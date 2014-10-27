@@ -1,0 +1,46 @@
+nav-back = #252a3a
+nav-fore = #ccc
+nav-title-fore = #565d64
+
+
+.md-sidenav-left
+  width 200px
+  color nav-fore
+  background nav-back
+  z-index 8
+
+  .avatar-bar
+    .avatar-wrap
+      margin 20px auto
+      height 100px
+      width 100px
+      background nav-fore
+      border-radius 50%
+      overflow hidden
+
+    .name-wrap
+      text-align center
+
+  .menu-item
+    z-index 1
+    width 100%
+    border none
+    height 40px
+    display block
+    cursor pointer
+    line-height 40px
+    padding 0 15px
+    position relative
+    background rgba(255, 255, 255, 0)
+    transition background-color 0.2s ease-out
+
+    &:hover
+      background rgba(255, 255, 255, 0.05)
+
+    &.menu-title
+      color nav-title-fore
+      text-transform uppercase
+      border-bottom 1px solid rgba(0, 0, 0, 0.2)
+
+    &.active
+      background rgba(0, 0, 0, 0.2)

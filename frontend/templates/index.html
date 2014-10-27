@@ -7,24 +7,45 @@
   <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
 </head>
 <body layout="horizontal">
-
+{% verbatim %}
 <md-sidenav layout="vertical" class="md-sidenav-left md-whiteframe-z2" component-id="left">
-  <md-toolbar class="theme-dark md-medium-tall">
-  <h1 class="md-toolbar-tools">Myicons</h1>
+  <md-toolbar class="md-tall">
+  <div class="avatar-bar">
+    <div class="avatar-wrap">
+      <img ng-src="{{ app.gravatar('yun.er.run@gmail.com') }}" alt="">
+    </div>
+    <div class="name-wrap">
+      Chase
+    </div>
+  </div>
   </md-toolbar>
 
-  <md-content flex >
-  <div ng-repeat="section in sections">
-    <button class="menu-item" ink-ripple tabindex="0">
+  <md-content flex ng-controller="MenuCtrl">
+  <div ng-repeat="section in menu.sections">
+    <div ink-ripple class="menu-item menu-title"
+      ng-class="{active: menu.isSelectedSection(section)}"
+      ng-click="menu.toggleExpand(section)">
       {{ section.name }}
-      <div class="md-ripple-container"></div>
-    </button>
+    </div>
+    <a 
+      ink-ripple
+      class="menu-item"
+      ng-show="section.isExpand"
+      ng-click="menu.selectItem(section, item)"
+      ng-repeat="item in section.items"
+      ng-class="{active: menu.isSelectedItem(section, item)}"
+
+      aria-hidden="false"
+      
+      >
+      {{ item.name }}
+    </a>
   </div>
   </md-content>
 </md-sidenav>
 
 <div layout="vertical" layout-fill role="main">
-  <md-toolbar class="theme-light md-medium-tall">
+  <md-toolbar class="md-tall">
   <div class="md-toolbar-tools" ng-click="openMenu()">
     <button class="menu-icon" hide-md aria-label="Toggle Menu">
       MENU
@@ -34,6 +55,7 @@
   </md-toolbar>
   <md-content class="md-content-padding"></md-content>
 </div>
+{% endverbatim %}
 <script type="text/javascript" src="{% static 'js/app.js' %}"></script>
 </body>
 </html>

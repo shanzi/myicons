@@ -1,3 +1,45 @@
+.md-sidenav-left {
+  width: 200px;
+  color: #ccc;
+  background: #252a3a;
+  z-index: 8;
+}
+.md-sidenav-left .avatar-bar .avatar-wrap {
+  margin: 20px auto;
+  height: 100px;
+  width: 100px;
+  background: #ccc;
+  border-radius: 50%;
+  overflow: hidden;
+}
+.md-sidenav-left .avatar-bar .name-wrap {
+  text-align: center;
+}
+.md-sidenav-left .menu-item {
+  z-index: 1;
+  width: 100%;
+  border: none;
+  height: 40px;
+  display: block;
+  cursor: pointer;
+  line-height: 40px;
+  padding: 0 15px;
+  position: relative;
+  background: rgba(255,255,255,0);
+  transition: background-color 0.2s ease-out;
+}
+.md-sidenav-left .menu-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+.md-sidenav-left .menu-item.menu-title {
+  color: #565d64;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+.md-sidenav-left .menu-item.active {
+  background: rgba(0,0,0,0.2);
+}
+
 /*!
  * Angular Material Design
  * https://github.com/angular/material
