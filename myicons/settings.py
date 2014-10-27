@@ -41,6 +41,8 @@ INSTALLED_APPS = (
     'rest_framework',
 
     # Project apps
+    'iconpacks',
+    'iconcollections',
     'accounts',
     'convert',
 )
