@@ -1,0 +1,24 @@
+{
+  "name": "myicons-md",
+  "version": "0.0.0",
+  "authors": [
+    "chase"
+  ],
+  "description": "frontend with material design for myicons",
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-route": "~1.3.0",
+    "angular-material": "~0.4.2"
+  },
+  "resolutions": {
+    "angular": "1.3.0-rc.4"
+  }
+}
+
