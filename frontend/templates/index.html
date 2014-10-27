@@ -1,0 +1,40 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en" ng-app="myiconsApp" ng-controller="AppCtrl">
+<head>
+  <meta charset="UTF-8">
+  <title>myicons</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
+</head>
+<body layout="horizontal">
+
+<md-sidenav layout="vertical" class="md-sidenav-left md-whiteframe-z2" component-id="left">
+  <md-toolbar class="theme-dark md-medium-tall">
+  <h1 class="md-toolbar-tools">Myicons</h1>
+  </md-toolbar>
+
+  <md-content flex >
+  <div ng-repeat="section in sections">
+    <button class="menu-item" ink-ripple tabindex="0">
+      {{ section.name }}
+      <div class="md-ripple-container"></div>
+    </button>
+  </div>
+  </md-content>
+</md-sidenav>
+
+<div layout="vertical" layout-fill role="main">
+  <md-toolbar class="theme-light md-medium-tall">
+  <div class="md-toolbar-tools" ng-click="openMenu()">
+    <button class="menu-icon" hide-md aria-label="Toggle Menu">
+      MENU
+    </button>
+    <p>Test Title</p>
+  </div>
+  </md-toolbar>
+  <md-content class="md-content-padding"></md-content>
+</div>
+<script type="text/javascript" src="{% static 'js/app.js' %}"></script>
+</body>
+</html>
+

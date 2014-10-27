@@ -41,6 +41,7 @@ INSTALLED_APPS = (
     'rest_framework',
 
     # Project apps
+    'frontend',
     'iconpacks',
     'iconcollections',
     'accounts',
