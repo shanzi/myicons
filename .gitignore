@@ -56,3 +56,12 @@ docs/_build/
 # PyBuilder
 target/
 
+# Created by https://www.gitignore.io
+
+### Django ###
+*.log
+*.pot
+*.pyc
+__pycache__/
+local_settings.py
+db.sqlite3

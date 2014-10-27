@@ -36,6 +36,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third party apps
+    'rest_framework',
+
+    # Project apps
+    'accounts',
+    'convert',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -81,3 +88,26 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# File upload handlers
+FILE_UPLOAD_HANDLERS = (
+        "django.core.files.uploadhandler.TemporaryFileUploadHandler",
+)
+
+# Rest Framework
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'rest_framework.filters.DjangoFilterBackend',
+        'rest_framework.filters.OrderingFilter',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
+
+if not DEBUG:
+    REST_FRAMEWORK.update({
+        'DEFAULT_RENDERER_CLASSES': (
+            'rest_framework.renderers.JSONRenderer',
+        )
+    })
