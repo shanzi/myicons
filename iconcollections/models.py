@@ -8,7 +8,7 @@ class Collection(models.Model):
     build_name = models.CharField(max_length=128, db_index=True)
     prefix = models.CharField(max_length=16, default="", blank=True)
     notes = models.CharField(max_length=140, default="", blank=True)
-    token = models.CharField(max_length=32, unique=True, blank=True)
+    token = models.CharField(max_length=32, unique=True, editable=False, blank=True)
 
     def save(self, *args, **kwargs):
         # generate token if absent
@@ -23,7 +23,8 @@ class CollectionIcon(models.Model):
     width = models.FloatField(default=1.0, blank=True)
     tagnames = models.TextField(default="", blank=True)
 
-    packicon = models.ForeignKey('iconpacks.PackIcon', related_name="collectionicons")
+    packicon = models.ForeignKey('iconpacks.PackIcon', related_name="collectionicons",
+                                 null=True, on_delete=models.SET_NULL)
     collection = models.ForeignKey(Collection, related_name="icons")
 
     def __unicode__(self):

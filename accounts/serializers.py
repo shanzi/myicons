@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ('last_login', 'date_joined', 'is_staff', 'groups', 'user_permissions', 'password')
+        exclude = ('last_login', 'date_joined', 'groups', 'user_permissions', 'password')
 
 class UserAdminSerializer(serializers.ModelSerializer):
 
@@ -22,7 +22,7 @@ class UserAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         write_only_fields = ('password', )
-        exclude = ('last_login', 'date_joined', 'is_staff', 'groups', 'user_permissions')
+        exclude = ('last_login', 'date_joined', 'groups', 'user_permissions')
 
 
 class UserChangePasswordSerializer(serializers.ModelSerializer):
