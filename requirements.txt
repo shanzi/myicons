@@ -1,0 +1,7 @@
+Django==1.7.1
+argparse==1.2.1
+cssselect==0.9.1
+djangorestframework==2.4.3
+lxml==3.4.0
+pyquery==1.2.9
+wsgiref==0.1.2
