@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en" ng-app="myiconsApp" ng-controller="AppCtrl">
+<html lang="en" ng-app="myiconsApp" ng-controller="AppCtrl as app">
 <head>
   <meta charset="UTF-8">
   <title>myicons</title>
@@ -9,52 +9,39 @@
 <body layout="horizontal">
 {% verbatim %}
 <md-sidenav layout="vertical" class="md-sidenav-left md-whiteframe-z2" component-id="left">
-  <md-toolbar class="md-tall">
-  <div class="avatar-bar">
+  <md-toolbar class="md-tall" >
+  <div class="avatar-bar" ng-if="app.currentUser">
     <div class="avatar-wrap">
-      <img ng-src="{{ app.gravatar('yun.er.run@gmail.com') }}" alt="">
+      <img ng-src="{{ app.gravatar(app.currentUser.email) }}" alt="">
     </div>
     <div class="name-wrap">
-      Chase
+      {{ app.currentUser.username }}
     </div>
   </div>
   </md-toolbar>
 
-  <md-content flex ng-controller="MenuCtrl">
+  <md-content flex ng-controller="menuCtrl as menu">
   <div ng-repeat="section in menu.sections">
     <div ink-ripple class="menu-item menu-title"
       ng-class="{active: menu.isSelectedSection(section)}"
-      ng-click="menu.toggleExpand(section)">
+      ng-click="section.toggleExpand()">
       {{ section.name }}
     </div>
     <a 
       ink-ripple
       class="menu-item"
-      ng-show="section.isExpand"
-      ng-click="menu.selectItem(section, item)"
+      ng-show="section.isExpanded"
+      ng-click="menu.goto(section, item)"
       ng-repeat="item in section.items"
       ng-class="{active: menu.isSelectedItem(section, item)}"
-
       aria-hidden="false"
-      
       >
       {{ item.name }}
     </a>
   </div>
   </md-content>
 </md-sidenav>
-
-<div layout="vertical" layout-fill role="main">
-  <md-toolbar class="md-tall">
-  <div class="md-toolbar-tools" ng-click="openMenu()">
-    <button class="menu-icon" hide-md aria-label="Toggle Menu">
-      MENU
-    </button>
-    <p>Test Title</p>
-  </div>
-  </md-toolbar>
-  <md-content class="md-content-padding"></md-content>
-</div>
+<div ng-view layout="vertical" layout-fill scroll-y></div>
 {% endverbatim %}
 <script type="text/javascript" src="{% static 'js/app.js' %}"></script>
 </body>

@@ -1,0 +1,22 @@
+<md-toolbar class="md-medium-tall view-toolbar">
+<div class="md-toolbar-tools" ng-click="app.openMenu()">
+  <button class="menu-icon" hide-md aria-label="Toggle Menu">
+    MENU
+  </button>
+  <p>Packs</p>
+  <h1>{{ pack.data.name }}</h1>
+</div>
+<div class="md-toolbar-tools toolbar-tabs">
+  <span flex></span>
+  <div class="tab-item" ink-ripple>
+    icons
+  </div>
+  <div class="tab-item" ink-ripple>
+    info
+  </div>
+  <div class="tab-item" ink-ripple>
+    revisions
+  </div>
+</div>
+</md-toolbar>
+<md-content class="md-content-padding"></md-content>

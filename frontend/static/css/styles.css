@@ -4,6 +4,11 @@
   background: #252a3a;
   z-index: 8;
 }
+.md-sidenav-left a {
+  color: #ccc;
+  background: #252a3a;
+  text-decoration: none;
+}
 .md-sidenav-left .avatar-bar .avatar-wrap {
   margin: 20px auto;
   height: 100px;
@@ -25,8 +30,10 @@
   line-height: 40px;
   padding: 0 15px;
   position: relative;
+  text-overflow: ellipsis;
   background: rgba(255,255,255,0);
-  transition: background-color 0.2s ease-out;
+  transition: 0.2s ease-out;
+  transition-property: height, background, opacity;
 }
 .md-sidenav-left .menu-item:hover {
   background: rgba(255,255,255,0.05);
@@ -38,6 +45,25 @@
 }
 .md-sidenav-left .menu-item.active {
   background: rgba(0,0,0,0.2);
+}
+.md-sidenav-left .menu-item.ng-hide {
+  opacity: 0;
+  height: 0;
+}
+.view-toolbar {
+  border-bottom: 1px solid #eee;
+}
+.view-toolbar .toolbar-tabs .tab-item {
+  cursor: pointer;
+  padding: 0 20px;
+  height: 40px;
+  display: inline-block;
+  text-align: center;
+  position: relative;
+  font-size: 18px;
+  line-height: 40px;
+  text-transform: uppercase;
+  margin: 0;
 }
 
 /*!
