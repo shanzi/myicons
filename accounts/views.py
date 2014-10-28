@@ -25,7 +25,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return UserSerializer
 
     @list_route(methods=['get'])
-    def profile(self, request):
+    def current(self, request):
         user = request.user
         serializer_class = self.get_serializer_class()
         serializer = serializer_class(user)
