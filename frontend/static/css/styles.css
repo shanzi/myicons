@@ -65,6 +65,53 @@
   text-transform: uppercase;
   margin: 0;
 }
+.tab-item {
+  transition: background 0.2s ease-out;
+}
+.tab-item.active {
+  background: #eee;
+}
+.tab {
+  width: 100%;
+}
+.icons .icon {
+  cursor: pointer;
+  width: 70px;
+  height: 70px;
+  margin: 5px;
+  padding: 10px;
+  border: solid 1px #eee;
+  border-radius: 10px;
+  display: inline-block;
+  transition: opacity 0.2s ease-out;
+}
+.icons .icon:hover {
+  opacity: 0.8;
+}
+.pack-icons {
+  width: 800px;
+  margin: 0 auto;
+}
+@media (max-width: 1160px) {
+  .pack-icons {
+    width: 720px;
+  }
+}
+@media (max-width: 840px) {
+  .pack-icons {
+    width: 640px;
+  }
+}
+@media (max-width: 640px) {
+  .pack-icons {
+    width: 400px;
+  }
+}
+@media (max-width: 440px) {
+  .pack-icons {
+    width: 240px;
+  }
+}
 
 /*!
  * Angular Material Design

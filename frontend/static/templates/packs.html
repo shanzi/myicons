@@ -4,19 +4,30 @@
     MENU
   </button>
   <p>Packs</p>
-  <h1>{{ pack.data.name }}</h1>
+  <h1>{{ pack.info.name }}</h1>
 </div>
 <div class="md-toolbar-tools toolbar-tabs">
   <span flex></span>
-  <div class="tab-item" ink-ripple>
+  <div class="tab-item" ink-ripple ng-class="{active: pack.isTab('icons')}" ng-click="pack.setTab('icons')">
     icons
   </div>
-  <div class="tab-item" ink-ripple>
+  <div class="tab-item" ink-ripple ng-class="{active: pack.isTab('info')}" ng-click="pack.setTab('info')">
     info
   </div>
-  <div class="tab-item" ink-ripple>
+  <div class="tab-item" ink-ripple ng-class="{active: pack.isTab('revisions')}" ng-click="pack.setTab('revisions')">
     revisions
   </div>
 </div>
 </md-toolbar>
-<md-content class="md-content-padding"></md-content>
+<md-content class="md-content-padding" flex>
+<div class="tab" ng-show="pack.isTab('icons')">
+  <div class="pack-icons icons" ng-bind-html="pack.iconsHtml">
+  </div>
+</div>
+<div class="tab" ng-show="pack.isTab('info')">
+  info
+</div>
+<div class="tab" ng-show="pack.isTab('revisions')">
+  revisions
+</div>
+</md-content>
