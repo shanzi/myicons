@@ -21,11 +21,37 @@
 </md-toolbar>
 <md-content class="md-content-padding" flex>
 <div class="tab" ng-show="pack.isTab('icons')">
-  <div class="pack-icons icons" ng-bind-html="pack.iconsHtml">
+  <div class="pack-icons" ng-bind-html="pack.iconsHtml">
   </div>
 </div>
 <div class="tab" ng-show="pack.isTab('info')">
-  info
+  <div class="pack-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
+    <form>
+      <div class="row">
+        <md-button class="save-button">Save</md-button>
+      </div>
+      <div class="row" >
+        <md-text-float label="Name" ng-model="pack.info.name" > </md-text-float>
+        <div layout="vertical" layout-sm="horizontal">
+          <md-text-float label="Build Name" ng-model="pack.info.build_name" flex> </md-text-float>
+          <md-text-float label="Class Prefix" ng-model="pack.info.prefix" flex> </md-text-float>
+        </div>
+      </div>
+      <div class="row" layout="vertical" layout-sm="horizontal" >
+        <md-text-float label="Author" ng-model="pack.info.author" flex> </md-text-float>
+        <md-text-float label="Email" ng-model="pack.info.author_email" flex> </md-text-float>
+      </div>
+      <div class="row" layout="vertical">
+        <md-text-float label="Website" ng-model="pack.info.website" > </md-text-float>
+        <md-text-float label="Github" ng-model="pack.info.github" > </md-text-float>
+        <md-text-float label="CDN" ng-model="pack.info.cdn" > </md-text-float>
+      </div>
+      <div class="row" layout="vertical">
+        <md-text-float label="License" ng-model="pack.info.license" > </md-text-float>
+        <md-text-float label="Full Text" ng-model="pack.info.license_fulltext" > </md-text-float>
+      </div>
+    </form>
+  </div>
 </div>
 <div class="tab" ng-show="pack.isTab('revisions')">
   revisions

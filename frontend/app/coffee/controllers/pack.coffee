@@ -24,9 +24,8 @@ class PackController
     id = @$routeParams.id
     @info = @$models.Pack.get {id: id}, (pack) =>
       $rootScope.$broadcast '$reselectMenuItem'
-      @$models.PackIcon.query 'pack': @info.id, (icons) =>
-        @icons = icons
-        @iconsHtml = @renderIcons()
+    @icons = @$models.PackIcon.query 'pack': @info.id, (icons) =>
+      @iconsHtml = @renderIcons()
 
 
 module.exports = PackController
