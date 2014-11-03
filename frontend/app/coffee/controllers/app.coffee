@@ -1,6 +1,7 @@
 md5 = require '../deps/md5.js'
 
 class AppController
+  theme: 'mydark'
   currentUser: null
 
   gravatar: (email, size=100) ->

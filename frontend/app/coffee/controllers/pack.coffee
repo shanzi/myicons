@@ -25,7 +25,9 @@ class PackController
 
   save: ->
     @_info = @info
-    @_info.$save => @reset()
+    @_info.$save (pack) =>
+      @_info = pack
+      @reset()
 
   unchanged: ->
     angular.equals @info, @_info

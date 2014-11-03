@@ -1,0 +1,69 @@
+nav-back = #252a3a
+nav-fore = #ccc
+nav-title-fore = #565d64
+label-color = #888
+label-focused-color = #444
+button-color-primary = #29b6f6
+button-color-warn = #FC8E29
+button-color-green = #2baf2b
+button-color-disabled = #ccc
+
+.md-sidenav-left.md-mydark-theme
+    color nav-fore
+    background nav-back
+    a
+      color nav-fore
+      background transparent
+
+    .menu-item
+      background rgba(255, 255, 255, 0)
+
+      &:hover
+        background rgba(255, 255, 255, 0.05)
+
+      &.menu-title
+        color nav-title-fore
+        border-bottom 1px solid rgba(0, 0, 0, 0.2)
+
+      &.active
+        background rgba(0, 0, 0, 0.2)
+
+.view-toolbar.md-mydark-theme
+  border-bottom 1px solid #eee
+  .tab-item.active
+    transition background 0.2s ease-out
+    background rgba(0, 0, 0, 0.1)
+
+md-input-group.md-mydark-theme
+  label
+    color label-color
+
+  &.md-input-focused
+    label
+      color label-focused-color
+
+    input
+      border-bottom-width 1px
+      border-bottom-color label-focused-color
+
+md-button
+  &.md-outlined
+    border-width 1px
+    border-style solid
+    border-radius 5px
+
+  &.md-primary
+    color button-color-primary
+    border-color button-color-primary
+
+  &.md-warn
+    color button-color-warn
+    border-color button-color-warn
+
+  &.md-green
+    color button-color-green
+    border-color button-color-green
+
+  &[disabled]
+    color button-color-disabled
+    border-color button-color-disabled

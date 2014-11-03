@@ -1,6 +1,6 @@
 {% load staticfiles %}
 <!DOCTYPE html>
-<html lang="en" md-theme="none" ng-app="myiconsApp" ng-controller="AppCtrl as app">
+<html lang="en" ng-app="myiconsApp" ng-controller="AppCtrl as app" md-theme="mydark" >
 <head>
   <meta charset="UTF-8">
   <meta name="csrf-token" content="{{ csrf_token }}">
@@ -9,7 +9,7 @@
 </head>
 <body layout="horizontal">
 {% verbatim %}
-<md-sidenav layout="vertical" class="md-sidenav-left md-whiteframe-z2" is-locked-open="$media('md')" component-id="left">
+<md-sidenav layout="vertical" class="md-sidenav-left md-whiteframe-z2 md-mydark-theme" is-locked-open="$media('md')" component-id="left">
   <md-toolbar class="md-tall" >
   <div class="avatar-bar" ng-if="app.currentUser">
     <div class="avatar-wrap">

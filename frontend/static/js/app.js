@@ -64,6 +64,8 @@ var AppController, md5;
 md5 = require('../deps/md5.js');
 
 AppController = (function() {
+  AppController.prototype.theme = 'mydark';
+
   AppController.prototype.currentUser = null;
 
   AppController.prototype.gravatar = function(email, size) {
@@ -256,7 +258,8 @@ PackController = (function() {
   PackController.prototype.save = function() {
     this._info = this.info;
     return this._info.$save((function(_this) {
-      return function() {
+      return function(pack) {
+        _this._info = pack;
         return _this.reset();
       };
     })(this));

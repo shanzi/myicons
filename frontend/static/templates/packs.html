@@ -27,15 +27,10 @@
 <div class="tab" ng-show="pack.isTab('info')">
   <div class="pack-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
     <form name="form">
-      <div class="row actions">
-        <md-button aria-label class="reset-button" ng-click="pack.reset()" ng-disabled="pack.unchanged()">Reset</md-button>
-        <md-button aria-label class="save-button" ng-click="pack.save()" ng-disabled="form.$invalid || pack.unchanged()">Save</md-button>
-      </div>
       <div class="row" >
         <md-text-float label="Name" ng-model="pack.info.name" required> </md-text-float>
         <div layout="vertical" layout-sm="horizontal">
-          <md-text-float label="Build Name" ng-model="pack.info.build_name" required 
-          pattern="^[a-zA-Z][a-zA-Z0-9]{0,127}$" flex> </md-text-float>
+          <md-text-float label="Build Name" ng-model="pack.info.build_name" pattern="^[a-zA-Z][a-zA-Z0-9]{0,127}$" flex> </md-text-float>
           <md-text-float label="Class Prefix" name="prefix" ng-model="pack.info.prefix"
           pattern="^[a-z][a-z0-9]{0,15}$" flex> </md-text-float>
         </div>
@@ -50,7 +45,11 @@
         <md-text-float label="CDN" type="url" ng-model="pack.info.cdn" url> </md-text-float>
       </div>
       <div class="row" layout="vertical">
-        <md-text-float label="License" ng-model="pack.info.license" required > </md-text-float>
+        <md-text-float label="License" ng-model="pack.info.license" required maxlength="64"> </md-text-float>
+      </div>
+      <div class="row actions">
+        <md-button aria-label class="md-outlined md-warn" ng-click="pack.reset()" ng-disabled="pack.unchanged()">Reset</md-button>
+        <md-button aria-label class="md-outlined md-green" ng-click="pack.save()" ng-disabled="form.$invalid || pack.unchanged()">Save</md-button>
       </div>
     </form>
   </div>

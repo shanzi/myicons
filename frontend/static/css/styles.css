@@ -1,12 +1,8 @@
 .md-sidenav-left {
   width: 200px;
-  color: #ccc;
-  background: #252a3a;
   z-index: 8;
 }
 .md-sidenav-left a {
-  color: #ccc;
-  background: #252a3a;
   text-decoration: none;
 }
 .md-sidenav-left .avatar-bar .avatar-wrap {
@@ -31,27 +27,15 @@
   padding: 0 15px;
   position: relative;
   text-overflow: ellipsis;
-  background: rgba(255,255,255,0);
   transition: 0.2s ease-out;
   transition-property: height, background, opacity;
 }
-.md-sidenav-left .menu-item:hover {
-  background: rgba(255,255,255,0.05);
-}
 .md-sidenav-left .menu-item.menu-title {
-  color: #565d64;
   text-transform: uppercase;
-  border-bottom: 1px solid rgba(0,0,0,0.2);
-}
-.md-sidenav-left .menu-item.active {
-  background: rgba(0,0,0,0.2);
 }
 .md-sidenav-left .menu-item.ng-hide {
   opacity: 0;
   height: 0;
-}
-.view-toolbar {
-  border-bottom: 1px solid #eee;
 }
 .view-toolbar .toolbar-tabs .tab-item {
   cursor: pointer;
@@ -64,15 +48,6 @@
   line-height: 40px;
   text-transform: uppercase;
   margin: 0;
-}
-.tab-item {
-  transition: background 0.2s ease-out;
-}
-.tab-item.active {
-  background: #eee;
-}
-.tab {
-  width: 100%;
 }
 .pack-icons {
   width: 800px;
@@ -113,7 +88,7 @@
   opacity: 0.8;
 }
 .pack-info .row {
-  padding: 40px;
+  padding: 30px;
 }
 .pack-info md-input-group {
   margin: 5px;
@@ -125,29 +100,65 @@
 .pack-info .row.actions {
   text-align: right;
 }
-.pack-info .reset-button {
+.pack-info .row.actions md-button {
   width: 120px;
-  color: #fc8e29;
-  border: 1px solid #fc8e29;
-  border-radius: 5px;
 }
-.pack-info .reset-button[disabled] {
+.md-sidenav-left.md-mydark-theme {
   color: #ccc;
-  border-color: #ccc;
+  background: #252a3a;
 }
-.pack-info .save-button {
-  width: 120px;
-  color: #2baf2b;
-  border: 1px solid #2baf2b;
+.md-sidenav-left.md-mydark-theme a {
+  color: #ccc;
+  background: transparent;
+}
+.md-sidenav-left.md-mydark-theme .menu-item {
+  background: rgba(255,255,255,0);
+}
+.md-sidenav-left.md-mydark-theme .menu-item:hover {
+  background: rgba(255,255,255,0.05);
+}
+.md-sidenav-left.md-mydark-theme .menu-item.menu-title {
+  color: #565d64;
+  border-bottom: 1px solid rgba(0,0,0,0.2);
+}
+.md-sidenav-left.md-mydark-theme .menu-item.active {
+  background: rgba(0,0,0,0.2);
+}
+.view-toolbar.md-mydark-theme {
+  border-bottom: 1px solid #eee;
+}
+.view-toolbar.md-mydark-theme .tab-item.active {
+  transition: background 0.2s ease-out;
+  background: rgba(0,0,0,0.1);
+}
+md-input-group.md-mydark-theme label {
+  color: #888;
+}
+md-input-group.md-mydark-theme.md-input-focused label {
+  color: #444;
+}
+md-input-group.md-mydark-theme.md-input-focused input {
+  border-bottom-width: 1px;
+  border-bottom-color: #444;
+}
+md-button.md-outlined {
+  border-width: 1px;
+  border-style: solid;
   border-radius: 5px;
 }
-.pack-info .reset-button,
-.pack-info .save-button {
-  transition: 0.2s ease-out;
-  transition-property: color, border-color;
+md-button.md-primary {
+  color: #29b6f6;
+  border-color: #29b6f6;
 }
-.pack-info .reset-button[disabled],
-.pack-info .save-button[disabled] {
+md-button.md-warn {
+  color: #fc8e29;
+  border-color: #fc8e29;
+}
+md-button.md-green {
+  color: #2baf2b;
+  border-color: #2baf2b;
+}
+md-button[disabled] {
   color: #ccc;
   border-color: #ccc;
 }

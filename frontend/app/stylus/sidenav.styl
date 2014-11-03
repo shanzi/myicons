@@ -1,17 +1,8 @@
-nav-back = #252a3a
-nav-fore = #ccc
-nav-title-fore = #565d64
-
-
 .md-sidenav-left
   width 200px
-  color nav-fore
-  background nav-back
   z-index 8
 
   a 
-    color nav-fore
-    background nav-back
     text-decoration none
 
   .avatar-bar
@@ -19,7 +10,7 @@ nav-title-fore = #565d64
       margin 20px auto
       height 100px
       width 100px
-      background nav-fore
+      background #ccc
       border-radius 50%
       overflow hidden
 
@@ -37,21 +28,13 @@ nav-title-fore = #565d64
     padding 0 15px
     position relative
     text-overflow ellipsis
-    background rgba(255, 255, 255, 0)
-
     transition 0.2s ease-out
     transition-property height, background, opacity
 
-    &:hover
-      background rgba(255, 255, 255, 0.05)
 
     &.menu-title
-      color nav-title-fore
       text-transform uppercase
-      border-bottom 1px solid rgba(0, 0, 0, 0.2)
 
-    &.active
-      background rgba(0, 0, 0, 0.2)
 
     &.ng-hide
       opacity 0
