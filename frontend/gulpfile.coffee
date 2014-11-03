@@ -7,9 +7,7 @@ coffee = require 'gulp-coffee'
 addsrc = require 'gulp-add-src'
 connect = require 'gulp-connect'
 
-stream = require 'stream'
 path = require 'path'
-mold = require 'mold-source-map'
 source = require 'vinyl-source-stream'
 browserify = require 'browserify'
 
@@ -20,30 +18,28 @@ TEMPLATES_BUILD = './templates'
 bower = (p) -> path.join(__dirname, './bower_components', p)
 
 gulp.task 'coffee', () ->
-  browserify extensions: ['.coffee'], basedir: path.join(__dirname, 'app/coffee/'), debug: true
-    .require bower('hammerjs/hammer.js'), expose: 'hammer'
-    .require bower('angular/angular.js'), expose: 'angular'
-    .require bower('angular-aria/angular-aria.js'), expose: 'angular.aria'
-    .require bower('angular-route/angular-route.js'), expose: 'angular.route'
-    .require bower('angular-animate/angular-animate.js'), expose: 'angular.animate'
-    .require bower('angular-resource/angular-resource.js'), expose: 'angular.resource'
-    .require bower('angular-material/angular-material.js'), expose: 'angular.material'
+  browserify extensions: ['.coffee'], basedir: path.join(__dirname, 'app/coffee/'), debug: false
+    .require bower('hammerjs/hammer.min.js'), expose: 'hammer'
+    .require bower('angular/angular.min.js'), expose: 'angular'
+    .require bower('angular-aria/angular-aria.min.js'), expose: 'angular.aria'
+    .require bower('angular-route/angular-route.min.js'), expose: 'angular.route'
+    .require bower('angular-animate/angular-animate.min.js'), expose: 'angular.animate'
+    .require bower('angular-resource/angular-resource.min.js'), expose: 'angular.resource'
+    .require bower('angular-material/angular-material.min.js'), expose: 'angular.material'
+    .require bower('angular-loading-bar/build/loading-bar.min.js'), expose: 'angular.loadingbar'
     .add './main.coffee'
     .transform 'coffeeify'
     .bundle()
-    .pipe(
-      mold.transform(
-        (sourcemap, callback) ->
-          sourcemap.sourceRoot 'file://'
-          callback sourcemap.toComment()
-    ))
     .pipe source('app.js')
     .pipe gulp.dest("#{BUILD}/js")
   
 gulp.task 'stylus',  () ->
   gulp.src('./app/stylus/main.styl')
     .pipe stylus()
-    .pipe addsrc(bower('angular-material/angular-material.css'))
+    .pipe addsrc([
+      bower('angular-material/angular-material.css')
+      bower('angular-loading-bar/build/loading-bar.css')
+    ])
     .pipe concat('styles.css')
     .pipe gulp.dest("#{BUILD}/css")
 

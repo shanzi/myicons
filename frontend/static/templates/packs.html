@@ -26,29 +26,29 @@
 </div>
 <div class="tab" ng-show="pack.isTab('info')">
   <div class="pack-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
-    <form>
-      <div class="row">
-        <md-button class="save-button">Save</md-button>
+    <form name="form">
+      <div class="row actions">
+        <md-button aria-label class="reset-button" ng-click="pack.reset()" ng-disabled="pack.unchanged()">Reset</md-button>
+        <md-button aria-label class="save-button" ng-click="pack.save()" ng-disabled="form.$invalid || pack.unchanged()">Save</md-button>
       </div>
       <div class="row" >
-        <md-text-float label="Name" ng-model="pack.info.name" > </md-text-float>
+        <md-text-float label="Name" ng-model="pack.info.name" required> </md-text-float>
         <div layout="vertical" layout-sm="horizontal">
-          <md-text-float label="Build Name" ng-model="pack.info.build_name" flex> </md-text-float>
-          <md-text-float label="Class Prefix" ng-model="pack.info.prefix" flex> </md-text-float>
+          <md-text-float label="Build Name" ng-model="pack.info.build_name" required ng-pattern="/^[a-zA-Z0-9]{1, 128}$/" flex> </md-text-float>
+          <md-text-float label="Class Prefix" ng-model="pack.info.prefix" maxlength="16" flex> </md-text-float>
         </div>
       </div>
       <div class="row" layout="vertical" layout-sm="horizontal" >
-        <md-text-float label="Author" ng-model="pack.info.author" flex> </md-text-float>
-        <md-text-float label="Email" ng-model="pack.info.author_email" flex> </md-text-float>
+        <md-text-float label="Author" ng-model="pack.info.author" required flex> </md-text-float>
+        <md-text-float label="Email" type="email" ng-model="pack.info.author_email" required flex> </md-text-float>
       </div>
       <div class="row" layout="vertical">
-        <md-text-float label="Website" ng-model="pack.info.website" > </md-text-float>
-        <md-text-float label="Github" ng-model="pack.info.github" > </md-text-float>
-        <md-text-float label="CDN" ng-model="pack.info.cdn" > </md-text-float>
+        <md-text-float label="Website" type="url" ng-model="pack.info.website" required url> </md-text-float>
+        <md-text-float label="Github" type="url" ng-model="pack.info.github" url> </md-text-float>
+        <md-text-float label="CDN" type="url" ng-model="pack.info.cdn" url> </md-text-float>
       </div>
       <div class="row" layout="vertical">
-        <md-text-float label="License" ng-model="pack.info.license" > </md-text-float>
-        <md-text-float label="Full Text" ng-model="pack.info.license_fulltext" > </md-text-float>
+        <md-text-float label="License" ng-model="pack.info.license" required > </md-text-float>
       </div>
     </form>
   </div>

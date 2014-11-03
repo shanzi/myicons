@@ -7,6 +7,7 @@ require 'angular.route'
 require 'angular.animate'
 require 'angular.resource'
 require 'angular.material'
+require 'angular.loadingbar'
 
 # import controllers
 appCtrl = require './controllers/app'
@@ -20,7 +21,12 @@ models = require './models'
 
 template = (name) -> "/static/templates/#{name}.html"
 
-angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource'])
+angular.module('myiconsApp', [
+  'ngMaterial'
+  'ngRoute'
+  'ngResource'
+  'angular-loading-bar'
+  ])
   # config controlelrs
   .controller('AppCtrl', appCtrl)
   .controller('menuCtrl', menuCtrl)
@@ -48,3 +54,12 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource'])
         redirectTo: '/home/dashboard'
 
     $resourceProvider.defaults.stripTrailingSlashes = false
+
+  # config loading bar
+  .config (cfpLoadingBarProvider) ->
+    cfpLoadingBarProvider.includeSpinner = false
+
+  # config CSRF
+  .config ($httpProvider) ->
+    csrf_token = document.querySelector('meta[name=csrf-token]').content
+    $httpProvider.defaults.headers.common['X-CSRFToken'] = csrf_token

@@ -17,12 +17,23 @@ class PackController
     </div>
     """
 
-  renderIcons: -> @$sce.trustAsHtml((@_renderIcon(icon) for icon in @icons).join(''))
+  renderIcons: ->
+    @$sce.trustAsHtml((@_renderIcon(icon) for icon in @icons).join(''))
 
+  reset: ->
+    @info = angular.copy @_info
+
+  save: ->
+    @_info = @info
+    @_info.$save => @reset()
+
+  unchanged: ->
+    angular.equals @info, @_info
   
   constructor: (@$routeParams, @$rootScope, @$sce, @$models) ->
     id = @$routeParams.id
-    @info = @$models.Pack.get {id: id}, (pack) =>
+    @_info = @$models.Pack.get {id: id}, (pack) =>
+      @reset()
       $rootScope.$broadcast '$reselectMenuItem'
     @icons = @$models.PackIcon.query 'pack': @info.id, (icons) =>
       @iconsHtml = @renderIcons()
