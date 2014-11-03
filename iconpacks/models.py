@@ -5,7 +5,6 @@ from django.db import models
 class Pack(models.Model):
     name = models.CharField(max_length=128, db_index=True)
     prefix = models.CharField(max_length=16, blank=True, default="")
-    build_name = models.CharField(max_length=128, blank=True, default="")
     author = models.CharField(max_length=128)
     author_email = models.EmailField()
     website = models.URLField()
