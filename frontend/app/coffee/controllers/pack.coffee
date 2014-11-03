@@ -28,6 +28,7 @@ class PackController
     @_info.$save (pack) =>
       @_info = pack
       @reset()
+      @$rootScope.$broadcast '$packInfoUpdated'
 
   unchanged: ->
     angular.equals @info, @_info
@@ -36,7 +37,7 @@ class PackController
     id = @$routeParams.id
     @_info = @$models.Pack.get {id: id}, (pack) =>
       @reset()
-      $rootScope.$broadcast '$reselectMenuItem'
+      @$rootScope.$broadcast '$reselectMenuItem'
     @icons = @$models.PackIcon.query 'pack': @info.id, (icons) =>
       @iconsHtml = @renderIcons()
 

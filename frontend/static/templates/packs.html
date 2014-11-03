@@ -29,11 +29,6 @@
     <form name="form">
       <div class="row" >
         <md-text-float label="Name" ng-model="pack.info.name" required> </md-text-float>
-        <div layout="vertical" layout-sm="horizontal">
-          <md-text-float label="Build Name" ng-model="pack.info.build_name" pattern="^[a-zA-Z][a-zA-Z0-9]{0,127}$" flex> </md-text-float>
-          <md-text-float label="Class Prefix" name="prefix" ng-model="pack.info.prefix"
-          pattern="^[a-z][a-z0-9]{0,15}$" flex> </md-text-float>
-        </div>
       </div>
       <div class="row" layout="vertical" layout-sm="horizontal" >
         <md-text-float label="Author" ng-model="pack.info.author" required flex> </md-text-float>

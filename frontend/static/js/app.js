@@ -203,6 +203,20 @@ MenuController = (function() {
         return _this.selectItem();
       };
     })(this));
+    this.$rootScope.$on('$packInfoUpdated', (function(_this) {
+      return function() {
+        return _this.packs.items = _this.$models.Pack.query(function() {
+          return _this.selectItem();
+        });
+      };
+    })(this));
+    this.$rootScope.$on('$collectionInfoUpdated', (function(_this) {
+      return function() {
+        return _this.packs.items = _this.$models.Collection.query(function() {
+          return _this.selectItem();
+        });
+      };
+    })(this));
   }
 
   return MenuController;
@@ -260,7 +274,8 @@ PackController = (function() {
     return this._info.$save((function(_this) {
       return function(pack) {
         _this._info = pack;
-        return _this.reset();
+        _this.reset();
+        return _this.$rootScope.$broadcast('$packInfoUpdated');
       };
     })(this));
   };
@@ -281,7 +296,7 @@ PackController = (function() {
     }, (function(_this) {
       return function(pack) {
         _this.reset();
-        return $rootScope.$broadcast('$reselectMenuItem');
+        return _this.$rootScope.$broadcast('$reselectMenuItem');
       };
     })(this));
     this.icons = this.$models.PackIcon.query({

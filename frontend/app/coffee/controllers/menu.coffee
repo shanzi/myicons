@@ -43,6 +43,8 @@ class MenuController
 
     @$rootScope.$on '$locationChangeSuccess', => @selectItem()
     @$rootScope.$on '$reselectMenuItem', => @selectItem()
+    @$rootScope.$on '$packInfoUpdated', => @packs.items = @$models.Pack.query(=> @selectItem())
+    @$rootScope.$on '$collectionInfoUpdated', => @packs.items = @$models.Collection.query(=> @selectItem())
   
 
 module.exports = MenuController
