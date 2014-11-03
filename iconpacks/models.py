@@ -12,7 +12,6 @@ class Pack(models.Model):
     github = models.URLField(blank=True)
     cdn = models.URLField(blank=True)
     license = models.CharField(max_length=64)
-    license_fulltext = models.TextField(blank=True, default="")
 
 
 class PackIcon(models.Model):
