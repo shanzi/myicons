@@ -7,6 +7,7 @@ require 'angular.route'
 require 'angular.animate'
 require 'angular.resource'
 require 'angular.material'
+
 require 'angular.loadingbar'
 
 # import controllers
@@ -25,6 +26,7 @@ angular.module('myiconsApp', [
   'ngMaterial'
   'ngRoute'
   'ngResource'
+
   'angular-loading-bar'
   ])
   # config controlelrs

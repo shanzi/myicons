@@ -21,7 +21,14 @@
 </md-toolbar>
 <md-content class="md-content-padding" flex>
 <div class="tab" ng-show="pack.isTab('icons')">
-  <div class="pack-icons" ng-bind-html="pack.iconsHtml">
+  <div class="pack-icons">
+    <md-button class="icon" ng-repeat="icon in pack.icons" aria-label="">
+    <svg viewBox="0 0 1024 1024">
+      <path ng-attr-d="{{icon.svg_d}}"
+      ng-attr-transform="scale(1, -1) translate( {{ 512 - (icon.width || 1024)/2}} , -896)" ></path>
+    </svg>
+    <md-tooltip>{{ icon.name }}</md-tooltip>
+    </md-button>
   </div>
 </div>
 <div class="tab" ng-show="pack.isTab('info')">
@@ -43,8 +50,8 @@
         <md-text-float label="License" ng-model="pack.info.license" required maxlength="64"> </md-text-float>
       </div>
       <div class="row actions">
-        <md-button aria-label class="md-outlined md-warn" ng-click="pack.reset()" ng-disabled="pack.unchanged()">Reset</md-button>
-        <md-button aria-label class="md-outlined md-green" ng-click="pack.save()" ng-disabled="form.$invalid || pack.unchanged()">Save</md-button>
+        <md-button aria-label class="md-warn" ng-click="pack.reset()" ng-disabled="pack.unchanged()">Reset</md-button>
+        <md-button aria-label class="md-safe" ng-click="pack.save()" ng-disabled="form.$invalid || pack.unchanged()">Save</md-button>
       </div>
     </form>
   </div>

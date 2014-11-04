@@ -245,26 +245,6 @@ PackController = (function() {
     return this.currentTab = name;
   };
 
-  PackController.prototype._renderIcon = function(icon) {
-    var offsetX;
-    offsetX = 512 - (icon.width || 1024) / 2;
-    return "<div class=\"icon\">\n  <svg viewBox=\"0 0 1024 1024\">\n    <path d=\"" + icon.svg_d + "\" transform=\"scale(1, -1) translate(" + offsetX + ", -896)\"></path>\n  </svg>\n</div>";
-  };
-
-  PackController.prototype.renderIcons = function() {
-    var icon;
-    return this.$sce.trustAsHtml(((function() {
-      var _i, _len, _ref, _results;
-      _ref = this.icons;
-      _results = [];
-      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-        icon = _ref[_i];
-        _results.push(this._renderIcon(icon));
-      }
-      return _results;
-    }).call(this)).join(''));
-  };
-
   PackController.prototype.reset = function() {
     return this.info = angular.copy(this._info);
   };
@@ -301,11 +281,7 @@ PackController = (function() {
     })(this));
     this.icons = this.$models.PackIcon.query({
       'pack': this.info.id
-    }, (function(_this) {
-      return function(icons) {
-        return _this.iconsHtml = _this.renderIcons();
-      };
-    })(this));
+    });
   }
 
   return PackController;

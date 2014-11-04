@@ -5,7 +5,7 @@ label-color = #888
 label-focused-color = #444
 button-color-primary = #29b6f6
 button-color-warn = #FC8E29
-button-color-green = #2baf2b
+button-color-safe = #2baf2b
 button-color-disabled = #ccc
 
 .md-sidenav-left.md-mydark-theme
@@ -60,10 +60,17 @@ md-button
     color button-color-warn
     border-color button-color-warn
 
-  &.md-green
-    color button-color-green
-    border-color button-color-green
+  &.md-safe
+    color button-color-safe
+    border-color button-color-safe
 
   &[disabled]
     color button-color-disabled
     border-color button-color-disabled
+
+md-tooltip
+  .md-background
+    background rgba(0, 0, 0, 0.8)
+
+  .md-content
+    color #fff

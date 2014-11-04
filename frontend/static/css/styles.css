@@ -78,11 +78,13 @@
   width: 70px;
   height: 70px;
   margin: 5px;
-  padding: 10px;
   border: solid 1px #eee;
   border-radius: 10px;
   display: inline-block;
   transition: opacity 0.2s ease-out;
+}
+.pack-icons .icon .md-button-inner {
+  padding: 10px;
 }
 .pack-icons .icon:hover {
   opacity: 0.8;
@@ -99,9 +101,7 @@
 }
 .pack-info .row.actions {
   text-align: right;
-}
-.pack-info .row.actions md-button {
-  width: 120px;
+  font-size: 1.5em;
 }
 .md-sidenav-left.md-mydark-theme {
   color: #ccc;
@@ -154,13 +154,19 @@ md-button.md-warn {
   color: #fc8e29;
   border-color: #fc8e29;
 }
-md-button.md-green {
+md-button.md-safe {
   color: #2baf2b;
   border-color: #2baf2b;
 }
 md-button[disabled] {
   color: #ccc;
   border-color: #ccc;
+}
+md-tooltip .md-background {
+  background: rgba(0,0,0,0.8);
+}
+md-tooltip .md-content {
+  color: #fff;
 }
 
 /*!
