@@ -14,6 +14,7 @@ require 'angular.loadingbar'
 appCtrl = require './controllers/app'
 menuCtrl = require './controllers/menu'
 packCtrl = require './controllers/pack'
+collectionCtrl = require './controllers/collection'
 settingsCtrl = require './controllers/settings'
 dashboardCtrl = require './controllers/dashboard'
 
@@ -30,9 +31,10 @@ angular.module('myiconsApp', [
   'angular-loading-bar'
   ])
   # config controlelrs
-  .controller('AppCtrl', appCtrl)
+  .controller('appCtrl', appCtrl)
   .controller('menuCtrl', menuCtrl)
   .controller('packCtrl', packCtrl)
+  .controller('collectionCtrl', collectionCtrl)
   .controller('DashboardCtrl', dashboardCtrl)
   .controller('SettingsCtrl', settingsCtrl)
 
@@ -49,9 +51,13 @@ angular.module('myiconsApp', [
         templateUrl: template('settings')
         controller: 'SettingsCtrl'
       .when '/packs/:id',
-        templateUrl: template('packs')
+        templateUrl: template('pack')
         controller: 'packCtrl'
         controllerAs: 'pack'
+      .when '/collections/:id',
+        templateUrl: template('collection')
+        controller: 'collectionCtrl'
+        controllerAs: 'collection'
       .otherwise
         redirectTo: '/home/dashboard'
 

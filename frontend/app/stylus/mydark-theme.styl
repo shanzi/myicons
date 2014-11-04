@@ -3,10 +3,11 @@ nav-fore = #ccc
 nav-title-fore = #565d64
 label-color = #888
 label-focused-color = #444
-button-color-primary = #29b6f6
-button-color-warn = #FC8E29
-button-color-safe = #2baf2b
-button-color-disabled = #ccc
+color-primary = #29b6f6
+color-warn = #FC8E29
+color-safe = #2baf2b
+color-danger = #FC2607
+color-disabled = #ccc
 
 .md-sidenav-left.md-mydark-theme
     color nav-fore
@@ -31,8 +32,10 @@ button-color-disabled = #ccc
 .view-toolbar.md-mydark-theme
   border-bottom 1px solid #eee
   .tab-item.active
-    transition background 0.2s ease-out
     background rgba(0, 0, 0, 0.1)
+
+input.ng-invalid
+  color color-danger
 
 md-input-group.md-mydark-theme
   label
@@ -46,6 +49,13 @@ md-input-group.md-mydark-theme
       border-bottom-width 1px
       border-bottom-color label-focused-color
 
+  &.ng-invalid
+    label
+      color color-danger
+
+    input
+      border-bottom-color color-danger
+
 md-button
   &.md-outlined
     border-width 1px
@@ -53,20 +63,24 @@ md-button
     border-radius 5px
 
   &.md-primary
-    color button-color-primary
-    border-color button-color-primary
+    color color-primary
+    border-color color-primary
 
   &.md-warn
-    color button-color-warn
-    border-color button-color-warn
+    color color-warn
+    border-color color-warn
 
   &.md-safe
-    color button-color-safe
-    border-color button-color-safe
+    color color-safe
+    border-color color-safe
+
+  &.md-danger
+    color color-danger
+    border-color color-danger
 
   &[disabled]
-    color button-color-disabled
-    border-color button-color-disabled
+    color color-disabled
+    border-color color-disabled
 
 md-tooltip
   .md-background
@@ -74,3 +88,6 @@ md-tooltip
 
   .md-content
     color #fff
+
+md-divider.md-mydark-theme
+  border-top 1px solid #eee

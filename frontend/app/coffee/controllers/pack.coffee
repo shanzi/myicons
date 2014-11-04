@@ -20,7 +20,7 @@ class PackController
   unchanged: ->
     angular.equals @info, @_info
   
-  constructor: (@$routeParams, @$rootScope, @$sce, @$models) ->
+  constructor: (@$routeParams, @$rootScope, @$models) ->
     id = @$routeParams.id
     @_info = @$models.Pack.get {id: id}, (pack) =>
       @reset()

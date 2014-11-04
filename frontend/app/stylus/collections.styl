@@ -1,0 +1,62 @@
+.collection-icons
+  width 800px
+  margin 0 auto
+  @media(max-width: 1160px)
+    width 720px
+  @media(max-width: 840px)
+    width 100%
+
+  .icon
+    width 80px
+    height 80px
+    padding 10px
+
+  .icon-item
+
+    .icon-name-label
+      md-button
+        transition opacity 0.2s ease-out
+
+        button
+          padding 0
+
+        &.ng-hide
+          opacity 0
+
+    .icon-info
+      font-size 28px
+      color #999
+
+      input
+        color #666
+        border none
+        outline none
+        width 60%
+        text-decoration underline
+        transition color 0.2s ease-out
+
+        &:focus
+          color #333
+
+    .icon-actions
+      width 80px
+      float right
+      padding 5px
+
+      button
+        padding 2px
+
+.collection-info
+  .row
+    padding 30px
+
+  md-input-group
+    margin 5px
+    font-size 22px
+
+  input
+    width 100%
+
+  .row.actions
+    text-align right
+    font-size 1.5em

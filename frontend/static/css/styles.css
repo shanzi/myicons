@@ -48,6 +48,7 @@
   line-height: 40px;
   text-transform: uppercase;
   margin: 0;
+  transition: background 0.2s ease-out;
 }
 .pack-icons {
   width: 800px;
@@ -103,6 +104,71 @@
   text-align: right;
   font-size: 1.5em;
 }
+.collection-icons {
+  width: 800px;
+  margin: 0 auto;
+}
+@media (max-width: 1160px) {
+  .collection-icons {
+    width: 720px;
+  }
+}
+@media (max-width: 840px) {
+  .collection-icons {
+    width: 100%;
+  }
+}
+.collection-icons .icon {
+  width: 80px;
+  height: 80px;
+  padding: 10px;
+}
+.collection-icons .icon-item .icon-name-label md-button {
+  transition: opacity 0.2s ease-out;
+}
+.collection-icons .icon-item .icon-name-label md-button button {
+  padding: 0;
+}
+.collection-icons .icon-item .icon-name-label md-button.ng-hide {
+  opacity: 0;
+}
+.collection-icons .icon-item .icon-info {
+  font-size: 28px;
+  color: #999;
+}
+.collection-icons .icon-item .icon-info input {
+  color: #666;
+  border: none;
+  outline: none;
+  width: 60%;
+  text-decoration: underline;
+  transition: color 0.2s ease-out;
+}
+.collection-icons .icon-item .icon-info input:focus {
+  color: #333;
+}
+.collection-icons .icon-item .icon-actions {
+  width: 80px;
+  float: right;
+  padding: 5px;
+}
+.collection-icons .icon-item .icon-actions button {
+  padding: 2px;
+}
+.collection-info .row {
+  padding: 30px;
+}
+.collection-info md-input-group {
+  margin: 5px;
+  font-size: 22px;
+}
+.collection-info input {
+  width: 100%;
+}
+.collection-info .row.actions {
+  text-align: right;
+  font-size: 1.5em;
+}
 .md-sidenav-left.md-mydark-theme {
   color: #ccc;
   background: #252a3a;
@@ -128,8 +194,10 @@
   border-bottom: 1px solid #eee;
 }
 .view-toolbar.md-mydark-theme .tab-item.active {
-  transition: background 0.2s ease-out;
   background: rgba(0,0,0,0.1);
+}
+input.ng-invalid {
+  color: #fc2607;
 }
 md-input-group.md-mydark-theme label {
   color: #888;
@@ -140,6 +208,12 @@ md-input-group.md-mydark-theme.md-input-focused label {
 md-input-group.md-mydark-theme.md-input-focused input {
   border-bottom-width: 1px;
   border-bottom-color: #444;
+}
+md-input-group.md-mydark-theme.ng-invalid label {
+  color: #fc2607;
+}
+md-input-group.md-mydark-theme.ng-invalid input {
+  border-bottom-color: #fc2607;
 }
 md-button.md-outlined {
   border-width: 1px;
@@ -158,6 +232,10 @@ md-button.md-safe {
   color: #2baf2b;
   border-color: #2baf2b;
 }
+md-button.md-danger {
+  color: #fc2607;
+  border-color: #fc2607;
+}
 md-button[disabled] {
   color: #ccc;
   border-color: #ccc;
@@ -167,6 +245,9 @@ md-tooltip .md-background {
 }
 md-tooltip .md-content {
   color: #fff;
+}
+md-divider.md-mydark-theme {
+  border-top: 1px solid #eee;
 }
 
 /*!

@@ -1,5 +1,5 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var appCtrl, dashboardCtrl, menuCtrl, models, packCtrl, settingsCtrl, template;
+var appCtrl, collectionCtrl, dashboardCtrl, menuCtrl, models, packCtrl, settingsCtrl, template;
 
 window.Hammer = require('hammer');
 
@@ -23,6 +23,8 @@ menuCtrl = require('./controllers/menu');
 
 packCtrl = require('./controllers/pack');
 
+collectionCtrl = require('./controllers/collection');
+
 settingsCtrl = require('./controllers/settings');
 
 dashboardCtrl = require('./controllers/dashboard');
@@ -33,7 +35,7 @@ template = function(name) {
   return "/static/templates/" + name + ".html";
 };
 
-angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar']).controller('AppCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).factory('$models', models).config(function($routeProvider, $resourceProvider) {
+angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('collectionCtrl', collectionCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).factory('$models', models).config(function($routeProvider, $resourceProvider) {
   $routeProvider.when('/home/dashboard', {
     templateUrl: template('dashboard'),
     controller: 'DashboardCtrl'
@@ -41,9 +43,13 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-lo
     templateUrl: template('settings'),
     controller: 'SettingsCtrl'
   }).when('/packs/:id', {
-    templateUrl: template('packs'),
+    templateUrl: template('pack'),
     controller: 'packCtrl',
     controllerAs: 'pack'
+  }).when('/collections/:id', {
+    templateUrl: template('collection'),
+    controller: 'collectionCtrl',
+    controllerAs: 'collection'
   }).otherwise({
     redirectTo: '/home/dashboard'
   });
@@ -58,7 +64,7 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-lo
 
 
 
-},{"./controllers/app":2,"./controllers/dashboard":3,"./controllers/menu":4,"./controllers/pack":5,"./controllers/settings":6,"./models":8,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
+},{"./controllers/app":2,"./controllers/collection":3,"./controllers/dashboard":4,"./controllers/menu":5,"./controllers/pack":6,"./controllers/settings":7,"./models":9,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
 var AppController, md5;
 
 md5 = require('../deps/md5.js');
@@ -103,12 +109,118 @@ module.exports = AppController;
 
 
 
-},{"../deps/md5.js":7}],3:[function(require,module,exports){
-module.exports = function($scope) {};
+},{"../deps/md5.js":8}],3:[function(require,module,exports){
+var CollectionController;
+
+CollectionController = (function() {
+  CollectionController.prototype.info = {};
+
+  CollectionController.prototype.icons = [];
+
+  CollectionController.prototype.iconNames = {};
+
+  CollectionController.prototype.currentTab = 'icons';
+
+  CollectionController.prototype.isTab = function(name) {
+    return name === this.currentTab;
+  };
+
+  CollectionController.prototype.setTab = function(name) {
+    return this.currentTab = name;
+  };
+
+  CollectionController.prototype.reset = function() {
+    return this.info = angular.copy(this._info);
+  };
+
+  CollectionController.prototype.save = function() {
+    this._info = this.info;
+    return this._info.$save((function(_this) {
+      return function(pack) {
+        _this._info = pack;
+        _this.reset();
+        return _this.$rootScope.$broadcast('$collectionInfoUpdated');
+      };
+    })(this));
+  };
+
+  CollectionController.prototype.saveIconName = function(icon) {
+    var save;
+    save = (function(_this) {
+      return function() {
+        if (icon.name && _this.iconNameChanged(icon)) {
+          _this.iconNames[icon.id] = icon.name;
+          return icon.$save();
+        }
+      };
+    })(this);
+    return setTimeout(save, 100);
+  };
+
+  CollectionController.prototype.iconNameChanged = function(icon) {
+    var oldName;
+    oldName = this.iconNames[icon.id];
+    return oldName !== icon.name;
+  };
+
+  CollectionController.prototype.iconNameReset = function(icon) {
+    return icon.name = this.iconNames[icon.id];
+  };
+
+  CollectionController.prototype.deleteIcon = function(icon) {
+    var idx;
+    idx = this.icons.indexOf(icon);
+    this.icons.splice(idx, 1);
+    return icon.$delete();
+  };
+
+  CollectionController.prototype.unchanged = function() {
+    return angular.equals(this.info, this._info);
+  };
+
+  function CollectionController($routeParams, $rootScope, $models) {
+    var id;
+    this.$routeParams = $routeParams;
+    this.$rootScope = $rootScope;
+    this.$models = $models;
+    id = this.$routeParams.id;
+    this._info = this.$models.Collection.get({
+      id: id
+    }, (function(_this) {
+      return function(pack) {
+        _this.reset();
+        return _this.$rootScope.$broadcast('$reselectMenuItem');
+      };
+    })(this));
+    this.icons = this.$models.CollectionIcon.query({
+      'collection': this.info.id
+    }, (function(_this) {
+      return function(icons) {
+        var icon, _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = icons.length; _i < _len; _i++) {
+          icon = icons[_i];
+          _results.push(_this.iconNames[icon.id] = icon.name);
+        }
+        return _results;
+      };
+    })(this));
+  }
+
+  return CollectionController;
+
+})();
+
+module.exports = CollectionController;
 
 
 
 },{}],4:[function(require,module,exports){
+module.exports = function($scope) {};
+
+
+
+},{}],5:[function(require,module,exports){
 var MenuController, MenuSection;
 
 MenuSection = (function() {
@@ -227,7 +339,7 @@ module.exports = MenuController;
 
 
 
-},{}],5:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 var PackController;
 
 PackController = (function() {
@@ -264,11 +376,10 @@ PackController = (function() {
     return angular.equals(this.info, this._info);
   };
 
-  function PackController($routeParams, $rootScope, $sce, $models) {
+  function PackController($routeParams, $rootScope, $models) {
     var id;
     this.$routeParams = $routeParams;
     this.$rootScope = $rootScope;
-    this.$sce = $sce;
     this.$models = $models;
     id = this.$routeParams.id;
     this._info = this.$models.Pack.get({
@@ -292,12 +403,12 @@ module.exports = PackController;
 
 
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 module.exports = function($scope) {};
 
 
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /*
  * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
  * Digest Algorithm, as defined in RFC 1321.
@@ -557,7 +668,7 @@ function binl2b64(binarray)
 
 module.exports = hex_md5;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 module.exports = function($resource) {
   return {
     'User': $resource('/accounts/users/:username/', {
@@ -577,12 +688,24 @@ module.exports = function($resource) {
     }),
     'PackIcon': $resource('/packicons/:id/', {
       id: '@id'
+    }, {
+      save: {
+        method: 'PATCH'
+      }
     }),
     'Collection': $resource('/collections/:id/', {
       id: '@id'
+    }, {
+      save: {
+        method: 'PATCH'
+      }
     }),
     'CollectionIcon': $resource('/collectionicons/:id/', {
       id: '@id'
+    }, {
+      save: {
+        method: 'PATCH'
+      }
     })
   };
 };

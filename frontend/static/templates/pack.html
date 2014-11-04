@@ -20,7 +20,7 @@
 </div>
 </md-toolbar>
 <md-content class="md-content-padding" flex>
-<div class="tab" ng-show="pack.isTab('icons')">
+<div class="tab" ng-if="pack.isTab('icons')">
   <div class="pack-icons">
     <md-button class="icon" ng-repeat="icon in pack.icons" aria-label="">
     <svg viewBox="0 0 1024 1024">
@@ -31,7 +31,7 @@
     </md-button>
   </div>
 </div>
-<div class="tab" ng-show="pack.isTab('info')">
+<div class="tab" ng-if="pack.isTab('info')">
   <div class="pack-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
     <form name="form">
       <div class="row" >
@@ -56,7 +56,7 @@
     </form>
   </div>
 </div>
-<div class="tab" ng-show="pack.isTab('revisions')">
+<div class="tab" ng-if="pack.isTab('revisions')">
   revisions
 </div>
 </md-content>

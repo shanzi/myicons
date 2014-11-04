@@ -1,0 +1,80 @@
+<md-toolbar class="md-medium-tall view-toolbar">
+<div class="md-toolbar-tools" ng-click="app.openMenu()">
+  <button class="menu-icon" hide-md aria-label="Toggle Menu">
+    MENU
+  </button>
+  <p>Collections</p>
+  <h1>{{ collection.info.name }}</h1>
+</div>
+<div class="md-toolbar-tools toolbar-tabs">
+  <span flex></span>
+  <div class="tab-item" ink-ripple ng-class="{active: collection.isTab('icons')}" ng-click="collection.setTab('icons')">
+    icons
+  </div>
+  <div class="tab-item" ink-ripple ng-class="{active: collection.isTab('info')}" ng-click="collection.setTab('info')">
+    info
+  </div>
+  <div class="tab-item" ink-ripple ng-class="{active: collection.isTab('revisions')}" ng-click="collection.setTab('revisions')">
+    revisions
+  </div>
+</div>
+</md-toolbar>
+<md-content class="md-content-padding" flex>
+<div class="tab" ng-if="collection.isTab('icons')">
+  <div class="collection-icons">
+    <md-list>
+      <md-item class="icon-item" ng-repeat="icon in collection.icons" aria-label="">
+        <md-item-content>
+        <div class="md-title-left icon">
+          <svg viewBox="0 0 1024 1024">
+            <path ng-attr-d="{{icon.svg_d}}"
+            ng-attr-transform="scale(1, -1) translate( {{ 512 - (icon.width || 1024)/2}} , -896)" ></path>
+          </svg>
+        </div>
+        <div class="md-tile-content">
+          <div class="icon-actions">
+            <p>ACTIONS</p>
+            <md-button class="md-primary" aria-label="edit">Edit</md-button>
+            <md-button class="md-danger" aria-label="delete" ng-click="collection.deleteIcon(icon)">Delete</md-button>
+          </div>
+          <p class="icon-name-label">
+          ICON NAME
+          <md-button class="md-warn"
+            ng-show="collection.iconNameChanged(icon)" 
+            ng-click="collection.iconNameReset(icon)"
+            >reset</md-button>
+          </p>
+          <div class="icon-info">
+            <span ng-if="collection.info.prefix">{{ collection.info.prefix }}-</span><input
+            ng-pattern="/^[a-z0-9\-]*[a-z0-9]$/" ng-model="icon.name"
+            ng-blur="collection.saveIconName(icon)"
+            >
+          </div>
+        </div>
+        </md-item-content>
+        <md-divider inset></md-divider>
+      </md-item>
+    </md-list>
+  </div>
+</div>
+<div class="tab" ng-if="collection.isTab('info')">
+  <div class="collection-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
+    <form name="form">
+      <div class="row" >
+        <md-text-float label="Name" ng-model="collection.info.name" required> </md-text-float>
+        <div layout="vertical" layout-md="horizontal">
+          <md-text-float label="Build Name" ng-model="collection.info.build_name" required pattern="^[a-zA-Z][a-zA-Z0-9]{0,127}$" flex> </md-text-float>
+          <md-text-float label="Class Prefix" ng-model="collection.info.prefix" pattern="^[a-z][a-z0-9]{0,15}$" flex> </md-text-float>
+        </div>
+      </div>
+      <div class="row actions">
+        <md-button aria-label class="md-warn" ng-click="collection.reset()" ng-disabled="collection.unchanged()">Reset</md-button>
+        <md-button aria-label class="md-safe" ng-click="collection.save()" ng-disabled="form.$invalid || collection.unchanged()">Save</md-button>
+      </div>
+    </form>
+  </div>
+</div>
+<div class="tab" ng-if="collection.isTab('revisions')">
+  revisions
+</div>
+</md-content>
