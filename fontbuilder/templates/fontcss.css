@@ -1,0 +1,34 @@
+/*!
+ * {{ name }}
+ * created by myicons(myicons.io-meter.com)
+*/
+@font-face {
+    font-family: "{{ build_name }}";
+    {% if production %}
+    src: url('../fonts/{{ build_name }}.eot');
+    src: url('../fonts/{{ build_name }}.eot#iefix') format('embedded-opentype'), url('../fonts/{{ build_name }}.woff') format('woff'), url('../fonts/{{ build_name }}.ttf') format('truetype'), url('../fonts/{{ build_name }}.svg#{{ build_name}}') format('svg');
+    {% else %}
+    src: url('{{ token }}.svg#{{ build_name }}') format('svg'), url('{{ token }}.woff') format('woff'); 
+    {% endif %}
+    font-weight: 500;
+    font-style: normal;
+}
+
+{{ classnames }} {
+    display: inline-block;
+    font-family: "{{ build_name }}";
+    speak: none;
+    font-style: normal;
+    font-weight: 500;
+    font-variant: normal;
+    text-transform: none;
+    text-rendering: auto;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;    
+    -moz-osx-font-smoothing: grayscale;
+}
+
+{% for icon in icons %}
+{{ icon.unicode|stringformat:"%x" }}
+.{{ icon.classname }}:before{content: "\{{ icon.unicode|stringformat:"x" }}";}
+{% endfor %}

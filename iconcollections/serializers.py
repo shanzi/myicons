@@ -10,7 +10,7 @@ class CollectionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Collection
-        exclude = ('token', )
+        read_only = ('token', )
 
 
 class CollectionIconSerializer(serializers.ModelSerializer):
