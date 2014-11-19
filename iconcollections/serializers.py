@@ -40,7 +40,7 @@ class CollectionIconSerializer(serializers.ModelSerializer):
         packicon = attrs.get('packicon')
         svg_d = attrs.get('svg_d')
         width = attrs.get('width')
-        if packicon or (d and width): return attrs
+        if packicon or (svg_d and width): return attrs
         raise serializers.ValidationError(
             'Either a packicon or the shape of icon should be given'
         )

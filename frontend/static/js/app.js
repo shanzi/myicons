@@ -337,7 +337,7 @@ MenuController = (function() {
     })(this));
     this.$rootScope.$on('$collectionInfoUpdated', (function(_this) {
       return function() {
-        return _this.packs.items = _this.$models.Collection.query(function() {
+        return _this.collections.items = _this.$models.Collection.query(function() {
           return _this.selectItem();
         });
       };
@@ -353,7 +353,34 @@ module.exports = MenuController;
 
 
 },{}],6:[function(require,module,exports){
-var PackController;
+var PackController, PackIconInfoController;
+
+PackIconInfoController = (function() {
+  PackIconInfoController.prototype.sendto = function(collection) {
+    var newIcon, newIconData;
+    newIconData = {
+      name: this.icon.name,
+      packicon: this.icon.id,
+      collection: collection.id
+    };
+    newIcon = new this.$models.CollectionIcon(newIconData);
+    return newIcon.$create((function(_this) {
+      return function() {
+        return _this.$mdBottomSheet.hide();
+      };
+    })(this));
+  };
+
+  function PackIconInfoController($mdBottomSheet, $models, icon) {
+    this.$mdBottomSheet = $mdBottomSheet;
+    this.$models = $models;
+    this.icon = icon;
+    this.collections = this.$models.Collection.query();
+  }
+
+  return PackIconInfoController;
+
+})();
 
 PackController = (function() {
   PackController.prototype.info = {};
@@ -389,11 +416,24 @@ PackController = (function() {
     return angular.equals(this.info, this._info);
   };
 
-  function PackController($routeParams, $rootScope, $models) {
+  PackController.prototype.showIconInfo = function(icon) {
+    console.log(icon);
+    return this.$mdBottomSheet.show({
+      controller: PackIconInfoController,
+      controllerAs: 'info',
+      templateUrl: '/static/templates/pack_icon_info.html',
+      locals: {
+        icon: icon
+      }
+    });
+  };
+
+  function PackController($routeParams, $rootScope, $models, $mdBottomSheet) {
     var id;
     this.$routeParams = $routeParams;
     this.$rootScope = $rootScope;
     this.$models = $models;
+    this.$mdBottomSheet = $mdBottomSheet;
     id = this.$routeParams.id;
     this._info = this.$models.Pack.get({
       id: id
@@ -704,6 +744,9 @@ module.exports = function($resource) {
     }, {
       save: {
         method: 'PATCH'
+      },
+      create: {
+        method: 'POST'
       }
     }),
     'Collection': $resource('/collections/:id/', {
@@ -725,6 +768,9 @@ module.exports = function($resource) {
     }, {
       save: {
         method: 'PATCH'
+      },
+      create: {
+        method: 'POST'
       }
     })
   };

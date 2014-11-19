@@ -40,3 +40,49 @@
   .row.actions
     text-align right
     font-size 1.5em
+
+.pack-icon-info
+  .item-info
+    height 200px
+    display none
+
+    @media(min-width: 600px)
+      &[show-sm]
+        display block
+
+    .icon
+      height 160px
+      padding 10px
+
+    .name
+      text-align center
+      font-size 18px
+      padding 10px
+      text-overflow ellipsis
+      white-space nowrap
+
+  .item-actions
+    overflow-y scroll
+
+    .title
+      text-transform uppercase
+      font-weight normal
+      font-size 14px
+      color #aaa
+      padding 0 5px
+
+    .collections
+      margin 10px 0
+
+    .collection
+      height 40px
+      line-height 40px
+      padding 0 5px
+      transition background-color 0.1s ease-out
+      color #666
+      cursor pointer
+      position relative
+
+      &:hover
+        background-color rgba(0, 0, 0, 0.1)
+

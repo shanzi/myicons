@@ -29,6 +29,8 @@
   text-overflow: ellipsis;
   transition: 0.2s ease-out;
   transition-property: height, background, opacity;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .md-sidenav-left .menu-item.menu-title {
   text-transform: uppercase;
@@ -103,6 +105,51 @@
 .pack-info .row.actions {
   text-align: right;
   font-size: 1.5em;
+}
+.pack-icon-info .item-info {
+  height: 200px;
+  display: none;
+}
+@media (min-width: 600px) {
+  .pack-icon-info .item-info[show-sm] {
+    display: block;
+  }
+}
+.pack-icon-info .item-info .icon {
+  height: 160px;
+  padding: 10px;
+}
+.pack-icon-info .item-info .name {
+  text-align: center;
+  font-size: 18px;
+  padding: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pack-icon-info .item-actions {
+  overflow-y: scroll;
+}
+.pack-icon-info .item-actions .title {
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 14px;
+  color: #aaa;
+  padding: 0 5px;
+}
+.pack-icon-info .item-actions .collections {
+  margin: 10px 0;
+}
+.pack-icon-info .item-actions .collection {
+  height: 40px;
+  line-height: 40px;
+  padding: 0 5px;
+  transition: background-color 0.1s ease-out;
+  color: #666;
+  cursor: pointer;
+  position: relative;
+}
+.pack-icon-info .item-actions .collection:hover {
+  background-color: rgba(0,0,0,0.1);
 }
 .collection-icons {
   width: 800px;
@@ -262,6 +309,25 @@ md-tooltip .md-content {
 }
 md-divider.md-mydark-theme {
   border-top: 1px solid #eee;
+}
+md-bottom-sheet.md-mydark-theme {
+  border-top-color: #eee;
+  height: 300px;
+  background: rgba(250,250,250,0.95);
+}
+md-bottom-sheet.md-mydark-theme .container {
+  width: 100%;
+  height: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+}
+@media (min-width: 960px) {
+  md-bottom-sheet.md-mydark-theme {
+    padding-left: 170px;
+  }
+}
+md-backdrop.md-mydark-theme {
+  background: rgba(0,0,0,0.2);
 }
 
 /*!

@@ -1,0 +1,27 @@
+<md-bottom-sheet>
+<div class="pack-icon-info container" layout="horizontal">
+  <div class="item-info" flex show-sm>
+    <div class="icon" >
+      <svg viewBox="0 0 1024 1024">
+        <path ng-attr-d="{{info.icon.svg_d}}"
+        ng-attr-transform="scale(1, -1) translate( {{ 512 - (info.icon.width || 1024)/2}} , -896)" ></path>
+      </svg>
+    </div>
+    <div class="name" ng-bind="info.icon.name"></div>
+  </div>
+  <div class="item-actions" flex>
+    <section>
+      <h3 class="title">Send to</h3>
+      <div class="collections">
+        <div
+          class="collection"
+          ng-repeat="collection in info.collections"
+          ng-bind="collection.name"
+          ng-click="info.sendto(collection)"
+          ink-ripple
+          ></div>
+      </div>
+    </section>
+  </div>
+</div>
+</md-bottom-sheet>

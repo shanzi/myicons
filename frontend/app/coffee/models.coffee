@@ -15,6 +15,8 @@ module.exports = ($resource) ->
     $resource '/packicons/:id/', {id: '@id'},
       save:
         method: 'PATCH'
+      create:
+        method: 'POST'
 
   'Collection':
     $resource '/collections/:id/', {id: '@id'},
@@ -29,4 +31,6 @@ module.exports = ($resource) ->
     $resource '/collectionicons/:id/', {id: '@id'},
       save:
         method: 'PATCH'
+      create:
+        method: 'POST'
 
