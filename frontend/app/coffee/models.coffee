@@ -20,6 +20,10 @@ module.exports = ($resource) ->
     $resource '/collections/:id/', {id: '@id'},
       save:
         method: 'PATCH'
+      retoken:
+        url: '/collections/:id/retoken/'
+        params: {id: '@id'}
+        method: 'POST'
 
   'CollectionIcon':
     $resource '/collectionicons/:id/', {id: '@id'},

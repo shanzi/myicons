@@ -13,8 +13,8 @@ class CollectionController
 
   save: ->
     @_info = @info
-    @_info.$save (pack) =>
-      @_info = pack
+    @_info.$save (info) =>
+      @_info = info
       @reset()
       @$rootScope.$broadcast '$collectionInfoUpdated'
 
@@ -36,10 +36,17 @@ class CollectionController
     idx = @icons.indexOf(icon)
     @icons.splice(idx, 1)
     icon.$delete()
-          
 
   unchanged: ->
     angular.equals @info, @_info
+
+  liveURL: ->
+    "#{window.location.origin}/build/livetesting/#{@info.token}.css"
+
+  retoken: ->
+    @info.$retoken (info) =>
+      @_info.token = info.token
+      @info.token = info.token
   
   constructor: (@$routeParams, @$rootScope, @$models) ->
     id = @$routeParams.id

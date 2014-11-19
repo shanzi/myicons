@@ -165,6 +165,20 @@
 .collection-info input {
   width: 100%;
 }
+.collection-info .row.livetesting {
+  padding: 30px 35px;
+  font-size: 14px;
+}
+.collection-info .row.livetesting pre {
+  padding: 5px;
+  overflow-x: scroll;
+  background: #eee;
+  border-radius: 4px;
+}
+.collection-info .row.livetesting .retoken {
+  cursor: pointer;
+  color: #fc8e29;
+}
 .collection-info .row.actions {
   text-align: right;
   font-size: 1.5em;

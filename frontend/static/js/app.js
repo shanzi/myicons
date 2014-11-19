@@ -136,8 +136,8 @@ CollectionController = (function() {
   CollectionController.prototype.save = function() {
     this._info = this.info;
     return this._info.$save((function(_this) {
-      return function(pack) {
-        _this._info = pack;
+      return function(info) {
+        _this._info = info;
         _this.reset();
         return _this.$rootScope.$broadcast('$collectionInfoUpdated');
       };
@@ -176,6 +176,19 @@ CollectionController = (function() {
 
   CollectionController.prototype.unchanged = function() {
     return angular.equals(this.info, this._info);
+  };
+
+  CollectionController.prototype.liveURL = function() {
+    return "" + window.location.origin + "/build/livetesting/" + this.info.token + ".css";
+  };
+
+  CollectionController.prototype.retoken = function() {
+    return this.info.$retoken((function(_this) {
+      return function(info) {
+        _this._info.token = info.token;
+        return _this.info.token = info.token;
+      };
+    })(this));
   };
 
   function CollectionController($routeParams, $rootScope, $models) {
@@ -698,6 +711,13 @@ module.exports = function($resource) {
     }, {
       save: {
         method: 'PATCH'
+      },
+      retoken: {
+        url: '/collections/:id/retoken/',
+        params: {
+          id: '@id'
+        },
+        method: 'POST'
       }
     }),
     'CollectionIcon': $resource('/collectionicons/:id/', {

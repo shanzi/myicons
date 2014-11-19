@@ -67,6 +67,15 @@
           <md-text-float label="Class Prefix" ng-model="collection.info.prefix" pattern="^[a-z][a-z0-9]{0,15}$" flex> </md-text-float>
         </div>
       </div>
+      <div class="row livetesting">
+        <p>
+        <b>Live testing</b> is a convenient way to debug your icons in your web pages. 
+        Insert the html code below into the head tag of your page, then the icons in this collection will be available.
+        <pre>&lt;link rel="stylesheet" href="{{ collection.liveURL() }}" type="text/css"&gt;</pre></p>
+        This live testing URL is accessible without authentication. You can 
+        <a class="retoken" ng-click="collection.retoken()" >regenerate</a>
+        this URL to avoid abuse.
+      </div>
       <div class="row actions">
         <md-button aria-label class="md-warn" ng-click="collection.reset()" ng-disabled="collection.unchanged()">Reset</md-button>
         <md-button aria-label class="md-safe" ng-click="collection.save()" ng-disabled="form.$invalid || collection.unchanged()">Save</md-button>
