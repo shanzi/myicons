@@ -33,20 +33,17 @@ class MenuController
           @currentItem = item
           @currentSection.isExpanded = true
 
-  constructor: (@$rootScope, @$location, @$models) ->
+  constructor: (@$rootScope, @$location, @$modelManager) ->
     @home = new MenuSection 'home', 'icon-home', [
       {id: 'dashboard', name: 'Dashboard'},
       {id: 'settings', name: 'Settings'}
     ]
-    @packs = new MenuSection 'packs', 'icon-packs', @$models.Pack.query()
-    @collections = new MenuSection 'collections', 'icon-collections', @$models.Collection.query()
+    @packs = new MenuSection 'packs', 'icon-packs', @$modelManager.packs
+    @collections = new MenuSection 'collections', 'icon-collections', @$modelManager.collections
 
     @sections = [@home, @packs, @collections]
 
-    @$rootScope.$on '$locationChangeSuccess', => @selectItem()
     @$rootScope.$on '$reselectMenuItem', => @selectItem()
-    @$rootScope.$on '$packInfoUpdated', => @packs.items = @$models.Pack.query(=> @selectItem())
-    @$rootScope.$on '$collectionInfoUpdated', => @collections.items = @$models.Collection.query(=> @selectItem())
   
 
 module.exports = MenuController

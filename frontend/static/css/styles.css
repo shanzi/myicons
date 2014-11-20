@@ -157,7 +157,7 @@
 .pack-icon-info .item-actions .collection {
   height: 40px;
   line-height: 40px;
-  padding: 0 5px;
+  padding: 0 10px;
   transition: background-color 0.1s ease-out;
   color: #666;
   cursor: pointer;
@@ -166,6 +166,9 @@
 .pack-icon-info .item-actions .collection:hover {
   background-color: rgba(0,0,0,0.1);
   color: #69f;
+}
+.pack-icon-info .item-actions .collection i.icon-collections {
+  width: 20px;
 }
 .collection-icons {
   width: 800px;
@@ -209,6 +212,9 @@
 }
 .collection-icons .icon-item .icon-info input:focus {
   color: #333;
+}
+.collection-icons .icon-item .icon-info input.ng-invalid {
+  color: #fc2607;
 }
 .collection-icons .icon-item .icon-actions {
   width: 80px;

@@ -1,5 +1,5 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var appCtrl, collectionCtrl, dashboardCtrl, menuCtrl, models, packCtrl, settingsCtrl, template;
+var appCtrl, collectionCtrl, dashboardCtrl, menuCtrl, modelManager, packCtrl, settingsCtrl, template;
 
 window.Hammer = require('hammer');
 
@@ -29,13 +29,13 @@ settingsCtrl = require('./controllers/settings');
 
 dashboardCtrl = require('./controllers/dashboard');
 
-models = require('./models');
+modelManager = require('./modelmanager');
 
 template = function(name) {
   return "/static/templates/" + name + ".html";
 };
 
-angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('collectionCtrl', collectionCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).factory('$models', models).config(function($routeProvider, $resourceProvider) {
+angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('collectionCtrl', collectionCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
   $routeProvider.when('/home/dashboard', {
     templateUrl: template('dashboard'),
     controller: 'DashboardCtrl'
@@ -64,7 +64,7 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-lo
 
 
 
-},{"./controllers/app":2,"./controllers/collection":3,"./controllers/dashboard":4,"./controllers/menu":5,"./controllers/pack":6,"./controllers/settings":7,"./models":9,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
+},{"./controllers/app":2,"./controllers/collection":3,"./controllers/dashboard":4,"./controllers/menu":5,"./controllers/pack":6,"./controllers/settings":7,"./modelmanager":9,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
 var AppController, md5;
 
 md5 = require('../deps/md5.js');
@@ -87,18 +87,15 @@ AppController = (function() {
     return this.$mdSidenav('left').open();
   };
 
-  AppController.prototype.getCurrentUser = function() {
-    return this.$models.User.current((function(_this) {
-      return function(user) {
-        return _this.currentUser = user;
+  function AppController($mdSidenav, $modelManager) {
+    this.$mdSidenav = $mdSidenav;
+    this.$modelManager = $modelManager;
+    this.currentUser = this.$modelManager.currentUser;
+    this.$modelManager.ready((function(_this) {
+      return function() {
+        return console.log('models ready');
       };
     })(this));
-  };
-
-  function AppController($mdSidenav, $models) {
-    this.$mdSidenav = $mdSidenav;
-    this.$models = $models;
-    this.getCurrentUser();
   }
 
   return AppController;
@@ -134,14 +131,8 @@ CollectionController = (function() {
   };
 
   CollectionController.prototype.save = function() {
-    this._info = this.info;
-    return this._info.$save((function(_this) {
-      return function(info) {
-        _this._info = info;
-        _this.reset();
-        return _this.$rootScope.$broadcast('$collectionInfoUpdated');
-      };
-    })(this));
+    angular.extend(this._info, this.info);
+    return this._info.$update();
   };
 
   CollectionController.prototype.saveIconName = function(icon) {
@@ -150,7 +141,7 @@ CollectionController = (function() {
       return function() {
         if (icon.name && _this.iconNameChanged(icon)) {
           _this.iconNames[icon.id] = icon.name;
-          return icon.$save();
+          return icon.$update();
         }
       };
     })(this);
@@ -191,31 +182,28 @@ CollectionController = (function() {
     })(this));
   };
 
-  function CollectionController($routeParams, $rootScope, $models) {
+  function CollectionController($routeParams, $rootScope, $modelManager) {
     var id;
     this.$routeParams = $routeParams;
     this.$rootScope = $rootScope;
-    this.$models = $models;
-    id = this.$routeParams.id;
-    this._info = this.$models.Collection.get({
-      id: id
-    }, (function(_this) {
-      return function(pack) {
+    this.$modelManager = $modelManager;
+    id = parseInt(this.$routeParams.id);
+    this.$modelManager.getCollection(id, (function(_this) {
+      return function(collection, icons) {
+        _this._info = collection;
+        _this.icons = icons;
+        _this.iconNames = {};
+        _this.icons.$promise.then(function() {
+          var icon, _i, _len, _results;
+          _results = [];
+          for (_i = 0, _len = icons.length; _i < _len; _i++) {
+            icon = icons[_i];
+            _results.push(_this.iconNames[icon.id] = icon.name);
+          }
+          return _results;
+        });
         _this.reset();
         return _this.$rootScope.$broadcast('$reselectMenuItem');
-      };
-    })(this));
-    this.icons = this.$models.CollectionIcon.query({
-      'collection': this.info.id
-    }, (function(_this) {
-      return function(icons) {
-        var icon, _i, _len, _results;
-        _results = [];
-        for (_i = 0, _len = icons.length; _i < _len; _i++) {
-          icon = icons[_i];
-          _results.push(_this.iconNames[icon.id] = icon.name);
-        }
-        return _results;
       };
     })(this));
   }
@@ -305,10 +293,10 @@ MenuController = (function() {
     return _results;
   };
 
-  function MenuController($rootScope, $location, $models) {
+  function MenuController($rootScope, $location, $modelManager) {
     this.$rootScope = $rootScope;
     this.$location = $location;
-    this.$models = $models;
+    this.$modelManager = $modelManager;
     this.home = new MenuSection('home', 'icon-home', [
       {
         id: 'dashboard',
@@ -318,31 +306,12 @@ MenuController = (function() {
         name: 'Settings'
       }
     ]);
-    this.packs = new MenuSection('packs', 'icon-packs', this.$models.Pack.query());
-    this.collections = new MenuSection('collections', 'icon-collections', this.$models.Collection.query());
+    this.packs = new MenuSection('packs', 'icon-packs', this.$modelManager.packs);
+    this.collections = new MenuSection('collections', 'icon-collections', this.$modelManager.collections);
     this.sections = [this.home, this.packs, this.collections];
-    this.$rootScope.$on('$locationChangeSuccess', (function(_this) {
-      return function() {
-        return _this.selectItem();
-      };
-    })(this));
     this.$rootScope.$on('$reselectMenuItem', (function(_this) {
       return function() {
         return _this.selectItem();
-      };
-    })(this));
-    this.$rootScope.$on('$packInfoUpdated', (function(_this) {
-      return function() {
-        return _this.packs.items = _this.$models.Pack.query(function() {
-          return _this.selectItem();
-        });
-      };
-    })(this));
-    this.$rootScope.$on('$collectionInfoUpdated', (function(_this) {
-      return function() {
-        return _this.collections.items = _this.$models.Collection.query(function() {
-          return _this.selectItem();
-        });
       };
     })(this));
   }
@@ -360,25 +329,24 @@ var PackController, PackIconInfoController;
 
 PackIconInfoController = (function() {
   PackIconInfoController.prototype.sendto = function(collection) {
-    var newIcon, newIconData;
+    var newIconData;
     newIconData = {
       name: this.icon.name,
       packicon: this.icon.id,
       collection: collection.id
     };
-    newIcon = new this.$models.CollectionIcon(newIconData);
-    return newIcon.$create((function(_this) {
+    return this.$modelManager.addCollectionIcon(newIconData, (function(_this) {
       return function() {
         return _this.$mdBottomSheet.hide();
       };
     })(this));
   };
 
-  function PackIconInfoController($mdBottomSheet, $models, icon) {
+  function PackIconInfoController($mdBottomSheet, $modelManager, icon) {
     this.$mdBottomSheet = $mdBottomSheet;
-    this.$models = $models;
+    this.$modelManager = $modelManager;
     this.icon = icon;
-    this.collections = this.$models.Collection.query();
+    this.collections = this.$modelManager.collections;
   }
 
   return PackIconInfoController;
@@ -405,14 +373,8 @@ PackController = (function() {
   };
 
   PackController.prototype.save = function() {
-    this._info = this.info;
-    return this._info.$save((function(_this) {
-      return function(pack) {
-        _this._info = pack;
-        _this.reset();
-        return _this.$rootScope.$broadcast('$packInfoUpdated');
-      };
-    })(this));
+    angular.extend(this._info, this.info);
+    return this._info.$update();
   };
 
   PackController.prototype.unchanged = function() {
@@ -430,24 +392,21 @@ PackController = (function() {
     });
   };
 
-  function PackController($routeParams, $rootScope, $models, $mdBottomSheet) {
+  function PackController($routeParams, $rootScope, $modelManager, $mdBottomSheet) {
     var id;
     this.$routeParams = $routeParams;
     this.$rootScope = $rootScope;
-    this.$models = $models;
+    this.$modelManager = $modelManager;
     this.$mdBottomSheet = $mdBottomSheet;
-    id = this.$routeParams.id;
-    this._info = this.$models.Pack.get({
-      id: id
-    }, (function(_this) {
-      return function(pack) {
+    id = parseInt(this.$routeParams.id);
+    this.$modelManager.getPack(id, (function(_this) {
+      return function(pack, icons) {
+        _this._info = pack;
+        _this.icons = icons;
         _this.reset();
         return _this.$rootScope.$broadcast('$reselectMenuItem');
       };
     })(this));
-    this.icons = this.$models.PackIcon.query({
-      'pack': this.info.id
-    });
   }
 
   return PackController;
@@ -724,6 +683,100 @@ function binl2b64(binarray)
 module.exports = hex_md5;
 
 },{}],9:[function(require,module,exports){
+var ModelManger, models;
+
+models = require('./models');
+
+ModelManger = (function() {
+  function ModelManger($resource, $q) {
+    this.$resource = $resource;
+    this.$q = $q;
+    this.$models = models(this.$resource);
+    this.currentUser = this.$models.User.current();
+    this.packs = this.$models.Pack.query();
+    this.collections = this.$models.Collection.query();
+  }
+
+  ModelManger.prototype.ready = function(callback) {
+    return this.$q.all(this.currentUser.$promise, this.packs.$promise, this.collections.promise).then(callback);
+  };
+
+  ModelManger.prototype.getPack = function(id, callback) {
+    return this.ready((function(_this) {
+      return function() {
+        var pack, _i, _len, _ref;
+        _ref = _this.packs;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          pack = _ref[_i];
+          if (pack.id === id) {
+            callback(pack, _this.$models.PackIcon.query({
+              pack: pack.id
+            }));
+            return;
+          }
+        }
+      };
+    })(this));
+  };
+
+  ModelManger.prototype.getCollection = function(id, callback) {
+    return this.ready((function(_this) {
+      return function() {
+        var collection, _i, _len, _ref;
+        _ref = _this.collections;
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          collection = _ref[_i];
+          if (collection.id === id) {
+            callback(collection, _this.$models.CollectionIcon.query({
+              collection: collection.id
+            }));
+            return;
+          }
+        }
+      };
+    })(this));
+  };
+
+  ModelManger.prototype.addPack = function(pack, callback) {};
+
+  ModelManger.prototype.addCollection = function(collection, callback) {
+    var newCollection;
+    newCollection = new this.$models.Collection(collection);
+    return newCollection.$save((function(_this) {
+      return function() {
+        _this.collections.push(newCollection);
+        if (callback) {
+          return callback(newCollection);
+        }
+      };
+    })(this));
+  };
+
+  ModelManger.prototype.addCollectionIcon = function(icon, callback) {
+    var newIcon;
+    newIcon = new this.$models.CollectionIcon(icon);
+    return newIcon.$save((function(_this) {
+      return function() {
+        if (callback) {
+          return callback(newIcon);
+        }
+      };
+    })(this));
+  };
+
+  return ModelManger;
+
+})();
+
+module.exports = (function(_this) {
+  return function($resource, $q) {
+    return new ModelManger($resource, $q);
+  };
+})(this);
+
+
+
+},{"./models":10}],10:[function(require,module,exports){
 module.exports = function($resource) {
   return {
     'User': $resource('/accounts/users/:username/', {
@@ -737,24 +790,21 @@ module.exports = function($resource) {
     'Pack': $resource('/packs/:id/', {
       id: '@id'
     }, {
-      save: {
+      update: {
         method: 'PATCH'
       }
     }),
     'PackIcon': $resource('/packicons/:id/', {
       id: '@id'
     }, {
-      save: {
+      update: {
         method: 'PATCH'
-      },
-      create: {
-        method: 'POST'
       }
     }),
     'Collection': $resource('/collections/:id/', {
       id: '@id'
     }, {
-      save: {
+      update: {
         method: 'PATCH'
       },
       retoken: {
@@ -768,11 +818,8 @@ module.exports = function($resource) {
     'CollectionIcon': $resource('/collectionicons/:id/', {
       id: '@id'
     }, {
-      save: {
+      update: {
         method: 'PATCH'
-      },
-      create: {
-        method: 'POST'
       }
     })
   };

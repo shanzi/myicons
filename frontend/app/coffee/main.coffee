@@ -19,7 +19,7 @@ settingsCtrl = require './controllers/settings'
 dashboardCtrl = require './controllers/dashboard'
 
 # import models
-models = require './models'
+modelManager = require './modelmanager'
 
 template = (name) -> "/static/templates/#{name}.html"
 
@@ -39,7 +39,7 @@ angular.module('myiconsApp', [
   .controller('SettingsCtrl', settingsCtrl)
 
   # config models
-  .factory('$models', models)
+  .factory('$modelManager', modelManager)
 
   # config routes and resource
   .config ($routeProvider, $resourceProvider) ->

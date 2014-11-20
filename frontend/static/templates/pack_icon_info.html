@@ -16,10 +16,11 @@
         <div
           class="collection"
           ng-repeat="collection in info.collections"
-          ng-bind="collection.name"
           ng-click="info.sendto(collection)"
-          ink-ripple
-          ></div>
+          ink-ripple>
+          <i class="icon-collections"></i>
+          <span ng-bind="collection.name"></span>
+        </div>
       </div>
     </section>
   </div>

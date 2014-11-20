@@ -5,12 +5,11 @@ class PackIconInfoController
       packicon: @icon.id
       collection: collection.id
 
-    newIcon = new @$models.CollectionIcon(newIconData)
-    newIcon.$create =>
+    @$modelManager.addCollectionIcon newIconData, =>
       @$mdBottomSheet.hide()
 
-  constructor: (@$mdBottomSheet, @$models, @icon) ->
-    @collections = @$models.Collection.query()
+  constructor: (@$mdBottomSheet, @$modelManager, @icon) ->
+    @collections = @$modelManager.collections
 
 
 class PackController
@@ -26,11 +25,8 @@ class PackController
     @info = angular.copy @_info
 
   save: ->
-    @_info = @info
-    @_info.$save (pack) =>
-      @_info = pack
-      @reset()
-      @$rootScope.$broadcast '$packInfoUpdated'
+    angular.extend @_info, @info
+    @_info.$update()
 
   unchanged: ->
     angular.equals @info, @_info
@@ -43,12 +39,13 @@ class PackController
       locals:
         icon: icon
   
-  constructor: (@$routeParams, @$rootScope, @$models, @$mdBottomSheet) ->
-    id = @$routeParams.id
-    @_info = @$models.Pack.get {id: id}, (pack) =>
+  constructor: (@$routeParams, @$rootScope, @$modelManager, @$mdBottomSheet) ->
+    id = parseInt @$routeParams.id
+    @$modelManager.getPack id, (pack, icons) =>
+      @_info = pack
+      @icons = icons
       @reset()
       @$rootScope.$broadcast '$reselectMenuItem'
-    @icons = @$models.PackIcon.query 'pack': @info.id
 
 
 module.exports = PackController

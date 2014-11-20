@@ -12,17 +12,14 @@ class CollectionController
     @info = angular.copy @_info
 
   save: ->
-    @_info = @info
-    @_info.$save (info) =>
-      @_info = info
-      @reset()
-      @$rootScope.$broadcast '$collectionInfoUpdated'
+    angular.extend @_info, @info
+    @_info.$update()
 
   saveIconName: (icon) ->
     save = =>
       if icon.name and @iconNameChanged(icon)
         @iconNames[icon.id] = icon.name
-        icon.$save()
+        icon.$update()
     setTimeout save, 100
 
   iconNameChanged: (icon) ->
@@ -48,13 +45,16 @@ class CollectionController
       @_info.token = info.token
       @info.token = info.token
   
-  constructor: (@$routeParams, @$rootScope, @$models) ->
-    id = @$routeParams.id
-    @_info = @$models.Collection.get {id: id}, (pack) =>
+  constructor: (@$routeParams, @$rootScope, @$modelManager) ->
+    id = parseInt @$routeParams.id
+    @$modelManager.getCollection id, (collection, icons) =>
+      @_info = collection
+      @icons = icons
+      @iconNames = {}
+      @icons.$promise.then =>
+        @iconNames[icon.id] = icon.name for icon in icons
       @reset()
       @$rootScope.$broadcast '$reselectMenuItem'
-    @icons = @$models.CollectionIcon.query 'collection': @info.id, (icons) =>
-      @iconNames[icon.id] = icon.name for icon in icons
 
 
 module.exports = CollectionController

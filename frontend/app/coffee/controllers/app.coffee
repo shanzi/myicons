@@ -11,10 +11,9 @@ class AppController
   openMenu: ->
     @$mdSidenav('left').open()
 
-  getCurrentUser: ->
-    @$models.User.current (user) => @currentUser = user
-
-  constructor: (@$mdSidenav, @$models) ->
-    @getCurrentUser()
+  constructor: (@$mdSidenav, @$modelManager) ->
+    @currentUser = @$modelManager.currentUser
+    @$modelManager.ready =>
+      console.log 'models ready'
 
 module.exports = AppController

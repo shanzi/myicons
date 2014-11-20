@@ -8,19 +8,17 @@ module.exports = ($resource) ->
 
   'Pack':
     $resource '/packs/:id/', {id: '@id'},
-      save:
+      update:
         method: 'PATCH'
 
   'PackIcon':
     $resource '/packicons/:id/', {id: '@id'},
-      save:
+      update:
         method: 'PATCH'
-      create:
-        method: 'POST'
 
   'Collection':
     $resource '/collections/:id/', {id: '@id'},
-      save:
+      update:
         method: 'PATCH'
       retoken:
         url: '/collections/:id/retoken/'
@@ -29,8 +27,6 @@ module.exports = ($resource) ->
 
   'CollectionIcon':
     $resource '/collectionicons/:id/', {id: '@id'},
-      save:
+      update:
         method: 'PATCH'
-      create:
-        method: 'POST'
 
