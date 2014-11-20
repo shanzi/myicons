@@ -237,10 +237,13 @@ module.exports = function($scope) {};
 var MenuController, MenuSection;
 
 MenuSection = (function() {
+  MenuSection.prototype.sectionIcon = '';
+
   MenuSection.prototype.isExpanded = false;
 
-  function MenuSection(name, items) {
+  function MenuSection(name, sectionIcon, items) {
     this.name = name;
+    this.sectionIcon = sectionIcon;
     this.items = items;
   }
 
@@ -306,7 +309,7 @@ MenuController = (function() {
     this.$rootScope = $rootScope;
     this.$location = $location;
     this.$models = $models;
-    this.home = new MenuSection('home', [
+    this.home = new MenuSection('home', 'icon-home', [
       {
         id: 'dashboard',
         name: 'Dashboard'
@@ -315,8 +318,8 @@ MenuController = (function() {
         name: 'Settings'
       }
     ]);
-    this.packs = new MenuSection('packs', this.$models.Pack.query());
-    this.collections = new MenuSection('collections', this.$models.Collection.query());
+    this.packs = new MenuSection('packs', 'icon-packs', this.$models.Pack.query());
+    this.collections = new MenuSection('collections', 'icon-collections', this.$models.Collection.query());
     this.sections = [this.home, this.packs, this.collections];
     this.$rootScope.$on('$locationChangeSuccess', (function(_this) {
       return function() {
@@ -417,7 +420,6 @@ PackController = (function() {
   };
 
   PackController.prototype.showIconInfo = function(icon) {
-    console.log(icon);
     return this.$mdBottomSheet.show({
       controller: PackIconInfoController,
       controllerAs: 'info',

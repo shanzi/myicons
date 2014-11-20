@@ -6,6 +6,9 @@
   <meta name="csrf-token" content="{{ csrf_token }}">
   <title>myicons</title>
   <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
+  {% if bootstrap %}
+  <link rel="stylesheet" href="/build/livetesting/{{ bootstrap }}.css" type="text/css">
+  {% endif %}
 </head>
 <body layout="horizontal">
 {% verbatim %}
@@ -15,9 +18,7 @@
     <div class="avatar-wrap">
       <img ng-src="{{ app.gravatar(app.currentUser.email) }}" alt="">
     </div>
-    <div class="name-wrap">
-      {{ app.currentUser.username }}
-    </div>
+    <div class="name-wrap" ng-bind="app.currentUser.username"></div>
   </div>
   </md-toolbar>
 
@@ -25,8 +26,10 @@
   <div ng-repeat="section in menu.sections">
     <div ink-ripple class="menu-item menu-title"
       ng-class="{active: menu.isSelectedSection(section)}"
-      ng-click="section.toggleExpand()">
-      {{ section.name }}
+      ng-click="section.toggleExpand()"
+      >
+      <i ng-class="section.sectionIcon" class="menu-icon"></i>
+      <span ng-bind="section.name"></span>
     </div>
     <a 
       ink-ripple
@@ -35,9 +38,9 @@
       ng-click="menu.goto(section, item)"
       ng-repeat="item in section.items"
       ng-class="{active: menu.isSelectedItem(section, item)}"
+      ng-bind="item.name"
       aria-hidden="false"
       >
-      {{ item.name }}
     </a>
   </div>
   </md-content>

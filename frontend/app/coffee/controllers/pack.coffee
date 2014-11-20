@@ -36,7 +36,6 @@ class PackController
     angular.equals @info, @_info
 
   showIconInfo: (icon) ->
-    console.log icon
     @$mdBottomSheet.show
       controller: PackIconInfoController
       controllerAs: 'info'

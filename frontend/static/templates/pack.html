@@ -1,21 +1,21 @@
 <md-toolbar class="md-medium-tall view-toolbar">
 <div class="md-toolbar-tools" ng-click="app.openMenu()">
-  <button class="menu-icon" hide-md aria-label="Toggle Menu">
-    MENU
-  </button>
+  <md-button class="menu-icon" hide-md aria-label="Toggle Menu">
+  <i class="icon-menu"></i>
+  </md-button>
   <p>Packs</p>
   <h1>{{ pack.info.name }}</h1>
 </div>
 <div class="md-toolbar-tools toolbar-tabs">
   <span flex></span>
   <div class="tab-item" ink-ripple ng-class="{active: pack.isTab('icons')}" ng-click="pack.setTab('icons')">
-    icons
+    <i class="icon-icons"></i> icons
   </div>
   <div class="tab-item" ink-ripple ng-class="{active: pack.isTab('info')}" ng-click="pack.setTab('info')">
-    info
+    <i class="icon-infomation"></i> info
   </div>
   <div class="tab-item" ink-ripple ng-class="{active: pack.isTab('revisions')}" ng-click="pack.setTab('revisions')">
-    revisions
+    <i class="icon-revisions"></i> revisions
   </div>
 </div>
 </md-toolbar>

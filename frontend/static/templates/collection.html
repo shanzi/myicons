@@ -1,21 +1,21 @@
 <md-toolbar class="md-medium-tall view-toolbar">
 <div class="md-toolbar-tools" ng-click="app.openMenu()">
-  <button class="menu-icon" hide-md aria-label="Toggle Menu">
-    MENU
-  </button>
+  <md-button class="menu-icon" hide-md aria-label="Toggle Menu">
+  <i class="icon-menu"></i>
+  </md-button>
   <p>Collections</p>
   <h1>{{ collection.info.name }}</h1>
 </div>
 <div class="md-toolbar-tools toolbar-tabs">
   <span flex></span>
   <div class="tab-item" ink-ripple ng-class="{active: collection.isTab('icons')}" ng-click="collection.setTab('icons')">
-    icons
+    <i class="icon-icons"></i> icons
   </div>
   <div class="tab-item" ink-ripple ng-class="{active: collection.isTab('info')}" ng-click="collection.setTab('info')">
-    info
+    <i class="icon-infomation"></i> info
   </div>
   <div class="tab-item" ink-ripple ng-class="{active: collection.isTab('revisions')}" ng-click="collection.setTab('revisions')">
-    revisions
+    <i class="icon-revisions"></i> revisions
   </div>
 </div>
 </md-toolbar>

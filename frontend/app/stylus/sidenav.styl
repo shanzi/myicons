@@ -1,5 +1,4 @@
 .md-sidenav-left
-  width 200px
   z-index 8
 
   a 
@@ -25,7 +24,7 @@
     display block
     cursor pointer
     line-height 40px
-    padding 0 15px
+    padding 0 15px 0 40px
     position relative
     text-overflow ellipsis
     transition 0.2s ease-out
@@ -33,11 +32,14 @@
     overflow hidden
     white-space nowrap
 
-
     &.menu-title
+      padding-left 15px
       text-transform uppercase
-
 
     &.ng-hide
       opacity 0
       height 0
+
+    .menu-icon
+      font-size 18px
+      width 20px

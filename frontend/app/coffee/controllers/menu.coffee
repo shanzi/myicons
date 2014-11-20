@@ -1,7 +1,9 @@
 class MenuSection
+  sectionIcon: ''
+
   isExpanded: false
 
-  constructor: (@name, @items) ->
+  constructor: (@name, @sectionIcon, @items) ->
 
   pathForItem: (item) -> "/#{@name}/#{item.id}"
 
@@ -32,12 +34,12 @@ class MenuController
           @currentSection.isExpanded = true
 
   constructor: (@$rootScope, @$location, @$models) ->
-    @home = new MenuSection 'home', [
+    @home = new MenuSection 'home', 'icon-home', [
       {id: 'dashboard', name: 'Dashboard'},
       {id: 'settings', name: 'Settings'}
     ]
-    @packs = new MenuSection 'packs', @$models.Pack.query()
-    @collections = new MenuSection 'collections', @$models.Collection.query()
+    @packs = new MenuSection 'packs', 'icon-packs', @$models.Pack.query()
+    @collections = new MenuSection 'collections', 'icon-collections', @$models.Collection.query()
 
     @sections = [@home, @packs, @collections]
 
