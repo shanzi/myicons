@@ -12,7 +12,7 @@
     <i class="icon-icons"></i> icons
   </div>
   <div class="tab-item" ink-ripple ng-class="{active: collection.isTab('info')}" ng-click="collection.setTab('info')">
-    <i class="icon-infomation"></i> info
+    <i class="icon-information"></i> info
   </div>
   <div class="tab-item" ink-ripple ng-class="{active: collection.isTab('revisions')}" ng-click="collection.setTab('revisions')">
     <i class="icon-revisions"></i> revisions
@@ -34,16 +34,19 @@
         <div class="md-tile-content">
           <div class="icon-actions">
             <p>ACTIONS</p>
-            <md-button class="md-primary" aria-label="edit">Edit</md-button>
-            <md-button class="md-danger" aria-label="delete" ng-click="collection.deleteIcon(icon)">Delete</md-button>
+            <md-button class="md-warn"
+              ng-disabled="!collection.iconNameChanged(icon)" 
+              ng-click="collection.iconNameReset(icon)"
+              aria-label="Reset"
+              >
+              <i class="icon-reset-o"></i>
+            </md-button>
+            <md-button class="md-danger" aria-label="delete" ng-click="collection.deleteIcon(icon)">
+              <i class="icon-delete-o"></i>
+            </md-button>
           </div>
           <p class="icon-name-label">
           ICON NAME
-          <md-button class="md-warn"
-            ng-show="collection.iconNameChanged(icon)" 
-            ng-click="collection.iconNameReset(icon)"
-            aria-label="Reset"
-            >reset</md-button>
           </p>
           <div class="icon-info">
             <span ng-if="collection.info.prefix">{{ collection.info.prefix }}-</span><input

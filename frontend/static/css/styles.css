@@ -217,12 +217,16 @@
   color: #fc2607;
 }
 .collection-icons .icon-item .icon-actions {
-  width: 80px;
+  width: 64px;
   float: right;
-  padding: 5px;
 }
 .collection-icons .icon-item .icon-actions button {
-  padding: 2px;
+  padding: 0;
+  margin-right: 5px;
+}
+.collection-icons .icon-item .icon-actions i {
+  font-size: 30px;
+  line-height: 36px;
 }
 .collection-info .row {
   padding: 30px;
