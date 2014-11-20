@@ -27,6 +27,6 @@ class ZIPPackViewSet(viewsets.ReadOnlyModelViewSet):
         response = viewsets.ReadOnlyModelViewSet.finalize_response(self, request, response, *args, **kwargs)
         obj = self.get_object()
         if obj:
-            response['content-disposition'] = 'attachment; filename=%s.zip' % obj.name
+            response['content-disposition'] = 'attachment; filename="%s.zip"' % obj.name
         return response
 
