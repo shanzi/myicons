@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>{{ name }} | cheatsheet</title>
-  <link rel="stylesheet" href="{{ token }}.css" type="text/css" charset="utf-8" />
+  {% if production %}
+    <link rel="stylesheet" href="css/{{ build_name }}.min.css" type="text/css" charset="utf-8" />
+  {% else %}
+    <link rel="stylesheet" href="{{ token }}.css" type="text/css" charset="utf-8" />
+  {% endif %}
   <style type="text/css" media="screen">
 * {box-sizing: border-box;}
 .main {
