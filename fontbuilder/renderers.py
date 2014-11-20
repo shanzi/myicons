@@ -12,7 +12,6 @@ class FontCSSRenderer(renderers.BaseRenderer):
     production = False
 
     def render(self, data, media_type=None, render_context=None):
-        print data
         data['production'] = self.production
         icons = data['icons']
         data['classnames'] = ', '.join('.' + icon['classname'] for icon in icons)
@@ -52,6 +51,16 @@ class BinaryFontRenderer(SVGFontRenderer):
         self.svgfile = svgfile
         return self.svgfile
 
+    def get_ttffile(self, data):
+        if self.ttffile: return self.get_ttffile
+        svtfile = self.get_svgfile()
+        svgfont = fontforge.open(svgfile.name)
+        ttffile = tempfile.NamedTemporaryFile(suffix='.ttf')
+        svgfont.generate(ttffile.name)
+        svgfont.close()
+        self.ttffile = ttffile
+        return self.ttffile
+
     def gen_binaryfont(self, fileformat, font):
         fontdata = ''
         tempfontfile = tempfile.NamedTemporaryFile(suffix=('.' + fileformat))
@@ -71,22 +80,3 @@ class BinaryFontRenderer(SVGFontRenderer):
 
 class WOFFRenderer(BinaryFontRenderer):
     format = 'woff'
-
-    def render(self, data, media_type=None, render_context=None):
-        # generate woff directly from svg may cause invalid error in firefox
-        # so we have to generate a ttf first and then translate it into woff
-
-        svgfile = self.get_svgfile(data)
-
-        svgfont = fontforge.open(svgfile.name)
-        ttftempfont = tempfile.NamedTemporaryFile(suffix='.ttf')
-        svgfont.generate(ttftempfont.name)
-        svgfont.close()
-        svgfile.close()
-
-        tfffont = fontforge.open(ttftempfont.name)
-        fontdata = self.gen_binaryfont(self.format, tfffont)
-        tfffont.close()
-
-        return fontdata
-
