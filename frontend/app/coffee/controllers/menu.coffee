@@ -3,6 +3,8 @@ class MenuSection
 
   isExpanded: false
 
+  addItemUrl: null
+
   constructor: (@name, @sectionIcon, @items) ->
 
   pathForItem: (item) -> "/#{@name}/#{item.id}"
@@ -40,6 +42,9 @@ class MenuController
     ]
     @packs = new MenuSection 'packs', 'icon-packs', @$modelManager.packs
     @collections = new MenuSection 'collections', 'icon-collections', @$modelManager.collections
+
+    @packs.addItemUrl = '#/packs/add'
+    @collections.addItemUrl = '#/collections/add'
 
     @sections = [@home, @packs, @collections]
 

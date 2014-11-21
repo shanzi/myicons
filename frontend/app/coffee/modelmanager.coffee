@@ -41,5 +41,10 @@ class ModelManger
     newIcon.$save =>
       callback newIcon if callback
 
+  deleteCollection: (col) ->
+    idx = @collections.indexOf col
+    @collections.splice(idx, 1)
+    col.$delete()
+
 module.exports = ($resource, $q) =>
   new ModelManger($resource, $q)

@@ -65,7 +65,7 @@
   <div class="collection-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
     <form name="form">
       <div class="row" >
-        <md-text-float label="Name" ng-model="collection.info.name" required> </md-text-float>
+        <md-text-float label="Name" ng-model="collection.info.name" required pattern="^[a-zA-Z][\x00-\x7F]{0,127}$"> </md-text-float>
         <div layout="vertical" layout-md="horizontal">
           <md-text-float label="Build Name" ng-model="collection.info.build_name" required pattern="^[a-zA-Z][a-zA-Z0-9]{0,127}$" flex> </md-text-float>
           <md-text-float label="Class Prefix" ng-model="collection.info.prefix" pattern="^[a-z][a-z0-9]{0,15}$" flex> </md-text-float>
@@ -87,6 +87,18 @@
         </a>
         <md-button aria-label class="md-warn" ng-click="collection.reset()" ng-disabled="collection.unchanged()">Reset</md-button>
         <md-button aria-label class="md-safe" ng-click="collection.save()" ng-disabled="form.$invalid || collection.unchanged()">Save</md-button>
+      </div>
+      <div class="row delete-action">
+        <button
+          ink-ripple
+          class="delete-button"
+          ng-click="collection.delete()"
+          >Delete this Collection</button>
+        <p>
+        Once deleted, the live testing url to this collection will be invalid.
+        Deletion can be undo in the revisions panel of <a href="#/home/dashboard">dashboard</a>
+        , but you should still be careful with this action.
+        </p>
       </div>
     </form>
   </div>

@@ -1,0 +1,37 @@
+<md-toolbar class="md-medium-tall view-toolbar">
+<div class="md-toolbar-tools" ng-click="app.openMenu()">
+  <md-button class="menu-icon" hide-md aria-label="Toggle Menu">
+  <i class="icon-menu"></i>
+  </md-button>
+  <p>Collections</p>
+  <h1>Add</h1>
+</div>
+</md-toolbar>
+<md-content class="md-content-padding" flex>
+<div class="collection-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
+    <form name="form">
+      <div class="row">
+        <h3>Create a new collection</h3>
+        <p class="description">
+        A collection is used to organize icons from your packs. You can add, rename, delete icons in your
+        collections.  A collection can be built as a new icon font.
+        </p>
+        <p>
+        Once created, a live testing url of the collection will also be generated that allows you to test the displaying
+        of the icons in your pages on the run.
+        </p>
+      </div>
+      <div class="row" >
+        <md-text-float label="Name" ng-model="collection.info.name" required pattern="^[a-zA-Z][\x00-\x7F]{0,127}$"></md-text-float>
+        <div layout="vertical" layout-md="horizontal">
+          <md-text-float label="Build Name" ng-model="collection.info.build_name" required pattern="^[a-zA-Z][a-zA-Z0-9]{0,127}$" flex> </md-text-float>
+          <md-text-float label="Class Prefix" ng-model="collection.info.prefix" pattern="^[a-z][a-z0-9]{0,15}$" flex> </md-text-float>
+        </div>
+      </div>
+      <div class="row actions">
+        <md-button aria-label class="md-warn" ng-click="collection.reset()" ng-disabled="collection.unchanged()">Reset</md-button>
+        <md-button aria-label class="md-safe" ng-click="collection.save()" ng-disabled="form.$invalid || collection.unchanged()">Save</md-button>
+      </div>
+    </form>
+  </div>
+</md-content>

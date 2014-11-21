@@ -44,8 +44,14 @@ class CollectionController
     @info.$retoken (info) =>
       @_info.token = info.token
       @info.token = info.token
+
+  delete: ->
+    ok = confirm 'Are you sure?'
+    if ok
+      @$modelManager.deleteCollection @_info
+      @$location.path('#/home/dashboard')
   
-  constructor: (@$routeParams, @$rootScope, @$modelManager) ->
+  constructor: (@$routeParams, @$rootScope, @$location, @$modelManager) ->
     id = parseInt @$routeParams.id
     @$modelManager.getCollection id, (collection, icons) =>
       @_info = collection

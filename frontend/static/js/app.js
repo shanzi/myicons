@@ -1,5 +1,5 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var appCtrl, collectionCtrl, dashboardCtrl, menuCtrl, modelManager, packCtrl, settingsCtrl, template;
+var appCtrl, collectionAddCtrl, collectionCtrl, dashboardCtrl, menuCtrl, modelManager, packCtrl, settingsCtrl, template;
 
 window.Hammer = require('hammer');
 
@@ -25,6 +25,8 @@ packCtrl = require('./controllers/pack');
 
 collectionCtrl = require('./controllers/collection');
 
+collectionAddCtrl = require('./controllers/collection_add');
+
 settingsCtrl = require('./controllers/settings');
 
 dashboardCtrl = require('./controllers/dashboard');
@@ -35,7 +37,7 @@ template = function(name) {
   return "/static/templates/" + name + ".html";
 };
 
-angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('collectionCtrl', collectionCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
+angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('collectionCtrl', collectionCtrl).controller('collectionAddCtrl', collectionAddCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
   $routeProvider.when('/home/dashboard', {
     templateUrl: template('dashboard'),
     controller: 'DashboardCtrl'
@@ -46,6 +48,10 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-lo
     templateUrl: template('pack'),
     controller: 'packCtrl',
     controllerAs: 'pack'
+  }).when('/collections/add', {
+    templateUrl: template('collection_add'),
+    controller: 'collectionAddCtrl',
+    controllerAs: 'collection'
   }).when('/collections/:id', {
     templateUrl: template('collection'),
     controller: 'collectionCtrl',
@@ -64,7 +70,7 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-lo
 
 
 
-},{"./controllers/app":2,"./controllers/collection":3,"./controllers/dashboard":4,"./controllers/menu":5,"./controllers/pack":6,"./controllers/settings":7,"./modelmanager":9,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
+},{"./controllers/app":2,"./controllers/collection":3,"./controllers/collection_add":4,"./controllers/dashboard":5,"./controllers/menu":6,"./controllers/pack":7,"./controllers/settings":8,"./modelmanager":10,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
 var AppController, md5;
 
 md5 = require('../deps/md5.js');
@@ -106,7 +112,7 @@ module.exports = AppController;
 
 
 
-},{"../deps/md5.js":8}],3:[function(require,module,exports){
+},{"../deps/md5.js":9}],3:[function(require,module,exports){
 var CollectionController;
 
 CollectionController = (function() {
@@ -182,10 +188,20 @@ CollectionController = (function() {
     })(this));
   };
 
-  function CollectionController($routeParams, $rootScope, $modelManager) {
+  CollectionController.prototype["delete"] = function() {
+    var ok;
+    ok = confirm('Are you sure?');
+    if (ok) {
+      this.$modelManager.deleteCollection(this._info);
+      return this.$location.path('#/home/dashboard');
+    }
+  };
+
+  function CollectionController($routeParams, $rootScope, $location, $modelManager) {
     var id;
     this.$routeParams = $routeParams;
     this.$rootScope = $rootScope;
+    this.$location = $location;
     this.$modelManager = $modelManager;
     id = parseInt(this.$routeParams.id);
     this.$modelManager.getCollection(id, (function(_this) {
@@ -217,17 +233,54 @@ module.exports = CollectionController;
 
 
 },{}],4:[function(require,module,exports){
-module.exports = function($scope) {};
+var CollectionAddController;
+
+CollectionAddController = (function() {
+  CollectionAddController.prototype.info = {};
+
+  CollectionAddController.prototype._info = {};
+
+  CollectionAddController.prototype.reset = function() {
+    return this.info = {};
+  };
+
+  CollectionAddController.prototype.save = function() {
+    return this.$modelManager.addCollection(this.info, (function(_this) {
+      return function(collection) {
+        _this.reset();
+        return _this.$location.path("/collections/" + collection.id);
+      };
+    })(this));
+  };
+
+  function CollectionAddController($location, $modelManager) {
+    this.$location = $location;
+    this.$modelManager = $modelManager;
+    this.reset();
+  }
+
+  return CollectionAddController;
+
+})();
+
+module.exports = CollectionAddController;
 
 
 
 },{}],5:[function(require,module,exports){
+module.exports = function($scope) {};
+
+
+
+},{}],6:[function(require,module,exports){
 var MenuController, MenuSection;
 
 MenuSection = (function() {
   MenuSection.prototype.sectionIcon = '';
 
   MenuSection.prototype.isExpanded = false;
+
+  MenuSection.prototype.addItemUrl = null;
 
   function MenuSection(name, sectionIcon, items) {
     this.name = name;
@@ -308,6 +361,8 @@ MenuController = (function() {
     ]);
     this.packs = new MenuSection('packs', 'icon-packs', this.$modelManager.packs);
     this.collections = new MenuSection('collections', 'icon-collections', this.$modelManager.collections);
+    this.packs.addItemUrl = '#/packs/add';
+    this.collections.addItemUrl = '#/collections/add';
     this.sections = [this.home, this.packs, this.collections];
     this.$rootScope.$on('$reselectMenuItem', (function(_this) {
       return function() {
@@ -324,7 +379,7 @@ module.exports = MenuController;
 
 
 
-},{}],6:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 var PackController, PackIconInfoController;
 
 PackIconInfoController = (function() {
@@ -417,12 +472,12 @@ module.exports = PackController;
 
 
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 module.exports = function($scope) {};
 
 
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 /*
  * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
  * Digest Algorithm, as defined in RFC 1321.
@@ -682,7 +737,7 @@ function binl2b64(binarray)
 
 module.exports = hex_md5;
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 var ModelManger, models;
 
 models = require('./models');
@@ -764,6 +819,13 @@ ModelManger = (function() {
     })(this));
   };
 
+  ModelManger.prototype.deleteCollection = function(col) {
+    var idx;
+    idx = this.collections.indexOf(col);
+    this.collections.splice(idx, 1);
+    return col.$delete();
+  };
+
   return ModelManger;
 
 })();
@@ -776,7 +838,7 @@ module.exports = (function(_this) {
 
 
 
-},{"./models":10}],10:[function(require,module,exports){
+},{"./models":11}],11:[function(require,module,exports){
 module.exports = function($resource) {
   return {
     'User': $resource('/accounts/users/:username/', {

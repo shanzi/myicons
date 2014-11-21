@@ -35,6 +35,15 @@
   padding-left: 15px;
   text-transform: uppercase;
 }
+.md-sidenav-left .menu-item.menu-title .add-item {
+  display: inline-block;
+  float: right;
+  opacity: 0.5;
+  transition: opacity 0.2s ease-out;
+}
+.md-sidenav-left .menu-item.menu-title .add-item:hover {
+  opacity: 0.9;
+}
 .md-sidenav-left .menu-item.ng-hide {
   opacity: 0;
   height: 0;
@@ -269,6 +278,21 @@
 .collection-info .download-collection i {
   font-size: 28px;
   width: 25px;
+}
+.collection-info .row.delete-action {
+  color: #ff5f00;
+}
+.collection-info .row.delete-action a {
+  color: inherit;
+}
+.collection-info .row.delete-action button.delete-button {
+  position: relative;
+  color: #ff5f00;
+  width: 100%;
+  padding: 10px;
+  background: #fff;
+  border-radius: 3px;
+  border: #ff5f00 1px solid;
 }
 .md-sidenav-left.md-mydark-theme {
   color: #ccc;

@@ -28,6 +28,12 @@
       ng-class="{active: menu.isSelectedSection(section)}"
       ng-click="section.toggleExpand()"
       >
+      <a
+        class="add-item"
+        ng-if="section.addItemUrl"
+        ng-href="{{ section.addItemUrl }}">
+        <i class="icon-add"></i>
+      </a>
       <i ng-class="section.sectionIcon" class="menu-icon"></i>
       <span ng-bind="section.name"></span>
     </div>
