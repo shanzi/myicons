@@ -1,0 +1,60 @@
+<md-toolbar class="md-medium-tall view-toolbar">
+<div class="md-toolbar-tools" ng-click="app.openMenu()">
+  <md-button class="menu-icon" hide-md aria-label="Toggle Menu">
+  <i class="icon-menu"></i>
+  </md-button>
+  <p>Packs</p>
+  <h1>Add</h1>
+</div>
+</md-toolbar>
+<md-content class="md-content-padding" flex>
+<div class="pack-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
+  <form name="form">
+    <div class="row">
+      <div class="upload-font"
+        ng-file-drop="pack.fontFileSelected($files)"
+        ng-file-drag-over-class="upload-drag-over"
+        ng-class="pack.fontStatus"
+        >
+        <div class="upload-symbol">
+          <i class="icon-packs"></i>
+        </div>
+        <div class="upload-info" ng-bind="pack.fontInfo()"></div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="upload-css"
+        ng-file-drop="pack.cssFileSelected($files)"
+        ng-file-drag-over-class="upload-drag-over"
+        ng-class="pack.cssStatus"
+        >
+        <div class="upload-symbol">
+          <i class="icon-css-code"></i>
+        </div>
+        <div class="upload-info" ng-bind="pack.cssInfo()"></div>
+      </div>
+    </div>
+    <div class="row" >
+      <md-text-float label="Name" ng-model="pack.info.name" required> </md-text-float>
+    </div>
+    <div class="row" layout="vertical" layout-sm="horizontal" >
+      <md-text-float label="Author" ng-model="pack.info.author" required flex> </md-text-float>
+      <md-text-float label="Email" type="email" ng-model="pack.info.author_email" required flex> </md-text-float>
+    </div>
+    <div class="row" layout="vertical">
+      <md-text-float label="Website" type="url" ng-model="pack.info.website" required url> </md-text-float>
+      <md-text-float label="Github" type="url" ng-model="pack.info.github" url> </md-text-float>
+      <md-text-float label="CDN" type="url" ng-model="pack.info.cdn" url> </md-text-float>
+    </div>
+    <div class="row" layout="vertical">
+      <md-text-float label="License" ng-model="pack.info.license" required maxlength="64"> </md-text-float>
+    </div>
+    <div class="row actions">
+      <md-button aria-label class="md-warn" ng-click="pack.reset()">Reset</md-button>
+      <md-button aria-label class="md-safe" ng-click="pack.save()"
+      >Save</md-button>
+    </div>
+  </form>
+
+</div>
+</md-content>

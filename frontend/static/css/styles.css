@@ -126,6 +126,54 @@
   text-align: right;
   font-size: 1.5em;
 }
+.pack-info .upload-symbol {
+  font-size: 150px;
+}
+.pack-info .upload-info {
+  padding: 20px;
+}
+.pack-info .upload-font,
+.pack-info .upload-css {
+  text-align: center;
+  background: #ddd;
+  color: #999;
+  border: #ccc 1px solid;
+  transition: background 0.2s ease-out;
+}
+.pack-info .upload-font.upload-drag-over,
+.pack-info .upload-css.upload-drag-over {
+  background: #eee;
+}
+.pack-info .upload-font.success,
+.pack-info .upload-css.success {
+  background: #bdffbd;
+  border-color: #89ff89;
+  color: #36d735;
+}
+.pack-info .upload-font.success.upload-drag-over,
+.pack-info .upload-css.success.upload-drag-over {
+  background: #d8ffea;
+}
+.pack-info .upload-font.error,
+.pack-info .upload-css.error {
+  background: #ffbea2;
+  border-color: #ff956b;
+  color: #d8653b;
+}
+.pack-info .upload-font.error.upload-drag-over,
+.pack-info .upload-css.error.upload-drag-over {
+  background: #ffe8e1;
+}
+.pack-info .upload-font.processing,
+.pack-info .upload-css.processing {
+  background: #fdffb1;
+  border-color: #fbff45;
+  color: #ffc108;
+}
+.pack-info .upload-font.processing.upload-drag-over,
+.pack-info .upload-css.processing.upload-drag-over {
+  background: #fdffb1;
+}
 .pack-icon-info .item-info {
   height: 200px;
   display: none;

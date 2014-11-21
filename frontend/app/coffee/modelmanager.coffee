@@ -27,8 +27,10 @@ class ModelManger
           return
 
   addPack: (pack, callback) ->
-    # TODO: implement add pack
-    #
+    newPack = new @$models.Pack pack
+    newPack.$save =>
+      @packs.push newPack
+      callback newPack if callback
 
   addCollection: (collection, callback) ->
     newCollection = new @$models.Collection collection

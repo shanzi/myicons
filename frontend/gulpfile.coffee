@@ -27,6 +27,8 @@ gulp.task 'coffee', () ->
     .require bower('angular-resource/angular-resource.min.js'), expose: 'angular.resource'
     .require bower('angular-material/angular-material.min.js'), expose: 'angular.material'
     .require bower('angular-loading-bar/build/loading-bar.min.js'), expose: 'angular.loadingbar'
+    .require bower('danialfarid-angular-file-upload/dist/angular-file-upload.min.js'), expose: 'angular.fileupload'
+    .require bower('danialfarid-angular-file-upload/dist/angular-file-upload-shim.min.js'), expose: 'angular.fileuploadshim'
     .add './main.coffee'
     .transform 'coffeeify'
     .bundle()

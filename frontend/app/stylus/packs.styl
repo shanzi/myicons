@@ -41,6 +41,46 @@
     text-align right
     font-size 1.5em
 
+  .upload-symbol
+    font-size 150px
+
+  .upload-info
+    padding 20px
+
+  .upload-font, .upload-css
+    text-align center
+    background #ddd
+    color #999
+    border #ccc 1px solid
+    transition background 0.2s ease-out
+
+    &.upload-drag-over
+      background #eee
+
+    &.success
+      background #BDFFBD
+      border-color #89FF89
+      color #36D735
+
+      &.upload-drag-over
+        background #D8FFEA
+
+    &.error
+      background #FFBEA2
+      border-color #FF956B
+      color #D8653B
+
+      &.upload-drag-over
+        background #FFE8E1
+
+    &.processing
+      background #FDFFB1
+      border-color #FBFF45
+      color #FFC108
+
+      &.upload-drag-over
+        background #FDFFB1
+
 .pack-icon-info
   .item-info
     height 200px

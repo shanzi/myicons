@@ -1,6 +1,5 @@
 class CollectionAddController
   info: {}
-  _info: {}
   
   reset: ->
     @info = {}

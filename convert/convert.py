@@ -70,8 +70,8 @@ def font(filepath):
         glyphs.append({
             'name': name,
             'width': width,
-            'unicode': unicode_as_int,
-            'd': d
+            'svg_unicode': unicode_as_int,
+            'svg_d': d
             })
 
     content = {
@@ -169,7 +169,7 @@ def icon(filepath):
         return {
             'viewBox': (0, 0,BASE_ASCENT, BASE_ASCENT),
             'boundingBox': bbox,
-            'd': d
+            'svg_d': d
             }
 
 

@@ -1,7 +1,9 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var appCtrl, collectionAddCtrl, collectionCtrl, dashboardCtrl, menuCtrl, modelManager, packCtrl, settingsCtrl, template;
+var appCtrl, collectionAddCtrl, collectionCtrl, dashboardCtrl, menuCtrl, modelManager, packAddCtrl, packCtrl, settingsCtrl, template;
 
 window.Hammer = require('hammer');
+
+require('angular.fileuploadshim');
 
 require('angular');
 
@@ -17,11 +19,15 @@ require('angular.material');
 
 require('angular.loadingbar');
 
+require('angular.fileupload');
+
 appCtrl = require('./controllers/app');
 
 menuCtrl = require('./controllers/menu');
 
 packCtrl = require('./controllers/pack');
+
+packAddCtrl = require('./controllers/pack_add');
 
 collectionCtrl = require('./controllers/collection');
 
@@ -37,13 +43,17 @@ template = function(name) {
   return "/static/templates/" + name + ".html";
 };
 
-angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('collectionCtrl', collectionCtrl).controller('collectionAddCtrl', collectionAddCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
+angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar', 'angularFileUpload']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('packAddCtrl', packAddCtrl).controller('collectionCtrl', collectionCtrl).controller('collectionAddCtrl', collectionAddCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
   $routeProvider.when('/home/dashboard', {
     templateUrl: template('dashboard'),
     controller: 'DashboardCtrl'
   }).when('/home/settings', {
     templateUrl: template('settings'),
     controller: 'SettingsCtrl'
+  }).when('/packs/add', {
+    templateUrl: template('pack_add'),
+    controller: 'packAddCtrl',
+    controllerAs: 'pack'
   }).when('/packs/:id', {
     templateUrl: template('pack'),
     controller: 'packCtrl',
@@ -70,7 +80,7 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-lo
 
 
 
-},{"./controllers/app":2,"./controllers/collection":3,"./controllers/collection_add":4,"./controllers/dashboard":5,"./controllers/menu":6,"./controllers/pack":7,"./controllers/settings":8,"./modelmanager":10,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
+},{"./controllers/app":2,"./controllers/collection":3,"./controllers/collection_add":4,"./controllers/dashboard":5,"./controllers/menu":6,"./controllers/pack":7,"./controllers/pack_add":8,"./controllers/settings":9,"./modelmanager":11,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.fileupload":"angular.fileupload","angular.fileuploadshim":"angular.fileuploadshim","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
 var AppController, md5;
 
 md5 = require('../deps/md5.js');
@@ -112,7 +122,7 @@ module.exports = AppController;
 
 
 
-},{"../deps/md5.js":9}],3:[function(require,module,exports){
+},{"../deps/md5.js":10}],3:[function(require,module,exports){
 var CollectionController;
 
 CollectionController = (function() {
@@ -237,8 +247,6 @@ var CollectionAddController;
 
 CollectionAddController = (function() {
   CollectionAddController.prototype.info = {};
-
-  CollectionAddController.prototype._info = {};
 
   CollectionAddController.prototype.reset = function() {
     return this.info = {};
@@ -473,11 +481,165 @@ module.exports = PackController;
 
 
 },{}],8:[function(require,module,exports){
-module.exports = function($scope) {};
+var PackAddController;
+
+PackAddController = (function() {
+  PackAddController.prototype.info = {};
+
+  PackAddController.prototype.fontStatus = '';
+
+  PackAddController.prototype.cssStatus = '';
+
+  PackAddController.prototype.icons = [];
+
+  PackAddController.prototype.iconNames = [];
+
+  PackAddController.prototype.reset = function() {
+    this.info = {};
+    this.icons = [];
+    this.iconNames = [];
+    this.fontStatus = '';
+    return this.cssStatus = '';
+  };
+
+  PackAddController.prototype.fontFileSelected = function(files) {
+    var fontfile;
+    if (files.length && this.fontStatus !== 'processing') {
+      fontfile = files[0];
+      if (!fontfile.name.match(/\.(ttf|woff|eot|svg)$/)) {
+        return this.fontStatus = 'error';
+      } else {
+        this.fontStatus = 'processing';
+        return this.$upload.upload({
+          url: '/convert/font/',
+          file: fontfile
+        }).success((function(_this) {
+          return function(data) {
+            _this.icons = data.content.glyphs;
+            _this.fontStatus = 'success';
+            return _this.info.name = data.content.fontname;
+          };
+        })(this)).error((function(_this) {
+          return function() {
+            return _this.fontStatus = 'error';
+          };
+        })(this));
+      }
+    }
+  };
+
+  PackAddController.prototype.cssFileSelected = function(files) {
+    var cssfile;
+    if (files.length && this.cssStatus !== 'processing') {
+      cssfile = files[0];
+      if (!cssfile.name.match(/\.css$/)) {
+        return this.cssStatus = 'error';
+      } else {
+        this.cssStatus = 'processing';
+        return this.$upload.upload({
+          url: '/convert/css',
+          file: cssfile
+        }).success((function(_this) {
+          return function(data) {
+            _this.iconNames = data.content;
+            return _this.cssStatus = 'success';
+          };
+        })(this)).error((function(_this) {
+          return function() {
+            return _this.cssStatus = 'error';
+          };
+        })(this));
+      }
+    }
+  };
+
+  PackAddController.prototype.fontInfo = function() {
+    if (this.fontStatus === 'error') {
+      return 'Invalid font file!';
+    } else if (this.fontStatus === 'success') {
+      return "" + this.icons.length + " icons detected";
+    } else if (this.fontStatus === 'processing') {
+      return 'Processing';
+    } else {
+      return 'Drag font(.ttf, .eot, .woff, .svg) file here to retrive all icons\' shape.';
+    }
+  };
+
+  PackAddController.prototype.cssInfo = function() {
+    if (this.cssStatus === 'error') {
+      return 'Invalid css file!';
+    } else if (this.cssStatus === 'success') {
+      return "" + this.iconNames.length + " icon names detected";
+    } else if (this.cssStatus === 'processing') {
+      return 'Processing';
+    } else {
+      return 'Drag StyleSheet(.css) file here to retrive all icon names.';
+    }
+  };
+
+  PackAddController.prototype.iconsInvalid = function() {
+    var _ref;
+    return !((this.cssStatus === (_ref = this.fontStatus) && _ref === 'success'));
+  };
+
+  PackAddController.prototype.pairIcons = function() {
+    var glyph, glyphDict, icon, icons, namepair, _i, _j, _len, _len1, _ref, _ref1;
+    glyphDict = {};
+    _ref = this.icons;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      glyph = _ref[_i];
+      glyphDict[glyph.svg_unicode] = glyph;
+    }
+    icons = [];
+    _ref1 = this.iconNames;
+    for (_j = 0, _len1 = _ref1.length; _j < _len1; _j++) {
+      namepair = _ref1[_j];
+      glyph = glyphDict[namepair.unicode];
+      if (glyph) {
+        icon = angular.copy(glyph);
+        icon.name = namepair.name;
+        icons.push(icon);
+      }
+    }
+    return icons;
+  };
+
+  PackAddController.prototype.save = function() {
+    var icons, info;
+    icons = this.pairIcons();
+    if (!icons.length > 0) {
+      return alert('Unmatched font and css, please upload the correct file!');
+    } else {
+      info = angular.copy(this.info);
+      info.icons = icons;
+      return this.$modelManager.addPack(info, (function(_this) {
+        return function(pack) {
+          return _this.$location.path("/pack/" + pack.id);
+        };
+      })(this));
+    }
+  };
+
+  function PackAddController($location, $modelManager, $upload) {
+    this.$location = $location;
+    this.$modelManager = $modelManager;
+    this.$upload = $upload;
+  }
+
+  return PackAddController;
+
+})();
+
+module.exports = PackAddController;
 
 
 
 },{}],9:[function(require,module,exports){
+module.exports = function($scope) {};
+
+
+
+},{}],10:[function(require,module,exports){
 /*
  * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
  * Digest Algorithm, as defined in RFC 1321.
@@ -737,7 +899,7 @@ function binl2b64(binarray)
 
 module.exports = hex_md5;
 
-},{}],10:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 var ModelManger, models;
 
 models = require('./models');
@@ -792,7 +954,18 @@ ModelManger = (function() {
     })(this));
   };
 
-  ModelManger.prototype.addPack = function(pack, callback) {};
+  ModelManger.prototype.addPack = function(pack, callback) {
+    var newPack;
+    newPack = new this.$models.Pack(pack);
+    return newPack.$save((function(_this) {
+      return function() {
+        _this.packs.push(newPack);
+        if (callback) {
+          return callback(newPack);
+        }
+      };
+    })(this));
+  };
 
   ModelManger.prototype.addCollection = function(collection, callback) {
     var newCollection;
@@ -838,7 +1011,7 @@ module.exports = (function(_this) {
 
 
 
-},{"./models":11}],11:[function(require,module,exports){
+},{"./models":12}],12:[function(require,module,exports){
 module.exports = function($resource) {
   return {
     'User': $resource('/accounts/users/:username/', {
@@ -936,6 +1109,12 @@ b)&&a.$watch(h,"radio"===n?k():l);break;case "range":c.config("ariaValue")&&(g.m
 !!a)});e("aria-invalid",b)&&a.$watch(function(){return d.$invalid},function(a){b.attr("aria-invalid",!!a)})}}}]).directive("ngDisabled",["$aria",function(c){return c.$$watchExpr("ngDisabled","aria-disabled")}]).directive("ngClick",h).directive("ngDblclick",h)})(window,window.angular);
 //# sourceMappingURL=angular-aria.min.js.map
 
+},{}],"angular.fileuploadshim":[function(require,module,exports){
+/*! 1.6.12 */
+!function(){var a=function(){try{var a=new ActiveXObject("ShockwaveFlash.ShockwaveFlash");if(a)return!0}catch(b){if(void 0!=navigator.mimeTypes["application/x-shockwave-flash"])return!0}return!1},b=function(a,b){window.XMLHttpRequest.prototype[a]=b(window.XMLHttpRequest.prototype[a])};if(window.XMLHttpRequest){if(!window.FormData||window.FileAPI&&FileAPI.forceLoad){var c=function(a){if(!a.__listeners){a.upload||(a.upload={}),a.__listeners=[];var b=a.upload.addEventListener;a.upload.addEventListener=function(c,d){a.__listeners[c]=d,b&&b.apply(this,arguments)}}};b("open",function(a){return function(b,d,e){c(this),this.__url=d;try{a.apply(this,[b,d,e])}catch(f){f.message.indexOf("Access is denied")>-1&&a.apply(this,[b,"_fix_for_ie_crossdomain__",e])}}}),b("getResponseHeader",function(a){return function(b){return this.__fileApiXHR&&this.__fileApiXHR.getResponseHeader?this.__fileApiXHR.getResponseHeader(b):null==a?null:a.apply(this,[b])}}),b("getAllResponseHeaders",function(a){return function(){return this.__fileApiXHR&&this.__fileApiXHR.getAllResponseHeaders?this.__fileApiXHR.getAllResponseHeaders():null==a?null:a.apply(this)}}),b("abort",function(a){return function(){return this.__fileApiXHR&&this.__fileApiXHR.abort?this.__fileApiXHR.abort():null==a?null:a.apply(this)}}),b("setRequestHeader",function(a){return function(b,d){if("__setXHR_"===b){c(this);var e=d(this);e instanceof Function&&e(this)}else this.__requestHeaders=this.__requestHeaders||{},this.__requestHeaders[b]=d,a.apply(this,arguments)}}),b("send",function(b){return function(){var c=this;if(arguments[0]&&arguments[0].__isShim){var d=arguments[0],e={url:c.__url,jsonp:!1,cache:!0,complete:function(a,b){c.__completed=!0,!a&&c.__listeners.load&&c.__listeners.load({type:"load",loaded:c.__loaded,total:c.__total,target:c,lengthComputable:!0}),!a&&c.__listeners.loadend&&c.__listeners.loadend({type:"loadend",loaded:c.__loaded,total:c.__total,target:c,lengthComputable:!0}),"abort"===a&&c.__listeners.abort&&c.__listeners.abort({type:"abort",loaded:c.__loaded,total:c.__total,target:c,lengthComputable:!0}),void 0!==b.status&&Object.defineProperty(c,"status",{get:function(){return 0==b.status&&a&&"abort"!==a?500:b.status}}),void 0!==b.statusText&&Object.defineProperty(c,"statusText",{get:function(){return b.statusText}}),Object.defineProperty(c,"readyState",{get:function(){return 4}}),void 0!==b.response&&Object.defineProperty(c,"response",{get:function(){return b.response}});var d=b.responseText||(a&&0==b.status&&"abort"!==a?a:void 0);Object.defineProperty(c,"responseText",{get:function(){return d}}),Object.defineProperty(c,"response",{get:function(){return d}}),a&&Object.defineProperty(c,"err",{get:function(){return a}}),c.__fileApiXHR=b,c.onreadystatechange&&c.onreadystatechange()},fileprogress:function(a){if(a.target=c,c.__listeners.progress&&c.__listeners.progress(a),c.__total=a.total,c.__loaded=a.loaded,a.total===a.loaded){var b=this;setTimeout(function(){c.__completed||(c.getAllResponseHeaders=function(){},b.complete(null,{status:204,statusText:"No Content"}))},1e4)}},headers:c.__requestHeaders};e.data={},e.files={};for(var f=0;f<d.data.length;f++){var g=d.data[f];null!=g.val&&null!=g.val.name&&null!=g.val.size&&null!=g.val.type?e.files[g.key]=g.val:e.data[g.key]=g.val}setTimeout(function(){if(!a())throw'Adode Flash Player need to be installed. To check ahead use "FileAPI.hasFlash"';c.__fileApiXHR=FileAPI.upload(e)},1)}else b.apply(c,arguments)}})}else b("setRequestHeader",function(a){return function(b,c){if("__setXHR_"===b){var d=c(this);d instanceof Function&&d(this)}else a.apply(this,arguments)}});window.XMLHttpRequest.__isShim=!0}if(!window.FormData||window.FileAPI&&FileAPI.forceLoad){var d=function(b){if(!a())throw'Adode Flash Player need to be installed. To check ahead use "FileAPI.hasFlash"';var c=angular.element(b);if(!(c.attr("disabled")||c.hasClass("js-fileapi-wrapper")||null==b.getAttribute("ng-file-select")&&null==b.getAttribute("data-ng-file-select")))if(FileAPI.wrapInsideDiv){var d=document.createElement("div");d.innerHTML='<div class="js-fileapi-wrapper" style="position:relative; overflow:hidden"></div>',d=d.firstChild;var e=b.parentNode;e.insertBefore(d,b),e.removeChild(b),d.appendChild(b)}else c.addClass("js-fileapi-wrapper"),c.parent()[0].__file_click_fn_delegate_&&((""===c.parent().css("position")||"static"===c.parent().css("position"))&&c.parent().css("position","relative"),c.css("top",0).css("bottom",0).css("left",0).css("right",0).css("width","100%").css("height","100%").css("padding",0).css("margin",0),c.parent().unbind("click",c.parent()[0].__file_click_fn_delegate_))},e=function(a){return function(b){for(var c=FileAPI.getFiles(b),d=0;d<c.length;d++)void 0===c[d].size&&(c[d].size=0),void 0===c[d].name&&(c[d].name="file"),void 0===c[d].type&&(c[d].type="undefined");b.target||(b.target={}),b.target.files=c,b.target.files!=c&&(b.__files_=c),(b.__files_||b.target.files).item=function(a){return(b.__files_||b.target.files)[a]||null},a&&a.apply(this,[b])}},f=function(a,b){return("change"===b.toLowerCase()||"onchange"===b.toLowerCase())&&"file"==a.getAttribute("type")};HTMLInputElement.prototype.addEventListener&&(HTMLInputElement.prototype.addEventListener=function(a){return function(b,c,g,h){f(this,b)?(d(this),a.apply(this,[b,e(c),g,h])):a.apply(this,[b,c,g,h])}}(HTMLInputElement.prototype.addEventListener)),HTMLInputElement.prototype.attachEvent&&(HTMLInputElement.prototype.attachEvent=function(a){return function(b,c){f(this,b)?(d(this),window.jQuery?angular.element(this).bind("change",e(null)):a.apply(this,[b,e(c)])):a.apply(this,[b,c])}}(HTMLInputElement.prototype.attachEvent)),window.FormData=FormData=function(){return{append:function(a,b,c){this.data.push({key:a,val:b,name:c})},data:[],__isShim:!0}},function(){if(window.FileAPI||(window.FileAPI={}),FileAPI.forceLoad&&(FileAPI.html5=!1),!FileAPI.upload){var b,c,d,e,f,g=document.createElement("script"),h=document.getElementsByTagName("script");if(window.FileAPI.jsUrl)b=window.FileAPI.jsUrl;else if(window.FileAPI.jsPath)c=window.FileAPI.jsPath;else for(d=0;d<h.length;d++)if(f=h[d].src,e=f.indexOf("angular-file-upload-shim.js"),-1==e&&(e=f.indexOf("angular-file-upload-shim.min.js")),e>-1){c=f.substring(0,e);break}null==FileAPI.staticPath&&(FileAPI.staticPath=c),g.setAttribute("src",b||c+"FileAPI.min.js"),document.getElementsByTagName("head")[0].appendChild(g),FileAPI.hasFlash=a()}}(),FileAPI.disableFileInput=function(a,b){b?a.removeClass("js-fileapi-wrapper"):a.addClass("js-fileapi-wrapper")}}window.FileReader||(window.FileReader=function(){var a=this,b=!1;this.listeners={},this.addEventListener=function(b,c){a.listeners[b]=a.listeners[b]||[],a.listeners[b].push(c)},this.removeEventListener=function(b,c){a.listeners[b]&&a.listeners[b].splice(a.listeners[b].indexOf(c),1)},this.dispatchEvent=function(b){var c=a.listeners[b.type];if(c)for(var d=0;d<c.length;d++)c[d].call(a,b)},this.onabort=this.onerror=this.onload=this.onloadstart=this.onloadend=this.onprogress=null;var c=function(b,c){var d={type:b,target:a,loaded:c.loaded,total:c.total,error:c.error};return null!=c.result&&(d.target.result=c.result),d},d=function(d){if(b||(b=!0,a.onloadstart&&this.onloadstart(c("loadstart",d))),"load"===d.type){a.onloadend&&a.onloadend(c("loadend",d));var e=c("load",d);a.onload&&a.onload(e),a.dispatchEvent(e)}else if("progress"===d.type){var e=c("progress",d);a.onprogress&&a.onprogress(e),a.dispatchEvent(e)}else{var e=c("error",d);a.onerror&&a.onerror(e),a.dispatchEvent(e)}};this.readAsArrayBuffer=function(a){FileAPI.readAsBinaryString(a,d)},this.readAsBinaryString=function(a){FileAPI.readAsBinaryString(a,d)},this.readAsDataURL=function(a){FileAPI.readAsDataURL(a,d)},this.readAsText=function(a){FileAPI.readAsText(a,d)}})}();
+},{}],"angular.fileupload":[function(require,module,exports){
+/*! 1.6.12 */
+!function(){var a=angular.module("angularFileUpload",[]);a.service("$upload",["$http","$q","$timeout",function(a,b,c){function d(d){d.method=d.method||"POST",d.headers=d.headers||{},d.transformRequest=d.transformRequest||function(b,c){return window.ArrayBuffer&&b instanceof window.ArrayBuffer?b:a.defaults.transformRequest[0](b,c)};var e=b.defer();window.XMLHttpRequest.__isShim&&(d.headers.__setXHR_=function(){return function(a){a&&(d.__XHR=a,d.xhrFn&&d.xhrFn(a),a.upload.addEventListener("progress",function(a){e.notify(a)},!1),a.upload.addEventListener("load",function(a){a.lengthComputable&&e.notify(a)},!1))}}),a(d).then(function(a){e.resolve(a)},function(a){e.reject(a)},function(a){e.notify(a)});var f=e.promise;return f.success=function(a){return f.then(function(b){a(b.data,b.status,b.headers,d)}),f},f.error=function(a){return f.then(null,function(b){a(b.data,b.status,b.headers,d)}),f},f.progress=function(a){return f.then(null,null,function(b){a(b)}),f},f.abort=function(){return d.__XHR&&c(function(){d.__XHR.abort()}),f},f.xhr=function(a){return d.xhrFn=function(b){return function(){b&&b.apply(f,arguments),a.apply(f,arguments)}}(d.xhrFn),f},f}this.upload=function(b){b.headers=b.headers||{},b.headers["Content-Type"]=void 0,b.transformRequest=b.transformRequest||a.defaults.transformRequest;var c=new FormData,e=b.transformRequest,f=b.data;return b.transformRequest=function(a,c){if(f)if(b.formDataAppender)for(var d in f){var g=f[d];b.formDataAppender(a,d,g)}else for(var d in f){var g=f[d];if("function"==typeof e)g=e(g,c);else for(var h=0;h<e.length;h++){var i=e[h];"function"==typeof i&&(g=i(g,c))}a.append(d,g)}if(null!=b.file){var j=b.fileFormDataName||"file";if("[object Array]"===Object.prototype.toString.call(b.file))for(var k="[object String]"===Object.prototype.toString.call(j),h=0;h<b.file.length;h++)a.append(k?j:j[h],b.file[h],b.fileName&&b.fileName[h]||b.file[h].name);else a.append(j,b.file,b.fileName||b.file.name)}return a},b.data=c,d(b)},this.http=function(a){return d(a)}}]),a.directive("ngFileSelect",["$parse","$timeout",function(a,b){return function(c,d,e){var f=a(e.ngFileSelect);if("input"!==d[0].tagName.toLowerCase()||"file"!==(d.attr("type")&&d.attr("type").toLowerCase())){for(var g=angular.element('<input type="file">'),h=d[0].attributes,i=0;i<h.length;i++)"type"!==h[i].name.toLowerCase()&&g.attr(h[i].name,h[i].value);e.multiple&&g.attr("multiple","true"),g.css("width","1px").css("height","1px").css("opacity",0).css("position","absolute").css("filter","alpha(opacity=0)").css("padding",0).css("margin",0).css("overflow","hidden"),g.attr("__wrapper_for_parent_",!0),d.append(g),d[0].__file_click_fn_delegate_=function(){g[0].click()},d.bind("click",d[0].__file_click_fn_delegate_),d.css("overflow","hidden"),d=g}d.bind("change",function(a){var d,e,g=[];if(d=a.__files_||a.target.files,null!=d)for(e=0;e<d.length;e++)g.push(d.item(e));b(function(){f(c,{$files:g,$event:a})})})}}]),a.directive("ngFileDropAvailable",["$parse","$timeout",function(a,b){return function(c,d,e){if("draggable"in document.createElement("span")){var f=a(e.ngFileDropAvailable);b(function(){f(c)})}}}]),a.directive("ngFileDrop",["$parse","$timeout","$location",function(a,b,c){return function(d,e,f){function g(a){return/^[\000-\177]*$/.test(a)}function h(a,d){var e=[],f=a.dataTransfer.items;if(f&&f.length>0&&f[0].webkitGetAsEntry&&"file"!=c.protocol()&&f[0].webkitGetAsEntry().isDirectory)for(var h=0;h<f.length;h++){var j=f[h].webkitGetAsEntry();null!=j&&(g(j.name)?i(e,j):f[h].webkitGetAsEntry().isDirectory||e.push(f[h].getAsFile()))}else{var k=a.dataTransfer.files;if(null!=k)for(var h=0;h<k.length;h++)e.push(k.item(h))}!function m(a){b(function(){l?m(10):d(e)},a||0)}()}function i(a,b,c){if(null!=b)if(b.isDirectory){var d=b.createReader();l++,d.readEntries(function(d){for(var e=0;e<d.length;e++)i(a,d[e],(c?c:"")+b.name+"/");l--})}else l++,b.file(function(b){l--,b._relativePath=(c?c:"")+b.name,a.push(b)})}if("draggable"in document.createElement("span")){var j=null;e[0].addEventListener("dragover",function(c){if(c.preventDefault(),b.cancel(j),!e[0].__drag_over_class_)if(f.ngFileDragOverClass&&f.ngFileDragOverClass.search(/\) *$/)>-1){var g=a(f.ngFileDragOverClass)(d,{$event:c});e[0].__drag_over_class_=g}else e[0].__drag_over_class_=f.ngFileDragOverClass||"dragover";e.addClass(e[0].__drag_over_class_)},!1),e[0].addEventListener("dragenter",function(a){a.preventDefault()},!1),e[0].addEventListener("dragleave",function(){j=b(function(){e.removeClass(e[0].__drag_over_class_),e[0].__drag_over_class_=null},f.ngFileDragOverDelay||1)},!1);var k=a(f.ngFileDrop);e[0].addEventListener("drop",function(a){a.preventDefault(),e.removeClass(e[0].__drag_over_class_),e[0].__drag_over_class_=null,h(a,function(b){k(d,{$files:b,$event:a})})},!1);var l=0}}}])}();
 },{}],"angular.loadingbar":[function(require,module,exports){
 /*! 
  * angular-loading-bar v0.6.0
