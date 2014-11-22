@@ -180,15 +180,15 @@ pack-icons .icon:hover {
 .pack-icon-info .item-info {
   height: 200px;
 }
-@media (min-width: 600px) {
-  .pack-icon-info .item-info[show-sm] {
-    display: block;
-  }
-}
 .pack-icon-info .item-info .icon {
   height: 160px;
   padding: 10px;
   display: none;
+}
+@media (min-width: 600px) {
+  .pack-icon-info .item-info .icon[show-sm] {
+    display: block;
+  }
 }
 .pack-icon-info .item-info .icon svg {
   height: 100%;
