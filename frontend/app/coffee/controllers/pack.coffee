@@ -8,8 +8,9 @@ class PackIconInfoController
     @$modelManager.addCollectionIcon newIconData, =>
       @$mdBottomSheet.hide()
 
-  constructor: (@$mdBottomSheet, @$modelManager, @icon) ->
+  constructor: (@$rootScope, @$mdBottomSheet, @$modelManager, @icon) ->
     @collections = @$modelManager.collections
+    @$rootScope.$on '$locationChangeStart', => @$mdBottomSheet.hide()
 
 
 class PackController

@@ -417,11 +417,17 @@ PackIconInfoController = (function() {
     })(this));
   };
 
-  function PackIconInfoController($mdBottomSheet, $modelManager, icon) {
+  function PackIconInfoController($rootScope, $mdBottomSheet, $modelManager, icon) {
+    this.$rootScope = $rootScope;
     this.$mdBottomSheet = $mdBottomSheet;
     this.$modelManager = $modelManager;
     this.icon = icon;
     this.collections = this.$modelManager.collections;
+    this.$rootScope.$on('$locationChangeStart', (function(_this) {
+      return function() {
+        return _this.$mdBottomSheet.hide();
+      };
+    })(this));
   }
 
   return PackIconInfoController;
