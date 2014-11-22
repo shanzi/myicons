@@ -376,9 +376,10 @@ MenuController = (function() {
     ]);
     this.packs = new MenuSection('packs', 'icon-packs', this.$modelManager.packs);
     this.collections = new MenuSection('collections', 'icon-collections', this.$modelManager.collections);
+    this.labels = new MenuSection('labels', 'icon-labels', []);
     this.packs.addItemUrl = '#/packs/add';
     this.collections.addItemUrl = '#/collections/add';
-    this.sections = [this.home, this.packs, this.collections];
+    this.sections = [this.home, this.packs, this.collections, this.labels];
     this.$rootScope.$on('$reselectMenuItem', (function(_this) {
       return function() {
         return _this.selectItem();
