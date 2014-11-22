@@ -62,9 +62,11 @@ def font(filepath):
 
     glyphs = []
     for glyph in raw_glyphs:
+        unicode_val = glyph.attrib.get('unicode')
+        if not unicode_val: continue
         d = glyph.attrib.get('d')
         name = glyph.attrib.get('glyph-name')
-        unicode_as_int = ord(glyph.attrib.get('unicode'))
+        unicode_as_int = ord(unicode_val)
         width = glyph.attrib.get('horiz-adv-x')
         width = int(width) if width is not None else BASE_ASCENT
         glyphs.append({
@@ -99,7 +101,7 @@ def css(filepath):
             content = rule.style['content']
             selectorText = rule.selectorText.lower().strip()
             matched = re.match(r'\.(?P<name>[a-z0-9\-_]+)\s*:before', selectorText)
-            if content:
+            if content and matched:
                 unicode_as_int = ord(content[1])
                 name = matched.groupdict()['name']
                 converted.append({

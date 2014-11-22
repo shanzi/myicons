@@ -6,11 +6,11 @@ class Pack(models.Model):
     name = models.CharField(max_length=128, db_index=True)
     prefix = models.CharField(max_length=16, blank=True, default="")
     author = models.CharField(max_length=128)
-    author_email = models.EmailField()
+    author_email = models.EmailField(blank=True, default="")
     website = models.URLField()
     github = models.URLField(blank=True)
     cdn = models.URLField(blank=True)
-    license = models.CharField(max_length=64)
+    license = models.CharField(max_length=128)
 
 
 class PackIcon(models.Model):
