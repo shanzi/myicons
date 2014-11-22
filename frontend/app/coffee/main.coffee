@@ -23,6 +23,9 @@ collectionAddCtrl = require './controllers/collection_add'
 settingsCtrl = require './controllers/settings'
 dashboardCtrl = require './controllers/dashboard'
 
+# directives
+packIconDirective = require './directives/pack_icons'
+
 # import models
 modelManager = require './modelmanager'
 
@@ -45,6 +48,9 @@ angular.module('myiconsApp', [
   .controller('collectionAddCtrl', collectionAddCtrl)
   .controller('DashboardCtrl', dashboardCtrl)
   .controller('SettingsCtrl', settingsCtrl)
+
+  # config directives
+  .directive('packIcons', packIconDirective)
 
   # config models
   .factory('$modelManager', modelManager)

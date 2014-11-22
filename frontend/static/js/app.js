@@ -1,5 +1,5 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var appCtrl, collectionAddCtrl, collectionCtrl, dashboardCtrl, menuCtrl, modelManager, packAddCtrl, packCtrl, settingsCtrl, template;
+var appCtrl, collectionAddCtrl, collectionCtrl, dashboardCtrl, menuCtrl, modelManager, packAddCtrl, packCtrl, packIconDirective, settingsCtrl, template;
 
 window.Hammer = require('hammer');
 
@@ -37,13 +37,15 @@ settingsCtrl = require('./controllers/settings');
 
 dashboardCtrl = require('./controllers/dashboard');
 
+packIconDirective = require('./directives/pack_icons');
+
 modelManager = require('./modelmanager');
 
 template = function(name) {
   return "/static/templates/" + name + ".html";
 };
 
-angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar', 'angularFileUpload']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('packAddCtrl', packAddCtrl).controller('collectionCtrl', collectionCtrl).controller('collectionAddCtrl', collectionAddCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
+angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar', 'angularFileUpload']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('packAddCtrl', packAddCtrl).controller('collectionCtrl', collectionCtrl).controller('collectionAddCtrl', collectionAddCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).directive('packIcons', packIconDirective).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
   $routeProvider.when('/home/dashboard', {
     templateUrl: template('dashboard'),
     controller: 'DashboardCtrl'
@@ -80,7 +82,7 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-lo
 
 
 
-},{"./controllers/app":2,"./controllers/collection":3,"./controllers/collection_add":4,"./controllers/dashboard":5,"./controllers/menu":6,"./controllers/pack":7,"./controllers/pack_add":8,"./controllers/settings":9,"./modelmanager":11,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.fileupload":"angular.fileupload","angular.fileuploadshim":"angular.fileuploadshim","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
+},{"./controllers/app":2,"./controllers/collection":3,"./controllers/collection_add":4,"./controllers/dashboard":5,"./controllers/menu":6,"./controllers/pack":7,"./controllers/pack_add":8,"./controllers/settings":9,"./directives/pack_icons":11,"./modelmanager":12,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.fileupload":"angular.fileupload","angular.fileuploadshim":"angular.fileuploadshim","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
 var AppController, md5;
 
 md5 = require('../deps/md5.js');
@@ -923,6 +925,92 @@ function binl2b64(binarray)
 module.exports = hex_md5;
 
 },{}],11:[function(require,module,exports){
+var PackIconDirective;
+
+PackIconDirective = (function() {
+  PackIconDirective.prototype._renderIcon = function(icon) {
+    return "<div class=\"icon\" data-icon-id=\"" + icon.id + "\">\n  <svg viewBox=\"0 0 1024 1024\">\n    <path d=\"" + icon.svg_d + "\" transform=\"scale(1, -1) translate(" + (512 - (icon.width || 1024) / 2) + ", -896)\"></path>\n  </svg>\n</div>";
+  };
+
+  PackIconDirective.prototype.renderIcons = function() {
+    var icon, icons;
+    icons = this.scope.icons;
+    if (icons) {
+      this.element.html(((function() {
+        var _i, _len, _results;
+        _results = [];
+        for (_i = 0, _len = icons.length; _i < _len; _i++) {
+          icon = icons[_i];
+          _results.push(this._renderIcon(icon));
+        }
+        return _results;
+      }).call(this)).join(''));
+      return this.element.children().on('click', (function(_this) {
+        return function(event) {
+          var iconEle, iconId;
+          iconEle = angular.element(event.currentTarget);
+          iconId = parseInt(iconEle.attr('data-icon-id'));
+          if (iconId) {
+            return _this.iconClicked(iconId);
+          }
+        };
+      })(this));
+    } else {
+      return this.element.html('');
+    }
+  };
+
+  PackIconDirective.prototype.iconWithId = function(id) {
+    var icon, _i, _len, _ref;
+    _ref = this.scope.icons;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      icon = _ref[_i];
+      if (icon.id === id) {
+        return icon;
+      }
+    }
+  };
+
+  PackIconDirective.prototype.iconClicked = function(id) {
+    var icon;
+    icon = this.iconWithId(id);
+    return this.scope.iconClick({
+      icon: icon
+    });
+  };
+
+  function PackIconDirective(scope, element, attrs) {
+    this.scope = scope;
+    this.element = element;
+    this.attrs = attrs;
+    this.renderIcons();
+    this.scope.$watchCollection('icons', (function(_this) {
+      return function(value) {
+        return _this.renderIcons();
+      };
+    })(this));
+  }
+
+  return PackIconDirective;
+
+})();
+
+module.exports = function() {
+  return {
+    restrict: 'E',
+    scope: {
+      icons: '=',
+      iconClick: '&'
+    },
+    link: function(scope, element, attrs) {
+      return scope.packIconCtrl = new PackIconDirective(scope, element, attrs);
+    }
+  };
+};
+
+
+
+},{}],12:[function(require,module,exports){
 var ModelManger, models;
 
 models = require('./models');
@@ -1034,7 +1122,7 @@ module.exports = (function(_this) {
 
 
 
-},{"./models":12}],12:[function(require,module,exports){
+},{"./models":13}],13:[function(require,module,exports){
 module.exports = function($resource) {
   return {
     'User': $resource('/accounts/users/:username/', {

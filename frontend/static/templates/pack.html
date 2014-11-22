@@ -21,15 +21,7 @@
 </md-toolbar>
 <md-content class="md-content-padding" flex>
 <div class="tab" ng-if="pack.isTab('icons')">
-  <div class="pack-icons">
-    <md-button class="icon" ng-repeat="icon in pack.icons" aria-label="" ng-click="pack.showIconInfo(icon)">
-    <svg viewBox="0 0 1024 1024">
-      <path ng-attr-d="{{icon.svg_d}}"
-      ng-attr-transform="scale(1, -1) translate( {{ 512 - (icon.width || 1024)/2}} , -896)" ></path>
-    </svg>
-    <md-tooltip>{{ icon.name }}</md-tooltip>
-    </md-button>
-  </div>
+  <pack-icons icons="pack.icons" icon-click="pack.showIconInfo(icon)"></pack-icons>
 </div>
 <div class="tab" ng-if="pack.isTab('info')">
   <div class="pack-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">

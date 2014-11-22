@@ -72,44 +72,47 @@
   width: 20px;
   font-size: 18px;
 }
-.pack-icons {
+pack-icons {
+  display: block;
   width: 800px;
   margin: 0 auto;
+  overflow: hidden;
 }
 @media (max-width: 1160px) {
-  .pack-icons {
+  pack-icons {
     width: 720px;
   }
 }
 @media (max-width: 840px) {
-  .pack-icons {
+  pack-icons {
     width: 640px;
   }
 }
 @media (max-width: 640px) {
-  .pack-icons {
+  pack-icons {
     width: 400px;
   }
 }
 @media (max-width: 440px) {
-  .pack-icons {
+  pack-icons {
     width: 240px;
   }
 }
-.pack-icons .icon {
+pack-icons .icon {
   cursor: pointer;
   width: 70px;
   height: 70px;
   margin: 5px;
+  padding: 10px;
   border: solid 1px #eee;
   border-radius: 10px;
   display: inline-block;
   transition: opacity 0.2s ease-out;
 }
-.pack-icons .icon .md-button-inner {
+pack-icons .icon .md-button-inner {
   padding: 10px;
 }
-.pack-icons .icon:hover {
+pack-icons .icon:hover {
   opacity: 0.8;
 }
 .pack-info .row {
