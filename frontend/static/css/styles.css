@@ -279,7 +279,7 @@ pack-icons .icon:hover {
   color: #fc2607;
 }
 .collection-icons .icon-item .icon-actions {
-  width: 64px;
+  width: 80px;
   float: right;
 }
 .collection-icons .icon-item .icon-actions button {
