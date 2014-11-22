@@ -87,7 +87,7 @@ class PackAddController
       info = angular.copy @info
       info.icons = icons
       @$modelManager.addPack info, (pack) =>
-        @$location.path "/pack/#{pack.id}"
+        @$location.path "/packs/#{pack.id}"
         @reset()
 
   fieldName: (prefix) ->

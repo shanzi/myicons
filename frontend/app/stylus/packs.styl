@@ -87,7 +87,6 @@ pack-icons
 .pack-icon-info
   .item-info
     height 200px
-    display none
 
     @media(min-width: 600px)
       &[show-sm]
@@ -96,6 +95,7 @@ pack-icons
     .icon
       height 160px
       padding 10px
+      display none
 
       svg
         height 100%
@@ -120,6 +120,8 @@ pack-icons
 
     .collections
       margin 10px 0
+      max-height 400px
+      overflow-y scroll
 
     .collection
       height 40px

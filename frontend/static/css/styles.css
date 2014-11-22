@@ -179,7 +179,6 @@ pack-icons .icon:hover {
 }
 .pack-icon-info .item-info {
   height: 200px;
-  display: none;
 }
 @media (min-width: 600px) {
   .pack-icon-info .item-info[show-sm] {
@@ -189,6 +188,7 @@ pack-icons .icon:hover {
 .pack-icon-info .item-info .icon {
   height: 160px;
   padding: 10px;
+  display: none;
 }
 .pack-icon-info .item-info .icon svg {
   height: 100%;
@@ -213,6 +213,8 @@ pack-icons .icon:hover {
 }
 .pack-icon-info .item-actions .collections {
   margin: 10px 0;
+  max-height: 400px;
+  overflow-y: scroll;
 }
 .pack-icon-info .item-actions .collection {
   height: 40px;

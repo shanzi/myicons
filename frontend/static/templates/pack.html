@@ -33,11 +33,11 @@
       </div>
       <div class="row" layout="vertical" layout-sm="horizontal" >
         <md-text-float label="Author" ng-model="pack.info.author"
-        fid="{{ pack.fieldName('email') }}"
+        fid="{{ pack.fieldName('author') }}"
         required flex> </md-text-float>
         <md-text-float label="Email" type="email" ng-model="pack.info.author_email"
         fid="{{ pack.fieldName('email') }}"
-        required flex> </md-text-float>
+        flex> </md-text-float>
       </div>
       <div class="row" layout="vertical">
         <md-text-float label="Website" type="url" ng-model="pack.info.website"
@@ -53,7 +53,7 @@
       <div class="row" layout="vertical">
         <md-text-float label="License" ng-model="pack.info.license"
         fid="{{ pack.fieldName('license') }}"
-        required maxlength="64"> </md-text-float>
+        required maxlength="128"> </md-text-float>
       </div>
       <div class="row actions">
         <md-button aria-label class="md-warn" ng-click="pack.reset()">Reset</md-button>

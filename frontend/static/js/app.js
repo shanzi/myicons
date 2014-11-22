@@ -639,7 +639,7 @@ PackAddController = (function() {
       info.icons = icons;
       return this.$modelManager.addPack(info, (function(_this) {
         return function(pack) {
-          _this.$location.path("/pack/" + pack.id);
+          _this.$location.path("/packs/" + pack.id);
           return _this.reset();
         };
       })(this));
