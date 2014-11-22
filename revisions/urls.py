@@ -1,12 +1,11 @@
 from django.conf.urls import patterns, include, url
 from rest_framework.routers import DefaultRouter
 
-from .views import PacksViewSet, PackIconsViewSet
+from .views import RevisionViewSet
 
 router = DefaultRouter()
 
-router.register('packs', PacksViewSet)
-router.register('packicons', PackIconsViewSet)
+router.register('revisions', RevisionViewSet)
 
 urlpatterns = patterns(
     '',

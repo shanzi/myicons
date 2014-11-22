@@ -7,6 +7,7 @@ urlpatterns = patterns('',
 
     url(r'^', include('iconpacks.urls')),
     url(r'^', include('iconcollections.urls')),
+    url(r'^', include('revisions.urls')),
 
     url(r'^', include('fontbuilder.urls')),
 

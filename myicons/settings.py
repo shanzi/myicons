@@ -44,6 +44,8 @@ INSTALLED_APPS = (
     'frontend',
     'iconpacks',
     'iconcollections',
+    'revisions',
+
     'fontbuilder',
     'accounts',
     'convert',

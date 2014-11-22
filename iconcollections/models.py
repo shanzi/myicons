@@ -7,7 +7,6 @@ class Collection(models.Model):
     name = models.CharField(max_length=128, db_index=True)
     build_name = models.CharField(max_length=128, db_index=True)
     prefix = models.CharField(max_length=16, default="", blank=True)
-    notes = models.CharField(max_length=140, default="", blank=True)
     token = models.CharField(max_length=32, unique=True, editable=False, blank=True, default="")
 
     def save(self, *args, **kwargs):

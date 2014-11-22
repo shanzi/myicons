@@ -1,9 +1,9 @@
 from django.conf.urls import patterns, include, url
-from rest_framework.routers import SimpleRouter
+from rest_framework.routers import DefaultRouter
 
 from .views import CollectionsViewSet, CollectionIconsViewSet
 
-router = SimpleRouter()
+router = DefaultRouter()
 
 router.register('collections', CollectionsViewSet)
 router.register('collectionicons', CollectionIconsViewSet)

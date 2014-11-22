@@ -3,6 +3,8 @@ from django.shortcuts import render
 from rest_framework import mixins
 from rest_framework import viewsets
 
+from revisions import mixins as rmixins
+
 from .models import Pack, PackIcon
 from .serializers import (PackSerializer,
                           PackIconSerializer,
@@ -10,7 +12,7 @@ from .serializers import (PackSerializer,
                           PackIconUpdateSerializer)
 
 
-class PacksViewSet(viewsets.ModelViewSet):
+class PacksViewSet(rmixins.PackRevisionMixin, viewsets.ModelViewSet):
 
     """ViewSet for displaying packs. """
     queryset = Pack.objects.all()
