@@ -10,10 +10,12 @@ class CollectionController
 
   reset: ->
     @info = angular.copy @_info
+    @randomFactor = (new Date()).valueOf().toString(16)
 
   save: ->
     angular.extend @_info, @info
     @_info.$update()
+    @randomFactor = (new Date()).valueOf().toString(16)
 
   saveIconName: (icon) ->
     save = =>
@@ -50,6 +52,9 @@ class CollectionController
     if ok
       @$modelManager.deleteCollection @_info
       @$location.path('#/home/dashboard')
+
+  fieldName: (prefix) ->
+    return prefix + @randomFactor
   
   constructor: (@$routeParams, @$rootScope, @$location, @$modelManager) ->
     id = parseInt @$routeParams.id

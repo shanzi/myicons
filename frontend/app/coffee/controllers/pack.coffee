@@ -23,10 +23,12 @@ class PackController
 
   reset: ->
     @info = angular.copy @_info
+    @randomFactor = (new Date()).valueOf().toString(16)
 
   save: ->
     angular.extend @_info, @info
     @_info.$update()
+    @randomFactor = (new Date()).valueOf().toString(16)
 
   unchanged: ->
     angular.equals @info, @_info
@@ -38,6 +40,9 @@ class PackController
       templateUrl: '/static/templates/pack_icon_info.html'
       locals:
         icon: icon
+
+  fieldName: (prefix) ->
+    return prefix + @randomFactor
   
   constructor: (@$routeParams, @$rootScope, @$modelManager, @$mdBottomSheet) ->
     id = parseInt @$routeParams.id

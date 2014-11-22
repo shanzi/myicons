@@ -11,6 +11,18 @@
 <div class="pack-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
   <form name="form">
     <div class="row">
+      <h3>Create New Pack</h3>
+      <p>
+      You create a pack by uploading a web icon font and its corresponding css file.
+      The application will analysis the files you upload and try to retrive all icons they contain.
+      You have to fill in the basic info of the icon sets yourself.
+      </p>
+      <p>
+      A pack is where you pick icons from and add them to collections to build into new
+      icon fonts. Please make sure you have the authority to do so.
+      </p>
+    </div>
+    <div class="row">
       <div class="upload-font"
         ng-file-drop="pack.fontFileSelected($files)"
         ng-file-drag-over-class="upload-drag-over"
@@ -35,23 +47,38 @@
       </div>
     </div>
     <div class="row" >
-      <md-text-float label="Name" ng-model="pack.info.name" required> </md-text-float>
+      <md-text-float label="Name" ng-model="pack.info.name"
+      fid="{{ pack.fieldName('name') }}"
+      required> </md-text-float>
     </div>
     <div class="row" layout="vertical" layout-sm="horizontal" >
-      <md-text-float label="Author" ng-model="pack.info.author" required flex> </md-text-float>
-      <md-text-float label="Email" type="email" ng-model="pack.info.author_email" required flex> </md-text-float>
+      <md-text-float label="Author" ng-model="pack.info.author"
+      fid="{{ pack.fieldName('email') }}"
+      required flex> </md-text-float>
+      <md-text-float label="Email" type="email" ng-model="pack.info.author_email"
+      fid="{{ pack.fieldName('email') }}"
+      required flex> </md-text-float>
     </div>
     <div class="row" layout="vertical">
-      <md-text-float label="Website" type="url" ng-model="pack.info.website" required url> </md-text-float>
-      <md-text-float label="Github" type="url" ng-model="pack.info.github" url> </md-text-float>
-      <md-text-float label="CDN" type="url" ng-model="pack.info.cdn" url> </md-text-float>
+      <md-text-float label="Website" type="url" ng-model="pack.info.website"
+      fid="{{ pack.fieldName('website') }}"
+      required url> </md-text-float>
+      <md-text-float label="Github" type="url" ng-model="pack.info.github"
+      fid="{{ pack.fieldName('github') }}"
+      url> </md-text-float>
+      <md-text-float label="CDN" type="url" ng-model="pack.info.cdn"
+      fid="{{ pack.fieldName('cdn') }}"
+      url> </md-text-float>
     </div>
     <div class="row" layout="vertical">
-      <md-text-float label="License" ng-model="pack.info.license" required maxlength="64"> </md-text-float>
+      <md-text-float label="License" ng-model="pack.info.license"
+      fid="{{ pack.fieldName('license') }}"
+      required maxlength="64"> </md-text-float>
     </div>
     <div class="row actions">
       <md-button aria-label class="md-warn" ng-click="pack.reset()">Reset</md-button>
       <md-button aria-label class="md-safe" ng-click="pack.save()"
+      ng-disabled="form.$invalid || pack.iconsInvalid()"
       >Save</md-button>
     </div>
   </form>

@@ -13,6 +13,7 @@ class PackAddController
     @iconNames = []
     @fontStatus = ''
     @cssStatus = ''
+    @randomFactor = (new Date()).valueOf().toString(16)
 
   fontFileSelected: (files) ->
     if files.length and @fontStatus!='processing'
@@ -87,7 +88,12 @@ class PackAddController
       info.icons = icons
       @$modelManager.addPack info, (pack) =>
         @$location.path "/pack/#{pack.id}"
+        @reset()
+
+  fieldName: (prefix) ->
+    return prefix + @randomFactor
 
   constructor: (@$location, @$modelManager, @$upload) ->
+    @reset()
 
 module.exports = PackAddController

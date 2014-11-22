@@ -34,6 +34,9 @@ class MenuController
           @currentSection = section
           @currentItem = item
           @currentSection.isExpanded = true
+          return
+    @currentSection = null
+    @currentItem = null
 
   constructor: (@$rootScope, @$location, @$modelManager) ->
     @home = new MenuSection 'home', 'icon-home', [
@@ -49,6 +52,7 @@ class MenuController
     @sections = [@home, @packs, @collections]
 
     @$rootScope.$on '$reselectMenuItem', => @selectItem()
+    @$rootScope.$on '$locationChangeSuccess', => @selectItem()
   
 
 module.exports = MenuController
