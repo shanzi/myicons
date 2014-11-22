@@ -2,15 +2,9 @@ models = require './models'
 
 class ModelManger
 
-  constructor: (@$resource, @$q) ->
-    @$models = models(@$resource)
-    @currentUser = @$models.User.current()
-    @packs = @$models.Pack.query()
-    @collections = @$models.Collection.query()
-
   ready: (callback) ->
-    @$q.all @currentUser.$promise, @packs.$promise, @collections.promise
-      .then callback
+    @$q.all @currentUser.$promise, @packs.$promise, @collections.$promise
+      .then => callback()
 
   getPack: (id, callback) ->
     @ready =>
@@ -32,6 +26,11 @@ class ModelManger
       @packs.push newPack
       callback newPack if callback
 
+  deletePack: (pack) ->
+    idx = @packs.indexOf pack
+    @packs.splice(idx, 1)
+    pack.$delete()
+
   addCollection: (collection, callback) ->
     newCollection = new @$models.Collection collection
     newCollection.$save =>
@@ -47,6 +46,13 @@ class ModelManger
     idx = @collections.indexOf col
     @collections.splice(idx, 1)
     col.$delete()
+
+  constructor: (@$resource, @$q) ->
+    @$models = models(@$resource)
+    @currentUser = @$models.User.current()
+    @packs = @$models.Pack.query()
+    @collections = @$models.Collection.query()
+
 
 module.exports = ($resource, $q) =>
   new ModelManger($resource, $q)

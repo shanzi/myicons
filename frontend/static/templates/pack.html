@@ -61,6 +61,18 @@
         ng-disabled="form.$invalid || pack.unchanged()"
         >Save</md-button>
       </div>
+      <div class="row delete-action">
+        <button
+          ink-ripple
+          class="delete-button"
+          ng-click="pack.delete()"
+          >Delete this Pack</button>
+        <p>
+        Deletion of the pack won't affect the icons you added to collections,
+        it can also be undo in the revisions panel of <a href="#/home/dashboard">dashboard</a>
+        , but you should still be careful with this action.
+        </p>
+      </div>
     </form>
   </div>
 </div>

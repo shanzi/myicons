@@ -475,14 +475,24 @@ PackController = (function() {
     });
   };
 
+  PackController.prototype["delete"] = function() {
+    var ok;
+    ok = confirm('Are you sure?');
+    if (ok) {
+      this.$modelManager.deletePack(this._info);
+      return this.$location.path("/home/dashboard");
+    }
+  };
+
   PackController.prototype.fieldName = function(prefix) {
     return prefix + this.randomFactor;
   };
 
-  function PackController($routeParams, $rootScope, $modelManager, $mdBottomSheet) {
+  function PackController($routeParams, $rootScope, $location, $modelManager, $mdBottomSheet) {
     var id;
     this.$routeParams = $routeParams;
     this.$rootScope = $rootScope;
+    this.$location = $location;
     this.$modelManager = $modelManager;
     this.$mdBottomSheet = $mdBottomSheet;
     id = parseInt(this.$routeParams.id);
@@ -586,7 +596,7 @@ PackAddController = (function() {
     } else if (this.fontStatus === 'processing') {
       return 'Processing';
     } else {
-      return 'Drag font(.ttf, .eot, .woff, .svg) file here to retrive all icons\' shape.';
+      return 'Drag font(one of .ttf, .eot, .woff, .svg) file here to retrive all icons\' shape.';
     }
   };
 
@@ -1022,17 +1032,12 @@ var ModelManger, models;
 models = require('./models');
 
 ModelManger = (function() {
-  function ModelManger($resource, $q) {
-    this.$resource = $resource;
-    this.$q = $q;
-    this.$models = models(this.$resource);
-    this.currentUser = this.$models.User.current();
-    this.packs = this.$models.Pack.query();
-    this.collections = this.$models.Collection.query();
-  }
-
   ModelManger.prototype.ready = function(callback) {
-    return this.$q.all(this.currentUser.$promise, this.packs.$promise, this.collections.promise).then(callback);
+    return this.$q.all(this.currentUser.$promise, this.packs.$promise, this.collections.$promise).then((function(_this) {
+      return function() {
+        return callback();
+      };
+    })(this));
   };
 
   ModelManger.prototype.getPack = function(id, callback) {
@@ -1084,6 +1089,13 @@ ModelManger = (function() {
     })(this));
   };
 
+  ModelManger.prototype.deletePack = function(pack) {
+    var idx;
+    idx = this.packs.indexOf(pack);
+    this.packs.splice(idx, 1);
+    return pack.$delete();
+  };
+
   ModelManger.prototype.addCollection = function(collection, callback) {
     var newCollection;
     newCollection = new this.$models.Collection(collection);
@@ -1115,6 +1127,15 @@ ModelManger = (function() {
     this.collections.splice(idx, 1);
     return col.$delete();
   };
+
+  function ModelManger($resource, $q) {
+    this.$resource = $resource;
+    this.$q = $q;
+    this.$models = models(this.$resource);
+    this.currentUser = this.$models.User.current();
+    this.packs = this.$models.Pack.query();
+    this.collections = this.$models.Collection.query();
+  }
 
   return ModelManger;
 

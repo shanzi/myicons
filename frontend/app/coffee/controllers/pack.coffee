@@ -42,10 +42,16 @@ class PackController
       locals:
         icon: icon
 
+  delete: ->
+    ok = confirm 'Are you sure?'
+    if ok
+      @$modelManager.deletePack @_info
+      @$location.path "/home/dashboard"
+
   fieldName: (prefix) ->
     return prefix + @randomFactor
   
-  constructor: (@$routeParams, @$rootScope, @$modelManager, @$mdBottomSheet) ->
+  constructor: (@$routeParams, @$rootScope, @$location, @$modelManager, @$mdBottomSheet) ->
     id = parseInt @$routeParams.id
     @$modelManager.getPack id, (pack, icons) =>
       @_info = pack
