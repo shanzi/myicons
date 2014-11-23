@@ -34,6 +34,11 @@ class RevisionMixin:
             }
         return {}
 
+    def get_ref_id(self, obj):
+        if self.revision_model == 'collectionicon':
+            return obj.collection.id
+        return obj.id
+
     def post_save(self, obj, created=False):
         serialized_obj = self.serialize(obj)
         if created:
@@ -42,6 +47,8 @@ class RevisionMixin:
                 model=self.revision_model,
                 target_id=obj.id,
                 target_name=obj.name,
+                ref_model=self.revision_ref_model,
+                ref_id=self.get_ref_id(obj),
                 user=self.get_user(),
                 snapshot=serialized_obj)
         else:
@@ -50,11 +57,14 @@ class RevisionMixin:
                 model=self.revision_model,
                 target_id=obj.id,
                 target_name=obj.name,
+                ref_model=self.revision_ref_model,
+                ref_id=self.get_ref_id(obj),
                 user=self.get_user(),
                 snapshot=serialized_obj)
 
     def pre_delete(self, obj):
         self._pre_delete_id = obj.id
+        self._pre_delete_ref_id = self.get_ref_id(obj)
         self._pre_delete_name = obj.name
         self._pre_delete_snapshot = self.serialize_delete(obj)
         
@@ -64,6 +74,8 @@ class RevisionMixin:
             model=self.revision_model,
             target_id=self._pre_delete_id,
             target_name=self._pre_delete_name,
+            ref_model=self.revision_ref_model,
+            ref_id=self._pre_delete_ref_id,
             user=self.get_user(),
             snapshot = self._pre_delete_snapshot)
 
@@ -71,6 +83,7 @@ class RevisionMixin:
 class PackRevisionMixin(RevisionMixin):
     fields = get_field_names(Pack)
     revision_model = 'pack'
+    revision_ref_model = 'pack'
 
     def serialize_delete(self, obj):
         serialized = self.serialize(obj)
@@ -82,6 +95,7 @@ class CollectionRevisionMixin(PackRevisionMixin):
     fields = get_field_names(Collection)
     exclude = ('token', )
     revision_model = 'collection'
+    revision_ref_model = 'collection'
     
 
 class CollectionIconRevisionMixin(RevisionMixin):
@@ -89,3 +103,4 @@ class CollectionIconRevisionMixin(RevisionMixin):
     exclude = ('packicon', )
     relations = ('collection', )
     revision_model = 'collectionicon'
+    revision_ref_model = 'collection'

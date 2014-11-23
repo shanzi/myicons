@@ -58,9 +58,10 @@ class CollectionController
   
   constructor: (@$routeParams, @$rootScope, @$location, @$modelManager) ->
     id = parseInt @$routeParams.id
-    @$modelManager.getCollection id, (collection, icons) =>
+    @$modelManager.getCollection id, (collection, icons, revisions) =>
       @_info = collection
       @icons = icons
+      @revisions = revisions
       @iconNames = {}
       @icons.$promise.then =>
         @iconNames[icon.id] = icon.name for icon in icons

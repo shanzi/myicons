@@ -10,14 +10,18 @@ class ModelManger
     @ready =>
       for pack in @packs
         if pack.id == id
-          callback pack, @$models.PackIcon.query pack: pack.id
+          icons = @$models.PackIcon.query pack: pack.id
+          revisions = @$models.Revision.query ref_model:'pack', ref_id:pack.id
+          callback pack, icons, revisions
           return
 
   getCollection: (id, callback) ->
     @ready =>
       for collection in @collections
         if collection.id == id
-          callback collection, @$models.CollectionIcon.query collection: collection.id
+          icons = @$models.CollectionIcon.query collection: collection.id
+          revisions = @$models.Revision.query ref_model:'collection', ref_id:collection.id
+          callback collection, icons, revisions
           return
 
   addPack: (pack, callback) ->

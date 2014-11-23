@@ -30,3 +30,7 @@ module.exports = ($resource) ->
       update:
         method: 'PATCH'
 
+  'Revision':
+    $resource '/revisions/:id/', {id: '@id'},
+
+

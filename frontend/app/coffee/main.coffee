@@ -25,6 +25,7 @@ dashboardCtrl = require './controllers/dashboard'
 
 # directives
 packIconDirective = require './directives/pack_icons'
+revisionDirective = require './directives/revisions'
 
 # import models
 modelManager = require './modelmanager'
@@ -51,6 +52,7 @@ angular.module('myiconsApp', [
 
   # config directives
   .directive('packIcons', packIconDirective)
+  .directive('revision', revisionDirective)
 
   # config models
   .factory('$modelManager', modelManager)

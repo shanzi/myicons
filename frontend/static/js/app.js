@@ -1,5 +1,5 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var appCtrl, collectionAddCtrl, collectionCtrl, dashboardCtrl, menuCtrl, modelManager, packAddCtrl, packCtrl, packIconDirective, settingsCtrl, template;
+var appCtrl, collectionAddCtrl, collectionCtrl, dashboardCtrl, menuCtrl, modelManager, packAddCtrl, packCtrl, packIconDirective, revisionDirective, settingsCtrl, template;
 
 window.Hammer = require('hammer');
 
@@ -39,13 +39,15 @@ dashboardCtrl = require('./controllers/dashboard');
 
 packIconDirective = require('./directives/pack_icons');
 
+revisionDirective = require('./directives/revisions');
+
 modelManager = require('./modelmanager');
 
 template = function(name) {
   return "/static/templates/" + name + ".html";
 };
 
-angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar', 'angularFileUpload']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('packAddCtrl', packAddCtrl).controller('collectionCtrl', collectionCtrl).controller('collectionAddCtrl', collectionAddCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).directive('packIcons', packIconDirective).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
+angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar', 'angularFileUpload']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('packAddCtrl', packAddCtrl).controller('collectionCtrl', collectionCtrl).controller('collectionAddCtrl', collectionAddCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).directive('packIcons', packIconDirective).directive('revision', revisionDirective).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
   $routeProvider.when('/home/dashboard', {
     templateUrl: template('dashboard'),
     controller: 'DashboardCtrl'
@@ -82,7 +84,7 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-lo
 
 
 
-},{"./controllers/app":2,"./controllers/collection":3,"./controllers/collection_add":4,"./controllers/dashboard":5,"./controllers/menu":6,"./controllers/pack":7,"./controllers/pack_add":8,"./controllers/settings":9,"./directives/pack_icons":11,"./modelmanager":12,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.fileupload":"angular.fileupload","angular.fileuploadshim":"angular.fileuploadshim","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
+},{"./controllers/app":2,"./controllers/collection":3,"./controllers/collection_add":4,"./controllers/dashboard":5,"./controllers/menu":6,"./controllers/pack":7,"./controllers/pack_add":8,"./controllers/settings":9,"./directives/pack_icons":11,"./directives/revisions":12,"./modelmanager":13,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.fileupload":"angular.fileupload","angular.fileuploadshim":"angular.fileuploadshim","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
 var AppController, md5;
 
 md5 = require('../deps/md5.js');
@@ -223,9 +225,10 @@ CollectionController = (function() {
     this.$modelManager = $modelManager;
     id = parseInt(this.$routeParams.id);
     this.$modelManager.getCollection(id, (function(_this) {
-      return function(collection, icons) {
+      return function(collection, icons, revisions) {
         _this._info = collection;
         _this.icons = icons;
+        _this.revisions = revisions;
         _this.iconNames = {};
         _this.icons.$promise.then(function() {
           var icon, _i, _len, _results;
@@ -498,9 +501,10 @@ PackController = (function() {
     this.$mdBottomSheet = $mdBottomSheet;
     id = parseInt(this.$routeParams.id);
     this.$modelManager.getPack(id, (function(_this) {
-      return function(pack, icons) {
+      return function(pack, icons, revisions) {
         _this._info = pack;
         _this.icons = icons;
+        _this.revisions = revisions;
         _this.reset();
         return _this.$rootScope.$broadcast('$reselectMenuItem');
       };
@@ -1028,6 +1032,77 @@ module.exports = function() {
 
 
 },{}],12:[function(require,module,exports){
+var md5;
+
+md5 = require('../deps/md5.js');
+
+module.exports = function() {
+  return {
+    restrict: 'E',
+    scope: {
+      revision: '=',
+      revertClick: '&'
+    },
+    template: "<div class=\"revision-title\">\n  <span class=\"revision-action-icon\" ng-class=\"revision.action\">\n    <i ng-class=\"rev.action_icon\"></i>\n  </span><img ng-src=\"{{ rev.avatar }}\" class=\"revision-avatar\">\n  <span class=\"revision-user\" ng-bind=\"revision.user.name\"></span>\n  <span class=\"revision-action\" ng-bind=\"rev.action\"></span>\n  <a class=\"revision-target\" ng-bind=\"revision.target_name\" ng-href=\"{{ rev.target_url }}\"></a>\n  at\n  <span class=\"revision-datetime\" ng-bind=\"revision.created_at|date:'short'\"></span>\n</div>\n<ul class=\"revision-detail\">\n  <li class=\"revision-detail-item\" ng-if=\"rev.rename\">\n  Renamed from <span class=\"old\" ng-bind=\"rev.rename.old\"></span> to <span class=\"new\" ng-bind=\"rev.rename.new\"></span>\n  </li>\n  <li class=\"revision-detail-item\" ng-repeat=\"item in rev.changes\">\n  Changed <span class=\"field\" ng-bind=\"item.field\"></span>\n  from <span class=\"old\" ng-bind=\"item.old\"></span> to <span class=\"new\" ng-bind=\"item.new\"></span>\n  </li>\n  <li class=\"revision-detail-item\" ng-repeat=\"item in rev.clears\">\n    Cleared the content of <span class=\"field\" ng-bind=\"item.field\"></span>\n  </li>\n  <li class=\"revision-detail-item\" ng-repeat=\"item in rev.sets\">\n    Set <span class=\"field\" ng-bind=\"item.field\"></span> to <span class=\"new\" ng-bind=\"item.new\"></span>\n  </li>\n</ul>\n<div class=\"revert\" ng-if=\"revision.revertable\">\n<i class=\"icon-rev-revert\"></i> Revert to this revision\n</div>",
+    link: function(scope, element, attrs) {
+      var changes, clears, k, model, rename, rev, revision, sets, v, val, _ref;
+      revision = scope.revision;
+      rev = {};
+      rev.action_icon = 'icon-rev-' + revision.action;
+      rev.avatar = "https://secure.gravatar.com/avatar/" + (md5(revision.user.email)) + "?s=16&d=mm";
+      model = revision.model;
+      if (model === 'collectionicon') {
+        model = 'icon';
+      }
+      switch (revision.action) {
+        case 'create':
+          rev.action = 'added new ' + model;
+          break;
+        case 'update':
+          rev.action = 'modified ' + model;
+          break;
+        case 'delete':
+          rev.action = 'removed ' + model;
+      }
+      rename = null;
+      changes = [];
+      clears = [];
+      sets = [];
+      _ref = revision.diff;
+      for (k in _ref) {
+        val = _ref[k];
+        v = angular.copy(val);
+        if (k === 'name') {
+          rename = v;
+        } else if (v.old.trim() && v["new"].trim()) {
+          v.field = k;
+          changes.push(v);
+        } else if (v.old.trim()) {
+          v.field = k;
+          clears.push(v);
+        } else if (v["new"].trim()) {
+          v.field = k;
+          sets.push(v);
+        }
+      }
+      rev.rename = rename;
+      rev.changes = changes;
+      rev.clears = clears;
+      rev.sets = sets;
+      console.log(rev);
+      if (revision.model === 'pack') {
+        rev.target_url = "#/packs/" + revision.target_id;
+      } else if (revision.model === 'collection') {
+        rev.target_url = "#/collections/" + revision.target_id;
+      }
+      return scope.rev = rev;
+    }
+  };
+};
+
+
+
+},{"../deps/md5.js":10}],13:[function(require,module,exports){
 var ModelManger, models;
 
 models = require('./models');
@@ -1044,14 +1119,19 @@ ModelManger = (function() {
   ModelManger.prototype.getPack = function(id, callback) {
     return this.ready((function(_this) {
       return function() {
-        var pack, _i, _len, _ref;
+        var icons, pack, revisions, _i, _len, _ref;
         _ref = _this.packs;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           pack = _ref[_i];
           if (pack.id === id) {
-            callback(pack, _this.$models.PackIcon.query({
+            icons = _this.$models.PackIcon.query({
               pack: pack.id
-            }));
+            });
+            revisions = _this.$models.Revision.query({
+              ref_model: 'pack',
+              ref_id: pack.id
+            });
+            callback(pack, icons, revisions);
             return;
           }
         }
@@ -1062,14 +1142,19 @@ ModelManger = (function() {
   ModelManger.prototype.getCollection = function(id, callback) {
     return this.ready((function(_this) {
       return function() {
-        var collection, _i, _len, _ref;
+        var collection, icons, revisions, _i, _len, _ref;
         _ref = _this.collections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           collection = _ref[_i];
           if (collection.id === id) {
-            callback(collection, _this.$models.CollectionIcon.query({
+            icons = _this.$models.CollectionIcon.query({
               collection: collection.id
-            }));
+            });
+            revisions = _this.$models.Revision.query({
+              ref_model: 'collection',
+              ref_id: collection.id
+            });
+            callback(collection, icons, revisions);
             return;
           }
         }
@@ -1150,7 +1235,7 @@ module.exports = (function(_this) {
 
 
 
-},{"./models":13}],13:[function(require,module,exports){
+},{"./models":14}],14:[function(require,module,exports){
 module.exports = function($resource) {
   return {
     'User': $resource('/accounts/users/:username/', {
@@ -1195,6 +1280,9 @@ module.exports = function($resource) {
       update: {
         method: 'PATCH'
       }
+    }),
+    'Revision': $resource('/revisions/:id/', {
+      id: '@id'
     })
   };
 };

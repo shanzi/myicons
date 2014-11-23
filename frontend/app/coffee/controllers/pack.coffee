@@ -53,9 +53,10 @@ class PackController
   
   constructor: (@$routeParams, @$rootScope, @$location, @$modelManager, @$mdBottomSheet) ->
     id = parseInt @$routeParams.id
-    @$modelManager.getPack id, (pack, icons) =>
+    @$modelManager.getPack id, (pack, icons, revisions) =>
       @_info = pack
       @icons = icons
+      @revisions = revisions
       @reset()
       @$rootScope.$broadcast '$reselectMenuItem'
 

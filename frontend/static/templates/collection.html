@@ -110,6 +110,11 @@
   </div>
 </div>
 <div class="tab" ng-if="collection.isTab('revisions')">
-  revisions
+  <div class="revisions">
+    <revision ng-repeat="revision in collection.revisions" revision="revision"></revision>
+    <div class="revision-start">
+      <div class="revision-start-marker"></div>
+    </div>
+  </div>
 </div>
 </md-content>
