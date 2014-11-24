@@ -1,6 +1,6 @@
 <md-toolbar class="md-medium-tall view-toolbar">
 <div class="md-toolbar-tools" ng-click="app.openMenu()">
-  <md-button class="menu-icon" hide-md aria-label="Toggle Menu">
+  <md-button class="menu-icon" hide-md aria-label="Toggle Menu" ng-click="app.openMenu()">
   <i class="icon-menu"></i>
   </md-button>
   <p>Packs</p>
@@ -56,7 +56,7 @@
         required maxlength="128"> </md-text-float>
       </div>
       <div class="row actions">
-        <md-button aria-label class="md-warn" ng-click="pack.reset()">Reset</md-button>
+        <md-button aria-label class="md-warn" ng-click="pack.reset()" ng-disabled="pack.unchanged()">Reset</md-button>
         <md-button aria-label class="md-safe" ng-click="pack.save()"
         ng-disabled="form.$invalid || pack.unchanged()"
         >Save</md-button>
@@ -77,6 +77,11 @@
   </div>
 </div>
 <div class="tab" ng-if="pack.isTab('revisions')">
-  revisions
+ <div class="revisions">
+    <revision ng-repeat="revision in pack.revisions" revision="revision"></revision>
+    <div class="revision-start">
+      <div class="revision-start-marker"></div>
+    </div>
+  </div>
 </div>
 </md-content>

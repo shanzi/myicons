@@ -2,11 +2,15 @@ class CollectionController
   info: {}
   icons: []
   iconNames: {}
+  revisions: []
   currentTab: 'icons'
 
   isTab: (name) -> name == @currentTab
 
-  setTab: (name) -> @currentTab = name
+  setTab: (name) ->
+    @currentTab = name
+    @refreshIcons() if @shouldRefreshIcons and @currentTab=='icons'
+    @refreshRevisions() if @shouldRefreshRevisions and @currentTab=='revisions'
 
   reset: ->
     @info = angular.copy @_info
@@ -14,14 +18,15 @@ class CollectionController
 
   save: ->
     angular.extend @_info, @info
-    @_info.$update()
-    @randomFactor = (new Date()).valueOf().toString(16)
+    @shouldRefreshRevisions = true
+    @_info.$update => @reset()
 
   saveIconName: (icon) ->
     save = =>
       if icon.name and @iconNameChanged(icon)
         @iconNames[icon.id] = icon.name
-        icon.$update()
+        icon.$update =>
+          @shouldRefreshRevisions = true
     setTimeout save, 100
 
   iconNameChanged: (icon) ->
@@ -34,7 +39,8 @@ class CollectionController
   deleteIcon: (icon) ->
     idx = @icons.indexOf(icon)
     @icons.splice(idx, 1)
-    icon.$delete()
+    icon.$delete =>
+      @shouldRefreshRevisions = true
 
   unchanged: ->
     angular.equals @info, @_info
@@ -55,17 +61,32 @@ class CollectionController
 
   fieldName: (prefix) ->
     return prefix + @randomFactor
+
+  refreshRevisions: ->
+    @shouldRefreshRevisions = false
+    @revisions = @$modelManager.getCollectionRevisions @_info
+
+  refreshIcons: ->
+    @shouldRefreshIcons = false
+    @icons = @$modelManager.getCollectionIcons @_info
+    @iconNames = {}
+    @icons.$promise.then =>
+      @iconNames[icon.id] = icon.name for icon in @icons
+
+  restoreRevision: (revision) ->
+    @shouldRefreshIcons = true
+    revision.$restore => @refreshRevisions()
   
   constructor: (@$routeParams, @$rootScope, @$location, @$modelManager) ->
     id = parseInt @$routeParams.id
-    @$modelManager.getCollection id, (collection, icons, revisions) =>
+    @$modelManager.getCollection id, (collection, icons) =>
       @_info = collection
       @icons = icons
-      @revisions = revisions
       @iconNames = {}
       @icons.$promise.then =>
         @iconNames[icon.id] = icon.name for icon in icons
       @reset()
+      @shouldRefreshRevisions = true
       @$rootScope.$broadcast '$reselectMenuItem'
 
 

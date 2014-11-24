@@ -1,6 +1,6 @@
 <md-toolbar class="md-medium-tall view-toolbar">
-<div class="md-toolbar-tools" ng-click="app.openMenu()">
-  <md-button class="menu-icon" hide-md aria-label="Toggle Menu">
+<div class="md-toolbar-tools">
+  <md-button class="menu-icon" hide-md aria-label="Toggle Menu" ng-click="app.openMenu()">
   <i class="icon-menu"></i>
   </md-button>
   <p>Collections</p>
@@ -111,7 +111,9 @@
 </div>
 <div class="tab" ng-if="collection.isTab('revisions')">
   <div class="revisions">
-    <revision ng-repeat="revision in collection.revisions" revision="revision"></revision>
+    <revision ng-repeat="revision in collection.revisions" revision="revision"
+    restore-click="collection.restoreRevision(revision)"
+    ></revision>
     <div class="revision-start">
       <div class="revision-start-marker"></div>
     </div>

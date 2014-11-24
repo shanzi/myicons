@@ -16,19 +16,21 @@ class RevisionViewSet(viewsets.ReadOnlyModelViewSet):
     ordering = ('-created_at', )
 
     @detail_route(methods=['post'])
-    def revert(self, request, *args, **kwargs):
+    def restore(self, request, *args, **kwargs):
         revision = self.get_object()
-        if revision.revert():
+        if revision.restore():
             user = {'name': request.user.username, 'email': request.user.email}
-            Revision.objects.create(
-                action='revert',
+            restored = Revision(
+                action='restore',
                 model=revision.model,
                 target_id=revision.target_id,
                 target_name=revision.target_name,
                 ref_model=revision.ref_model,
                 ref_id=revision.ref_id,
+                ref_name=revision.ref_name,
                 snapshot=revision.snapshot,
                 user=user)
+            restored.save()
             serializer = self.serializer_class(revision)
             return Response(serializer.data)
         return Response({'detail': 'Revert failed'}, status=status.HTTP_400_BAD_REQUEST)

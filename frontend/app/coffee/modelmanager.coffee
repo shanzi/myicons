@@ -11,8 +11,7 @@ class ModelManger
       for pack in @packs
         if pack.id == id
           icons = @$models.PackIcon.query pack: pack.id
-          revisions = @$models.Revision.query ref_model:'pack', ref_id:pack.id
-          callback pack, icons, revisions
+          callback pack, icons
           return
 
   getCollection: (id, callback) ->
@@ -20,9 +19,11 @@ class ModelManger
       for collection in @collections
         if collection.id == id
           icons = @$models.CollectionIcon.query collection: collection.id
-          revisions = @$models.Revision.query ref_model:'collection', ref_id:collection.id
-          callback collection, icons, revisions
+          callback collection, icons
           return
+
+  getCollectionIcons: (collection) ->
+    @$models.CollectionIcon.query collection: collection.id
 
   addPack: (pack, callback) ->
     newPack = new @$models.Pack pack
@@ -50,6 +51,12 @@ class ModelManger
     idx = @collections.indexOf col
     @collections.splice(idx, 1)
     col.$delete()
+
+  getPackRevisions: (pack) ->
+    return @$models.Revision.query ref_model:'pack', ref_id:pack.id
+
+  getCollectionRevisions: (collection) ->
+    return @$models.Revision.query ref_model:'collection', ref_id:collection.id
 
   constructor: (@$resource, @$q) ->
     @$models = models(@$resource)

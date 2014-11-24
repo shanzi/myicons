@@ -16,11 +16,14 @@ class PackIconInfoController
 class PackController
   info: {}
   icons: []
+  revisions: []
   currentTab: 'icons'
 
   isTab: (name) -> name == @currentTab
 
-  setTab: (name) -> @currentTab = name
+  setTab: (name) ->
+    @currentTab = name
+    @refreshRevisions() if @shouldRefreshRevisions
 
   reset: ->
     @info = angular.copy @_info
@@ -28,8 +31,8 @@ class PackController
 
   save: ->
     angular.extend @_info, @info
-    @_info.$update()
-    @randomFactor = (new Date()).valueOf().toString(16)
+    @shouldRefreshRevisions = true
+    @_info.$update => @reset()
 
   unchanged: ->
     angular.equals @info, @_info
@@ -50,14 +53,18 @@ class PackController
 
   fieldName: (prefix) ->
     return prefix + @randomFactor
+
+  refreshRevisions: ->
+    @shouldRefreshRevisions = false
+    @revisions = @$modelManager.getPackRevisions @_info
   
   constructor: (@$routeParams, @$rootScope, @$location, @$modelManager, @$mdBottomSheet) ->
     id = parseInt @$routeParams.id
-    @$modelManager.getPack id, (pack, icons, revisions) =>
+    @$modelManager.getPack id, (pack, icons) =>
       @_info = pack
       @icons = icons
-      @revisions = revisions
       @reset()
+      @shouldRefreshRevisions = true
       @$rootScope.$broadcast '$reselectMenuItem'
 
 

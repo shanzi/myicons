@@ -6,7 +6,7 @@ REVISION_ACTIONS = (
     ('create', 'Create a new record'),
     ('update', 'Update a existing record'),
     ('delete', 'Delete a record'),
-    ('revert', 'Revert a record'),
+    ('restore', 'restor deleted records'),
 )
 
 REVISION_MODEL = (
@@ -21,16 +21,17 @@ REVISION_REF_MODEL = (
 )
 
 class Revision(models.Model):
-    action = models.CharField(choices=REVISION_ACTIONS, max_length=6, db_index=True)
+    action = models.CharField(choices=REVISION_ACTIONS, max_length=7, db_index=True)
     model = models.CharField(choices=REVISION_MODEL, max_length=14, db_index=True)
     target_id = models.IntegerField(db_index=True)
     target_name = models.CharField(max_length=128)
     ref_model = models.CharField(choices=REVISION_REF_MODEL, max_length=10, db_index=True)
     ref_id = models.IntegerField(db_index=True)
-    revertable = models.BooleanField(default=True)
+    ref_name = models.CharField(max_length=128, blank=True, default="")
     user = JSONField(default={})
     snapshot = JSONField(default={})
     diff = JSONField(default={})
+    is_restored = models.BooleanField(default=False)
     created_at = models.DateTimeField(db_index=True, auto_now_add=True)
 
     @property
@@ -48,7 +49,8 @@ class Revision(models.Model):
         for key in new:
             oldval = old.get(key)
             newval = new.get(key)
-            if oldval != newval:
+            if key == 'svg_d': continue
+            if  isinstance(newval, unicode) and oldval != newval:
                 diff[key] = {'old': oldval, 'new':newval}
         return diff
 
@@ -59,9 +61,11 @@ class Revision(models.Model):
                 oldsnapshot = prev.snapshot
                 newsnapshot = self.snapshot
                 self.diff = self._diff(oldsnapshot, newsnapshot)
-        elif self.action == 'revert':
-            self.revertable == False
-        super(Revision, self).save(*args, **kwargs)
+        elif self.action == 'create':
+            oldsnapshot = {}
+            newsnapshot = self.snapshot
+            self.diff = self._diff(oldsnapshot, newsnapshot)
+        return super(Revision, self).save(*args, **kwargs)
 
     def retrieve_model(self):
         if self.model == 'pack':
@@ -82,32 +86,24 @@ class Revision(models.Model):
             from iconcollections.models import CollectionIcon
             return CollectionIcon
 
-    def revert(self):
-        if self.action == 'revert' or self.revertable == False: return False
+    def restore(self):
+        if self.action != 'delete': return False
         if self.model == 'collectionicon':
             CollectionIcon = self.retrieve_model()
             to_revert = CollectionIcon(**self.snapshot)
-            if self.action == 'delete':
-                to_revert.save(force_insert=True)
-                self.revertable = False
-                self.save()
-            else:
-                to_revert.save()
+            to_revert.save(force_insert=True)
+            self.is_restored = True
+            self.save()
         else:
             snapshot = self.snapshot
             RevertModel = self.retrieve_model()
-            if self.action == 'delete':
-                icons = snapshot['icons']
-                del snapshot['icons']
-                IconModel = self.retrieve_related_model()
-                to_revert = RevertModel(**snapshot)
-                revert_icons = [IconModel(**icon) for icon in icons]
-                to_revert.save(force_insert=True)
-                for icon in revert_icons: icon.save(force_insert=True)
-                self.revertable = False
-                self.save()
-            else:
-                del snapshot['icons']
-                to_revert = RevertModel(**snapshot)
-                to_revert.save()
+            icons = snapshot['icons']
+            if snapshot.has_key('icons'): del snapshot['icons']
+            IconModel = self.retrieve_related_model()
+            to_revert = RevertModel(**snapshot)
+            revert_icons = [IconModel(**icon) for icon in icons]
+            to_revert.save(force_insert=True)
+            for icon in revert_icons: icon.save(force_insert=True)
+            self.is_restored = True
+            self.save()
         return True

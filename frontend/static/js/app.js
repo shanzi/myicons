@@ -136,6 +136,8 @@ CollectionController = (function() {
 
   CollectionController.prototype.iconNames = {};
 
+  CollectionController.prototype.revisions = [];
+
   CollectionController.prototype.currentTab = 'icons';
 
   CollectionController.prototype.isTab = function(name) {
@@ -143,7 +145,13 @@ CollectionController = (function() {
   };
 
   CollectionController.prototype.setTab = function(name) {
-    return this.currentTab = name;
+    this.currentTab = name;
+    if (this.shouldRefreshIcons && this.currentTab === 'icons') {
+      this.refreshIcons();
+    }
+    if (this.shouldRefreshRevisions && this.currentTab === 'revisions') {
+      return this.refreshRevisions();
+    }
   };
 
   CollectionController.prototype.reset = function() {
@@ -153,8 +161,12 @@ CollectionController = (function() {
 
   CollectionController.prototype.save = function() {
     angular.extend(this._info, this.info);
-    this._info.$update();
-    return this.randomFactor = (new Date()).valueOf().toString(16);
+    this.shouldRefreshRevisions = true;
+    return this._info.$update((function(_this) {
+      return function() {
+        return _this.reset();
+      };
+    })(this));
   };
 
   CollectionController.prototype.saveIconName = function(icon) {
@@ -163,7 +175,9 @@ CollectionController = (function() {
       return function() {
         if (icon.name && _this.iconNameChanged(icon)) {
           _this.iconNames[icon.id] = icon.name;
-          return icon.$update();
+          return icon.$update(function() {
+            return _this.shouldRefreshRevisions = true;
+          });
         }
       };
     })(this);
@@ -184,7 +198,11 @@ CollectionController = (function() {
     var idx;
     idx = this.icons.indexOf(icon);
     this.icons.splice(idx, 1);
-    return icon.$delete();
+    return icon.$delete((function(_this) {
+      return function() {
+        return _this.shouldRefreshRevisions = true;
+      };
+    })(this));
   };
 
   CollectionController.prototype.unchanged = function() {
@@ -217,6 +235,38 @@ CollectionController = (function() {
     return prefix + this.randomFactor;
   };
 
+  CollectionController.prototype.refreshRevisions = function() {
+    this.shouldRefreshRevisions = false;
+    return this.revisions = this.$modelManager.getCollectionRevisions(this._info);
+  };
+
+  CollectionController.prototype.refreshIcons = function() {
+    this.shouldRefreshIcons = false;
+    this.icons = this.$modelManager.getCollectionIcons(this._info);
+    this.iconNames = {};
+    return this.icons.$promise.then((function(_this) {
+      return function() {
+        var icon, _i, _len, _ref, _results;
+        _ref = _this.icons;
+        _results = [];
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          icon = _ref[_i];
+          _results.push(_this.iconNames[icon.id] = icon.name);
+        }
+        return _results;
+      };
+    })(this));
+  };
+
+  CollectionController.prototype.restoreRevision = function(revision) {
+    this.shouldRefreshIcons = true;
+    return revision.$restore((function(_this) {
+      return function() {
+        return _this.refreshRevisions();
+      };
+    })(this));
+  };
+
   function CollectionController($routeParams, $rootScope, $location, $modelManager) {
     var id;
     this.$routeParams = $routeParams;
@@ -225,10 +275,9 @@ CollectionController = (function() {
     this.$modelManager = $modelManager;
     id = parseInt(this.$routeParams.id);
     this.$modelManager.getCollection(id, (function(_this) {
-      return function(collection, icons, revisions) {
+      return function(collection, icons) {
         _this._info = collection;
         _this.icons = icons;
-        _this.revisions = revisions;
         _this.iconNames = {};
         _this.icons.$promise.then(function() {
           var icon, _i, _len, _results;
@@ -240,6 +289,7 @@ CollectionController = (function() {
           return _results;
         });
         _this.reset();
+        _this.shouldRefreshRevisions = true;
         return _this.$rootScope.$broadcast('$reselectMenuItem');
       };
     })(this));
@@ -443,6 +493,8 @@ PackController = (function() {
 
   PackController.prototype.icons = [];
 
+  PackController.prototype.revisions = [];
+
   PackController.prototype.currentTab = 'icons';
 
   PackController.prototype.isTab = function(name) {
@@ -450,7 +502,10 @@ PackController = (function() {
   };
 
   PackController.prototype.setTab = function(name) {
-    return this.currentTab = name;
+    this.currentTab = name;
+    if (this.shouldRefreshRevisions) {
+      return this.refreshRevisions();
+    }
   };
 
   PackController.prototype.reset = function() {
@@ -460,8 +515,12 @@ PackController = (function() {
 
   PackController.prototype.save = function() {
     angular.extend(this._info, this.info);
-    this._info.$update();
-    return this.randomFactor = (new Date()).valueOf().toString(16);
+    this.shouldRefreshRevisions = true;
+    return this._info.$update((function(_this) {
+      return function() {
+        return _this.reset();
+      };
+    })(this));
   };
 
   PackController.prototype.unchanged = function() {
@@ -492,6 +551,11 @@ PackController = (function() {
     return prefix + this.randomFactor;
   };
 
+  PackController.prototype.refreshRevisions = function() {
+    this.shouldRefreshRevisions = false;
+    return this.revisions = this.$modelManager.getPackRevisions(this._info);
+  };
+
   function PackController($routeParams, $rootScope, $location, $modelManager, $mdBottomSheet) {
     var id;
     this.$routeParams = $routeParams;
@@ -501,11 +565,11 @@ PackController = (function() {
     this.$mdBottomSheet = $mdBottomSheet;
     id = parseInt(this.$routeParams.id);
     this.$modelManager.getPack(id, (function(_this) {
-      return function(pack, icons, revisions) {
+      return function(pack, icons) {
         _this._info = pack;
         _this.icons = icons;
-        _this.revisions = revisions;
         _this.reset();
+        _this.shouldRefreshRevisions = true;
         return _this.$rootScope.$broadcast('$reselectMenuItem');
       };
     })(this));
@@ -601,7 +665,7 @@ PackAddController = (function() {
     } else if (this.fontStatus === 'processing') {
       return 'Processing';
     } else {
-      return 'Drag font(one of .ttf, .eot, .woff, .svg) file here to retrive all icons\' shape.';
+      return 'Drag font (either .ttf or .woff) file here to retrive all icons\' shape.';
     }
   };
 
@@ -1041,9 +1105,9 @@ module.exports = function() {
     restrict: 'E',
     scope: {
       revision: '=',
-      revertClick: '&'
+      restoreClick: '&'
     },
-    template: "<div class=\"revision-title\">\n  <span class=\"revision-action-icon\" ng-class=\"revision.action\">\n    <i ng-class=\"rev.action_icon\"></i>\n  </span><img ng-src=\"{{ rev.avatar }}\" class=\"revision-avatar\">\n  <span class=\"revision-user\" ng-bind=\"revision.user.name\"></span>\n  <span class=\"revision-action\" ng-bind=\"rev.action\"></span>\n  <a class=\"revision-target\" ng-bind=\"revision.target_name\" ng-href=\"{{ rev.target_url }}\"></a>\n  at\n  <span class=\"revision-datetime\" ng-bind=\"revision.created_at|date:'short'\"></span>\n</div>\n<ul class=\"revision-detail\">\n  <li class=\"revision-detail-item\" ng-if=\"rev.rename\">\n  Renamed from <span class=\"old\" ng-bind=\"rev.rename.old\"></span> to <span class=\"new\" ng-bind=\"rev.rename.new\"></span>\n  </li>\n  <li class=\"revision-detail-item\" ng-repeat=\"item in rev.changes\">\n  Changed <span class=\"field\" ng-bind=\"item.field\"></span>\n  from <span class=\"old\" ng-bind=\"item.old\"></span> to <span class=\"new\" ng-bind=\"item.new\"></span>\n  </li>\n  <li class=\"revision-detail-item\" ng-repeat=\"item in rev.clears\">\n    Cleared the content of <span class=\"field\" ng-bind=\"item.field\"></span>\n  </li>\n  <li class=\"revision-detail-item\" ng-repeat=\"item in rev.sets\">\n    Set <span class=\"field\" ng-bind=\"item.field\"></span> to <span class=\"new\" ng-bind=\"item.new\"></span>\n  </li>\n</ul>\n<div class=\"revert\" ng-if=\"revision.revertable\">\n<i class=\"icon-rev-revert\"></i> Revert to this revision\n</div>",
+    template: "<div class=\"revision-title\">\n  <span class=\"revision-action-icon\" ng-class=\"revision.action\">\n    <i ng-class=\"rev.action_icon\"></i>\n  </span><img ng-src=\"{{ rev.avatar }}\" class=\"revision-avatar\">\n  <span class=\"revision-user\" ng-bind=\"revision.user.name\"></span>\n  <span class=\"revision-action\" ng-bind=\"rev.action\"></span>\n  <a class=\"revision-target\" ng-bind=\"revision.target_name\" ng-href=\"{{ rev.target_url }}\"></a>\n  <span class=\"revert-ref\" ng-if=\"revision.ref_name\">\n    <span ng-bind=\"rev.ref_action\"></span>\n    <a class=\"revision-ref\" ng-bind=\"revision.ref_name\" ng-href=\"{{ rev.ref_url }}\"></a>\n  </span>\n  at\n  <span class=\"revision-datetime\" ng-bind=\"revision.created_at|date:'short'\"></span>\n</div>\n<ul class=\"revision-detail\">\n  <li class=\"revision-detail-item\" ng-if=\"rev.rename\">\n  Renamed from <span class=\"old\" ng-bind=\"rev.rename.old\"></span> to <span class=\"new\" ng-bind=\"rev.rename.new\"></span>\n  </li>\n  <li class=\"revision-detail-item\" ng-repeat=\"item in rev.changes\">\n  Changed <span class=\"field\" ng-bind=\"item.field\"></span>\n  from <span class=\"old\" ng-bind=\"item.old\"></span> to <span class=\"new\" ng-bind=\"item.new\"></span>\n  </li>\n  <li class=\"revision-detail-item\" ng-repeat=\"item in rev.clears\">\n    Cleared the content of <span class=\"field\" ng-bind=\"item.field\"></span>\n  </li>\n  <li class=\"revision-detail-item\" ng-repeat=\"item in rev.sets\">\n    Set <span class=\"field\" ng-bind=\"item.field\"></span> to <span class=\"new\" ng-bind=\"item.new\"></span>\n  </li>\n</ul>\n<div class=\"restore-action\" ng-if=\"rev.restorable\" ng-click=\"restoreClick(revision)\">\n<i class=\"icon-rev-restore\"></i> Restore</div>",
     link: function(scope, element, attrs) {
       var changes, clears, k, model, rename, rev, revision, sets, v, val, _ref;
       revision = scope.revision;
@@ -1063,6 +1127,10 @@ module.exports = function() {
           break;
         case 'delete':
           rev.action = 'removed ' + model;
+          rev.restorable = !revision.is_restored;
+          break;
+        case 'restore':
+          rev.action = 'restored ' + model;
       }
       rename = null;
       changes = [];
@@ -1072,7 +1140,13 @@ module.exports = function() {
       for (k in _ref) {
         val = _ref[k];
         v = angular.copy(val);
-        if (k === 'name') {
+        if (!v.old) {
+          v.old = '';
+        }
+        if (!v["new"]) {
+          v["new"] = '';
+        }
+        if (k === 'name' && revision.action !== 'create') {
           rename = v;
         } else if (v.old.trim() && v["new"].trim()) {
           v.field = k;
@@ -1089,11 +1163,26 @@ module.exports = function() {
       rev.changes = changes;
       rev.clears = clears;
       rev.sets = sets;
-      console.log(rev);
       if (revision.model === 'pack') {
         rev.target_url = "#/packs/" + revision.target_id;
       } else if (revision.model === 'collection') {
         rev.target_url = "#/collections/" + revision.target_id;
+      }
+      if (revision.ref_name) {
+        rev.ref_url = "#/collections/" + revision.ref_id;
+        switch (revision.action) {
+          case 'create':
+            rev.ref_action = 'to collection';
+            break;
+          case 'restore':
+            rev.ref_action = 'to collection';
+            break;
+          case 'delete':
+            rev.ref_action = 'from collection';
+            break;
+          default:
+            rev.ref_action = 'of collection';
+        }
       }
       return scope.rev = rev;
     }
@@ -1119,7 +1208,7 @@ ModelManger = (function() {
   ModelManger.prototype.getPack = function(id, callback) {
     return this.ready((function(_this) {
       return function() {
-        var icons, pack, revisions, _i, _len, _ref;
+        var icons, pack, _i, _len, _ref;
         _ref = _this.packs;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           pack = _ref[_i];
@@ -1127,11 +1216,7 @@ ModelManger = (function() {
             icons = _this.$models.PackIcon.query({
               pack: pack.id
             });
-            revisions = _this.$models.Revision.query({
-              ref_model: 'pack',
-              ref_id: pack.id
-            });
-            callback(pack, icons, revisions);
+            callback(pack, icons);
             return;
           }
         }
@@ -1142,7 +1227,7 @@ ModelManger = (function() {
   ModelManger.prototype.getCollection = function(id, callback) {
     return this.ready((function(_this) {
       return function() {
-        var collection, icons, revisions, _i, _len, _ref;
+        var collection, icons, _i, _len, _ref;
         _ref = _this.collections;
         for (_i = 0, _len = _ref.length; _i < _len; _i++) {
           collection = _ref[_i];
@@ -1150,16 +1235,18 @@ ModelManger = (function() {
             icons = _this.$models.CollectionIcon.query({
               collection: collection.id
             });
-            revisions = _this.$models.Revision.query({
-              ref_model: 'collection',
-              ref_id: collection.id
-            });
-            callback(collection, icons, revisions);
+            callback(collection, icons);
             return;
           }
         }
       };
     })(this));
+  };
+
+  ModelManger.prototype.getCollectionIcons = function(collection) {
+    return this.$models.CollectionIcon.query({
+      collection: collection.id
+    });
   };
 
   ModelManger.prototype.addPack = function(pack, callback) {
@@ -1212,6 +1299,20 @@ ModelManger = (function() {
     idx = this.collections.indexOf(col);
     this.collections.splice(idx, 1);
     return col.$delete();
+  };
+
+  ModelManger.prototype.getPackRevisions = function(pack) {
+    return this.$models.Revision.query({
+      ref_model: 'pack',
+      ref_id: pack.id
+    });
+  };
+
+  ModelManger.prototype.getCollectionRevisions = function(collection) {
+    return this.$models.Revision.query({
+      ref_model: 'collection',
+      ref_id: collection.id
+    });
   };
 
   function ModelManger($resource, $q) {
@@ -1283,6 +1384,14 @@ module.exports = function($resource) {
     }),
     'Revision': $resource('/revisions/:id/', {
       id: '@id'
+    }, {
+      restore: {
+        url: '/revisions/:id/restore/',
+        params: {
+          id: '@id'
+        },
+        method: 'POST'
+      }
     })
   };
 };

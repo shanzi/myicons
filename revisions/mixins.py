@@ -18,7 +18,7 @@ class RevisionMixin:
             if name in self.exclude: continue
             val = getattr(obj, name)
             if name in self.relations:
-                serialized[name] = val.id
+                serialized[name + '_id'] = val.id
             else:
                 serialized[name] = val
         return serialized
@@ -39,6 +39,9 @@ class RevisionMixin:
             return obj.collection.id
         return obj.id
 
+    def get_ref_name(self, obj):
+        return ''
+
     def post_save(self, obj, created=False):
         serialized_obj = self.serialize(obj)
         if created:
@@ -49,6 +52,7 @@ class RevisionMixin:
                 target_name=obj.name,
                 ref_model=self.revision_ref_model,
                 ref_id=self.get_ref_id(obj),
+                ref_name=self.get_ref_name(obj),
                 user=self.get_user(),
                 snapshot=serialized_obj)
         else:
@@ -59,6 +63,7 @@ class RevisionMixin:
                 target_name=obj.name,
                 ref_model=self.revision_ref_model,
                 ref_id=self.get_ref_id(obj),
+                ref_name=self.get_ref_name(obj),
                 user=self.get_user(),
                 snapshot=serialized_obj)
 
@@ -67,6 +72,7 @@ class RevisionMixin:
         self._pre_delete_ref_id = self.get_ref_id(obj)
         self._pre_delete_name = obj.name
         self._pre_delete_snapshot = self.serialize_delete(obj)
+        self._pre_delete_ref_name = self.get_ref_name(obj)
         
     def post_delete(self, obj):
         Revision.objects.create(
@@ -76,6 +82,7 @@ class RevisionMixin:
             target_name=self._pre_delete_name,
             ref_model=self.revision_ref_model,
             ref_id=self._pre_delete_ref_id,
+            ref_name=self._pre_delete_ref_name,
             user=self.get_user(),
             snapshot = self._pre_delete_snapshot)
 
@@ -104,3 +111,6 @@ class CollectionIconRevisionMixin(RevisionMixin):
     relations = ('collection', )
     revision_model = 'collectionicon'
     revision_ref_model = 'collection'
+
+    def get_ref_name(self, obj):
+        return obj.collection.name

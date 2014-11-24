@@ -20,10 +20,9 @@ class CollectionIcon(models.Model):
     name = models.CharField(max_length=128, db_index=True, default="")
     svg_d = models.TextField(default="", blank=True)
     width = models.FloatField(default=1.0, blank=True)
-    tagnames = models.TextField(default="", blank=True)
 
     packicon = models.ForeignKey('iconpacks.PackIcon', related_name="collectionicons",
-                                 null=True, on_delete=models.SET_NULL)
+                                 null=True, blank=True, on_delete=models.SET_NULL)
     collection = models.ForeignKey(Collection, related_name="icons")
 
     def __unicode__(self):

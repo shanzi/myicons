@@ -32,5 +32,9 @@ module.exports = ($resource) ->
 
   'Revision':
     $resource '/revisions/:id/', {id: '@id'},
+      restore:
+        url: '/revisions/:id/restore/'
+        params: {id: '@id'}
+        method: 'POST'
 
 

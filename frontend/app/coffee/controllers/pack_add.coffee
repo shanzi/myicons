@@ -52,7 +52,7 @@ class PackAddController
     else if @fontStatus=='processing'
       return 'Processing'
     else
-      'Drag font(one of .ttf, .eot, .woff, .svg) file here to retrive all icons\' shape.'
+      'Drag font (either .ttf or .woff) file here to retrive all icons\' shape.'
 
   cssInfo: ->
     if @cssStatus=='error'
