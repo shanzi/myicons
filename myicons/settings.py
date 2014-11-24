@@ -45,6 +45,7 @@ INSTALLED_APPS = (
     'iconpacks',
     'iconcollections',
     'revisions',
+    'labels',
 
     'fontbuilder',
     'accounts',

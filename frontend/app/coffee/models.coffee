@@ -37,4 +37,5 @@ module.exports = ($resource) ->
         params: {id: '@id'}
         method: 'POST'
 
-
+  'Label':
+    $resource '/labels/:name/', {name: '@name'},

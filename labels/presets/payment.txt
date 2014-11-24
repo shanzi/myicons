@@ -1,0 +1,15 @@
+credit-card
+credit
+creditcard
+wallet
+googlewallet
+visa
+mastercard
+discover
+paypal
+stripe
+gittip
+amex
+btc
+bitcoin
+dogecoin

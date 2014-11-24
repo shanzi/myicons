@@ -1,0 +1,16 @@
+phone
+mobile
+navigate
+map
+location
+battery
+flash
+wifi
+bluetooth
+camera
+ipad
+iphone
+telephone
+mixer
+playstore
+reminder

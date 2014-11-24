@@ -1,0 +1,10 @@
+up
+down
+left
+right
+arrow
+arrows
+angle
+caret
+chevron
+hand

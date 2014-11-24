@@ -63,6 +63,7 @@ class ModelManger
     @currentUser = @$models.User.current()
     @packs = @$models.Pack.query()
     @collections = @$models.Collection.query()
+    @labels = @$models.Label.query()
 
 
 module.exports = ($resource, $q) =>

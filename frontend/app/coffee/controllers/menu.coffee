@@ -45,7 +45,7 @@ class MenuController
     ]
     @packs = new MenuSection 'packs', 'icon-packs', @$modelManager.packs
     @collections = new MenuSection 'collections', 'icon-collections', @$modelManager.collections
-    @labels = new MenuSection 'labels', 'icon-labels', []
+    @labels = new MenuSection 'labels', 'icon-labels', @$modelManager.labels
 
     @packs.addItemUrl = '#/packs/add'
     @collections.addItemUrl = '#/collections/add'

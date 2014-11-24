@@ -429,7 +429,7 @@ MenuController = (function() {
     ]);
     this.packs = new MenuSection('packs', 'icon-packs', this.$modelManager.packs);
     this.collections = new MenuSection('collections', 'icon-collections', this.$modelManager.collections);
-    this.labels = new MenuSection('labels', 'icon-labels', []);
+    this.labels = new MenuSection('labels', 'icon-labels', this.$modelManager.labels);
     this.packs.addItemUrl = '#/packs/add';
     this.collections.addItemUrl = '#/collections/add';
     this.sections = [this.home, this.packs, this.collections, this.labels];
@@ -1322,6 +1322,7 @@ ModelManger = (function() {
     this.currentUser = this.$models.User.current();
     this.packs = this.$models.Pack.query();
     this.collections = this.$models.Collection.query();
+    this.labels = this.$models.Label.query();
   }
 
   return ModelManger;
@@ -1392,6 +1393,9 @@ module.exports = function($resource) {
         },
         method: 'POST'
       }
+    }),
+    'Label': $resource('/labels/:name/', {
+      name: '@name'
     })
   };
 };
