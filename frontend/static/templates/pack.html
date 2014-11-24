@@ -77,10 +77,12 @@
   </div>
 </div>
 <div class="tab" ng-if="pack.isTab('revisions')">
- <div class="revisions">
-    <revision ng-repeat="revision in pack.revisions" revision="revision"></revision>
-    <div class="revision-start">
-      <div class="revision-start-marker"></div>
+  <div class="revisions-wrap">
+    <div class="revisions">
+      <revision ng-repeat="revision in pack.revisions" revision="revision"></revision>
+      <div class="revision-start">
+        <div class="revision-start-marker"></div>
+      </div>
     </div>
   </div>
 </div>

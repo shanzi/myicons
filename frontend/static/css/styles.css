@@ -76,9 +76,12 @@
   width: 20px;
   font-size: 18px;
 }
-.revisions {
+.revisions-wrap {
   max-width: 640px;
   margin: 0 auto 10px;
+  padding-left: 30px;
+}
+.revisions {
   border-left: solid 2px #eee;
 }
 .revisions revision {
