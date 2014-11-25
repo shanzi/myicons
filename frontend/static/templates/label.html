@@ -1,0 +1,20 @@
+<md-toolbar class="md-medium-tall view-toolbar">
+<div class="md-toolbar-tools" ng-click="app.openMenu()">
+  <md-button class="menu-icon" hide-md aria-label="Toggle Menu" ng-click="app.openMenu()">
+  <i class="icon-menu"></i>
+  </md-button>
+  <p>Labels</p>
+  <h1>{{ label.info.name }}</h1>
+</div>
+</md-toolbar>
+<md-content class="md-content-padding" flex>
+<div class="label-content">
+  <div class="label-pack" ng-repeat="pack in label.info.packs | orderBy:'id'">
+    <h2 class="label-pack-title">
+      <span ng-bind="pack.name"></span>
+      <a ng-href="#/packs/{{ pack.id }}"><i class="icon-link"></i></a>
+    </h2>
+    <pack-icons icons="pack.icons" icon-click="label.showIconInfo(icon)"></pack-icons>
+  </div>
+</div>
+</md-content>

@@ -38,4 +38,4 @@ module.exports = ($resource) ->
         method: 'POST'
 
   'Label':
-    $resource '/labels/:name/', {name: '@name'},
+    $resource '/labels/:id/', {id: '@id'},

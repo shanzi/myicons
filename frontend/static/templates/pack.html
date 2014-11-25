@@ -21,7 +21,9 @@
 </md-toolbar>
 <md-content class="md-content-padding" flex>
 <div class="tab" ng-if="pack.isTab('icons')">
+  <div class="pack-wrap">
   <pack-icons icons="pack.icons" icon-click="pack.showIconInfo(icon)"></pack-icons>
+  </div>
 </div>
 <div class="tab" ng-if="pack.isTab('info')">
   <div class="pack-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">

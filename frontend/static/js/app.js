@@ -1,5 +1,5 @@
 require=(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var appCtrl, collectionAddCtrl, collectionCtrl, dashboardCtrl, menuCtrl, modelManager, packAddCtrl, packCtrl, packIconDirective, revisionDirective, settingsCtrl, template;
+var appCtrl, collectionAddCtrl, collectionCtrl, dashboardCtrl, labelCtrl, menuCtrl, modelManager, packAddCtrl, packCtrl, packIconDirective, revisionDirective, settingsCtrl, template;
 
 window.Hammer = require('hammer');
 
@@ -33,6 +33,8 @@ collectionCtrl = require('./controllers/collection');
 
 collectionAddCtrl = require('./controllers/collection_add');
 
+labelCtrl = require('./controllers/label');
+
 settingsCtrl = require('./controllers/settings');
 
 dashboardCtrl = require('./controllers/dashboard');
@@ -47,7 +49,7 @@ template = function(name) {
   return "/static/templates/" + name + ".html";
 };
 
-angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar', 'angularFileUpload']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('packAddCtrl', packAddCtrl).controller('collectionCtrl', collectionCtrl).controller('collectionAddCtrl', collectionAddCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).directive('packIcons', packIconDirective).directive('revision', revisionDirective).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
+angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar', 'angularFileUpload']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('packAddCtrl', packAddCtrl).controller('collectionCtrl', collectionCtrl).controller('collectionAddCtrl', collectionAddCtrl).controller('labelCtrl', labelCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).directive('packIcons', packIconDirective).directive('revision', revisionDirective).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
   $routeProvider.when('/home/dashboard', {
     templateUrl: template('dashboard'),
     controller: 'DashboardCtrl'
@@ -70,6 +72,10 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-lo
     templateUrl: template('collection'),
     controller: 'collectionCtrl',
     controllerAs: 'collection'
+  }).when('/labels/:id', {
+    templateUrl: template('label'),
+    controller: 'labelCtrl',
+    controllerAs: 'label'
   }).otherwise({
     redirectTo: '/home/dashboard'
   });
@@ -84,7 +90,7 @@ angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-lo
 
 
 
-},{"./controllers/app":2,"./controllers/collection":3,"./controllers/collection_add":4,"./controllers/dashboard":5,"./controllers/menu":6,"./controllers/pack":7,"./controllers/pack_add":8,"./controllers/settings":9,"./directives/pack_icons":11,"./directives/revisions":12,"./modelmanager":13,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.fileupload":"angular.fileupload","angular.fileuploadshim":"angular.fileuploadshim","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
+},{"./controllers/app":2,"./controllers/collection":3,"./controllers/collection_add":4,"./controllers/dashboard":5,"./controllers/label":6,"./controllers/menu":7,"./controllers/pack":8,"./controllers/pack_add":9,"./controllers/settings":11,"./directives/pack_icons":13,"./directives/revisions":14,"./modelmanager":15,"angular":"angular","angular.animate":"angular.animate","angular.aria":"angular.aria","angular.fileupload":"angular.fileupload","angular.fileuploadshim":"angular.fileuploadshim","angular.loadingbar":"angular.loadingbar","angular.material":"angular.material","angular.resource":"angular.resource","angular.route":"angular.route","hammer":"hammer"}],2:[function(require,module,exports){
 var AppController, md5;
 
 md5 = require('../deps/md5.js');
@@ -126,7 +132,7 @@ module.exports = AppController;
 
 
 
-},{"../deps/md5.js":10}],3:[function(require,module,exports){
+},{"../deps/md5.js":12}],3:[function(require,module,exports){
 var CollectionController;
 
 CollectionController = (function() {
@@ -347,6 +353,48 @@ module.exports = function($scope) {};
 
 
 },{}],6:[function(require,module,exports){
+var LabelController, PackIconInfoController;
+
+PackIconInfoController = require('./pack_icon_info');
+
+LabelController = (function() {
+  LabelController.prototype.info = {};
+
+  LabelController.prototype.showIconInfo = function(icon) {
+    return this.$mdBottomSheet.show({
+      controller: PackIconInfoController,
+      controllerAs: 'info',
+      templateUrl: '/static/templates/pack_icon_info.html',
+      locals: {
+        icon: icon
+      }
+    });
+  };
+
+  function LabelController($routeParams, $rootScope, $modelManager, $mdBottomSheet) {
+    var label;
+    this.$routeParams = $routeParams;
+    this.$rootScope = $rootScope;
+    this.$modelManager = $modelManager;
+    this.$mdBottomSheet = $mdBottomSheet;
+    label = this.$routeParams.id;
+    this.$modelManager.getLabel(label, (function(_this) {
+      return function(info) {
+        _this.info = info;
+        return _this.$rootScope.$broadcast('$reselectMenuItem');
+      };
+    })(this));
+  }
+
+  return LabelController;
+
+})();
+
+module.exports = LabelController;
+
+
+
+},{"./pack_icon_info":10}],7:[function(require,module,exports){
 var MenuController, MenuSection;
 
 MenuSection = (function() {
@@ -453,40 +501,10 @@ module.exports = MenuController;
 
 
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 var PackController, PackIconInfoController;
 
-PackIconInfoController = (function() {
-  PackIconInfoController.prototype.sendto = function(collection) {
-    var newIconData;
-    newIconData = {
-      name: this.icon.name,
-      packicon: this.icon.id,
-      collection: collection.id
-    };
-    return this.$modelManager.addCollectionIcon(newIconData, (function(_this) {
-      return function() {
-        return _this.$mdBottomSheet.hide();
-      };
-    })(this));
-  };
-
-  function PackIconInfoController($rootScope, $mdBottomSheet, $modelManager, icon) {
-    this.$rootScope = $rootScope;
-    this.$mdBottomSheet = $mdBottomSheet;
-    this.$modelManager = $modelManager;
-    this.icon = icon;
-    this.collections = this.$modelManager.collections;
-    this.$rootScope.$on('$locationChangeStart', (function(_this) {
-      return function() {
-        return _this.$mdBottomSheet.hide();
-      };
-    })(this));
-  }
-
-  return PackIconInfoController;
-
-})();
+PackIconInfoController = require('./pack_icon_info');
 
 PackController = (function() {
   PackController.prototype.info = {};
@@ -583,7 +601,7 @@ module.exports = PackController;
 
 
 
-},{}],8:[function(require,module,exports){
+},{"./pack_icon_info":10}],9:[function(require,module,exports){
 var PackAddController;
 
 PackAddController = (function() {
@@ -744,12 +762,51 @@ module.exports = PackAddController;
 
 
 
-},{}],9:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
+var PackIconInfoController;
+
+PackIconInfoController = (function() {
+  PackIconInfoController.prototype.sendto = function(collection) {
+    var newIconData;
+    newIconData = {
+      name: this.icon.name,
+      packicon: this.icon.id,
+      collection: collection.id
+    };
+    return this.$modelManager.addCollectionIcon(newIconData, (function(_this) {
+      return function() {
+        return _this.$mdBottomSheet.hide();
+      };
+    })(this));
+  };
+
+  function PackIconInfoController($rootScope, $mdBottomSheet, $modelManager, icon) {
+    this.$rootScope = $rootScope;
+    this.$mdBottomSheet = $mdBottomSheet;
+    this.$modelManager = $modelManager;
+    this.icon = icon;
+    this.collections = this.$modelManager.collections;
+    this.$rootScope.$on('$locationChangeStart', (function(_this) {
+      return function() {
+        return _this.$mdBottomSheet.hide();
+      };
+    })(this));
+  }
+
+  return PackIconInfoController;
+
+})();
+
+module.exports = PackIconInfoController;
+
+
+
+},{}],11:[function(require,module,exports){
 module.exports = function($scope) {};
 
 
 
-},{}],10:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 /*
  * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
  * Digest Algorithm, as defined in RFC 1321.
@@ -1009,7 +1066,7 @@ function binl2b64(binarray)
 
 module.exports = hex_md5;
 
-},{}],11:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 var PackIconDirective;
 
 PackIconDirective = (function() {
@@ -1095,7 +1152,7 @@ module.exports = function() {
 
 
 
-},{}],12:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 var md5;
 
 md5 = require('../deps/md5.js');
@@ -1191,14 +1248,14 @@ module.exports = function() {
 
 
 
-},{"../deps/md5.js":10}],13:[function(require,module,exports){
+},{"../deps/md5.js":12}],15:[function(require,module,exports){
 var ModelManger, models;
 
 models = require('./models');
 
 ModelManger = (function() {
   ModelManger.prototype.ready = function(callback) {
-    return this.$q.all(this.currentUser.$promise, this.packs.$promise, this.collections.$promise).then((function(_this) {
+    return this.$q.all(this.currentUser.$promise, this.packs.$promise, this.collections.$promise, this.labels.$promise).then((function(_this) {
       return function() {
         return callback();
       };
@@ -1239,6 +1296,18 @@ ModelManger = (function() {
             return;
           }
         }
+      };
+    })(this));
+  };
+
+  ModelManger.prototype.getLabel = function(id, callback) {
+    return this.ready((function(_this) {
+      return function() {
+        var label_info;
+        label_info = _this.$models.Label.get({
+          id: id
+        });
+        return callback(label_info);
       };
     })(this));
   };
@@ -1337,7 +1406,7 @@ module.exports = (function(_this) {
 
 
 
-},{"./models":14}],14:[function(require,module,exports){
+},{"./models":16}],16:[function(require,module,exports){
 module.exports = function($resource) {
   return {
     'User': $resource('/accounts/users/:username/', {
@@ -1394,8 +1463,8 @@ module.exports = function($resource) {
         method: 'POST'
       }
     }),
-    'Label': $resource('/labels/:name/', {
-      name: '@name'
+    'Label': $resource('/labels/:id/', {
+      id: '@id'
     })
   };
 };

@@ -1,6 +1,6 @@
+adobe
 google
 windows
-android
 yahoo
 apple
 css3

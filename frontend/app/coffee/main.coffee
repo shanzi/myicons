@@ -20,6 +20,7 @@ packCtrl = require './controllers/pack'
 packAddCtrl = require './controllers/pack_add'
 collectionCtrl = require './controllers/collection'
 collectionAddCtrl = require './controllers/collection_add'
+labelCtrl = require './controllers/label'
 settingsCtrl = require './controllers/settings'
 dashboardCtrl = require './controllers/dashboard'
 
@@ -47,6 +48,7 @@ angular.module('myiconsApp', [
   .controller('packAddCtrl', packAddCtrl)
   .controller('collectionCtrl', collectionCtrl)
   .controller('collectionAddCtrl', collectionAddCtrl)
+  .controller('labelCtrl', labelCtrl)
   .controller('DashboardCtrl', dashboardCtrl)
   .controller('SettingsCtrl', settingsCtrl)
 
@@ -82,6 +84,10 @@ angular.module('myiconsApp', [
         templateUrl: template('collection')
         controller: 'collectionCtrl'
         controllerAs: 'collection'
+      .when '/labels/:id',
+        templateUrl: template('label')
+        controller: 'labelCtrl'
+        controllerAs: 'label'
       .otherwise
         redirectTo: '/home/dashboard'
 

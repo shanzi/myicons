@@ -166,31 +166,38 @@
   background: #fff;
   margin-left: -16px;
 }
-pack-icons {
-  display: block;
+.label-pack,
+.pack-wrap {
   width: 800px;
   margin: 0 auto;
-  overflow: hidden;
 }
 @media (max-width: 1160px) {
-  pack-icons {
+  .label-pack,
+  .pack-wrap {
     width: 720px;
   }
 }
 @media (max-width: 840px) {
-  pack-icons {
+  .label-pack,
+  .pack-wrap {
     width: 640px;
   }
 }
 @media (max-width: 640px) {
-  pack-icons {
+  .label-pack,
+  .pack-wrap {
     width: 400px;
   }
 }
 @media (max-width: 440px) {
-  pack-icons {
+  .label-pack,
+  .pack-wrap {
     width: 240px;
   }
+}
+pack-icons {
+  display: block;
+  overflow: hidden;
 }
 pack-icons .icon {
   cursor: pointer;
@@ -455,6 +462,16 @@ pack-icons .icon:hover {
   background: #fff;
   border-radius: 3px;
   border: #ff5f00 1px solid;
+}
+.label-pack-title {
+  padding: 10px;
+}
+.label-pack-title a {
+  color: #999;
+  transition: color 0.2s ease-out;
+}
+.label-pack-title a:hover {
+  color: #666;
 }
 .md-sidenav-left.md-mydark-theme {
   color: #ccc;

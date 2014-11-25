@@ -6,7 +6,7 @@ from rest_framework.response import Response
 
 from iconpacks.models import Pack, PackIcon
 
-from .preset_labels import PRESET_LABELS, PRESET_LABEL_DICT, PRESET_LABEL_SET
+from .preset_labels import PRESET_LABELS, PRESET_LABEL_DICT, PRESET_LABEL_MAP
 
 
 class LabelViewSet(viewsets.ViewSet):
@@ -15,7 +15,8 @@ class LabelViewSet(viewsets.ViewSet):
         return Response(PRESET_LABELS)
 
     def retrieve(self, request, pk):
-        if pk in PRESET_LABEL_SET:
+        pk = pk.lower()
+        if pk in PRESET_LABEL_MAP.keys():
             results = self._search_icons(pk)
             return Response(results)
         return Response({'detail': 'Not Found'}, status=status.HTTP_404_NOT_FOUND)
@@ -31,7 +32,8 @@ class LabelViewSet(viewsets.ViewSet):
             pack_icons = list(pack_dict[pack_id])
             pack['icons'] = pack_icons
         return {
-            'name': label,
+            'name': PRESET_LABEL_MAP.get(label),
+            'id': label,
             'packs': packs
         }
 

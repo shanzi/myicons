@@ -42,7 +42,7 @@
       class="menu-item"
       ng-show="section.isExpanded"
       ng-click="menu.goto(section, item)"
-      ng-repeat="item in section.items"
+      ng-repeat="item in section.items | orderBy:'id'"
       ng-class="{active: menu.isSelectedItem(section, item)}"
       ng-bind="item.name"
       aria-hidden="false"

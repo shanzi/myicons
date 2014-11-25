@@ -3,7 +3,7 @@ models = require './models'
 class ModelManger
 
   ready: (callback) ->
-    @$q.all @currentUser.$promise, @packs.$promise, @collections.$promise
+    @$q.all @currentUser.$promise, @packs.$promise, @collections.$promise, @labels.$promise
       .then => callback()
 
   getPack: (id, callback) ->
@@ -21,6 +21,11 @@ class ModelManger
           icons = @$models.CollectionIcon.query collection: collection.id
           callback collection, icons
           return
+
+  getLabel: (id, callback) ->
+    @ready =>
+      label_info = @$models.Label.get id: id
+      callback(label_info)
 
   getCollectionIcons: (collection) ->
     @$models.CollectionIcon.query collection: collection.id
