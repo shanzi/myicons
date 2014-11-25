@@ -8,8 +8,7 @@ from revisions import mixins as rmixins
 from .models import Pack, PackIcon
 from .serializers import (PackSerializer,
                           PackIconSerializer,
-                          PackCreateSerializer,
-                          PackIconUpdateSerializer)
+                          PackCreateSerializer)
 
 
 class PacksViewSet(rmixins.PackRevisionMixin, viewsets.ModelViewSet):
@@ -33,10 +32,3 @@ class PackIconsViewSet(viewsets.ReadOnlyModelViewSet, mixins.UpdateModelMixin):
     filter_fields = ('pack', )
     ordering_fields = ('id', 'name', 'svg_unicode')
     serializer_class = PackIconSerializer
-
-    def get_serializer_class(self):
-        request = self.request
-        if request.method in ('PUT', 'PATCH'):
-            return PackIconUpdateSerializer
-        else:
-            return PackIconSerializer

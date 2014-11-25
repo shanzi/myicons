@@ -1,6 +1,8 @@
 import re
 from rest_framework import serializers
 
+from labels.utils import search_text_for
+
 from .models import Pack, PackIcon
 
 
@@ -54,13 +56,9 @@ class PackCreateSerializer(serializers.ModelSerializer):
         obj.save()
         related = obj._related_data
         icons = related.get('icons')
-        for icon in icons: icon.pack = obj
+        for icon in icons:
+            icon.pack = obj
+            icon.search_text = search_text_for(icon.name)
         PackIcon.objects.bulk_create(icons)
         del(obj._related_data)
 
-
-class PackIconUpdateSerializer(PackIconSerializer):
-
-    class Meta:
-        model = PackIcon
-        fields = ('tagnames', )

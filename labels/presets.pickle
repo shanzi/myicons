@@ -1,5 +1,5 @@
 (dp1
-S'people'
+S'People'
 p2
 c__builtin__
 set
@@ -26,7 +26,7 @@ p13
 aS'man'
 p14
 atRp15
-sS'mobile'
+sS'Mobile'
 p16
 g3
 ((lp17
@@ -63,7 +63,7 @@ p32
 aS'iphone'
 p33
 atRp34
-sS'arrows'
+sS'Arrows'
 p35
 g3
 ((lp36
@@ -88,7 +88,7 @@ p45
 aS'left'
 p46
 atRp47
-sS'mediaplayer'
+sS'MediaPlayer'
 p48
 g3
 ((lp49
@@ -159,7 +159,7 @@ p81
 aS'backward'
 p82
 atRp83
-sS'texteditor'
+sS'TextEditor'
 p84
 g3
 ((lp85
@@ -270,7 +270,7 @@ p137
 aS'justify'
 p138
 atRp139
-sS'meteor'
+sS'Meteor'
 p140
 g3
 ((lp141
@@ -315,7 +315,7 @@ p160
 aS'wind'
 p161
 atRp162
-sS'social'
+sS'Social'
 p163
 g3
 ((lp164
@@ -426,7 +426,7 @@ p216
 aS'4sq'
 p217
 atRp218
-sS'brands'
+sS'Brands'
 p219
 g3
 ((lp220
@@ -467,7 +467,7 @@ p237
 aS'play-station'
 p238
 atRp239
-sS'payment'
+sS'Payment'
 p240
 g3
 ((lp241
