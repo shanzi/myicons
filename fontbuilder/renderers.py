@@ -15,7 +15,7 @@ class FontCSSRenderer(renderers.BaseRenderer):
     production = False
 
     def render(self, data, media_type=None, render_context=None):
-        if render_context.get('response').status_code != 200: return ''
+        if render_context and render_context.get('response').status_code != 200: return ''
         data['production'] = self.production
         icons = data['icons']
         data['classnames'] = ', '.join('.' + icon['classname'] for icon in icons)
@@ -28,7 +28,7 @@ class FontCheatSheetRenderer(renderers.BaseRenderer):
     production = False
 
     def render(self, data, media_type=None, render_context=None):
-        if render_context.get('response').status_code != 200: return ''
+        if render_context and render_context.get('response').status_code != 200: return ''
         data['production'] = self.production
         return render_to_string('fontcheatsheet.html', data)
 
@@ -68,7 +68,7 @@ class BinaryFontRenderer(SVGFontRenderer):
         return fontdata
 
     def render(self, data, media_type=None, render_context=None):
-        if render_context.get('response').status_code != 200: return ''
+        if render_context and render_context.get('response').status_code != 200: return ''
         svgfile = self.get_svgfile(data)
         font = fontforge.open(svgfile.name)
         fontdata = self.gen_binaryfont(self.format, font)
@@ -89,7 +89,7 @@ class ZIPPackRenderer(BinaryFontRenderer, FontCSSRenderer, FontCheatSheetRendere
     production = True
 
     def render(self, data, media_type=None, render_context=None):
-        if render_context.get('response').status_code != 200: return ''
+        if render_context and render_context.get('response').status_code != 200: return ''
         svgfile = self.get_svgfile(data)
         font = fontforge.open(svgfile.name)
 
