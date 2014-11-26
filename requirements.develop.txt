@@ -12,4 +12,3 @@ lxml==3.4.0
 pyquery==1.2.9
 static3==0.5.1
 wsgiref==0.1.2
-psycopg2==2.5.4
