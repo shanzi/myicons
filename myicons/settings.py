@@ -115,6 +115,9 @@ REST_FRAMEWORK = {
     )
 }
 
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
+
 try:
     from .local_settings import *
 except ImportError:

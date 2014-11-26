@@ -290,6 +290,7 @@ CollectionController = (function() {
       if (!svgfile.name.match(/\.svg$/)) {
         return this.svgInvalid = true;
       } else {
+        this.svgInvalid = false;
         return this.$upload.upload({
           url: '/convert/svg',
           file: svgfile

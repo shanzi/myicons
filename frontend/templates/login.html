@@ -1,0 +1,42 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>myicons | login</title>
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
+  {% if bootstrap %}
+  <link rel="stylesheet" href="/build/livetesting/{{ bootstrap }}.css" type="text/css">
+  {% else %}
+  <link rel="stylesheet" href="{% static 'css/myicons.min.css' %}" type="text/css">
+  {% endif %}
+</head>
+<body>
+<div id="login">
+  <div class="logo">
+    <i class="icon-myicons-logo"></i>
+  </div>
+  <div class="content">
+    <form action="{% url 'login' %}" method="post">
+      {% csrf_token %}
+      <legend>Welcome to <b>myicons</b>!</legend>
+      <input type="text" name="username" maxlength="100" autocapitalize="off" autocorrect="off" autocomplete="off"
+      placeholder="Username">
+      <input type="password" name="password" maxlength="100" autocapitalize="off" autocorrect="off"
+      placeholder="Password">
+      <input type="hidden" name="next" value="{{ next }}" />
+      {% if form.errors %}
+      <div class="errors">
+        Sorry, log in failed.
+      </div>
+      {% endif %}
+      <input type="submit" name="submit" value="Log in" class="btn btn-primary" id="submit-id-submit">
+      <div class="footer">
+        About <a href="http://io-meter.com/myicons">myicons</a>.
+      </div>
+    </form>
+  </div>
+</div>
+</body>
+</html>
+

@@ -120,59 +120,42 @@ def icon(filepath):
     """
     iconfile = open(filepath)
     origincontents = iconfile.read()
-    iconfile.close()
-    contents = re.sub(r'xmlns\s*=\s*["\'][^"\']+["\']', '', origincontents.lower())
-    svgdom = pq(contents)
-    svg = svgdom('svg')
-    viewBox = (svg.attr('viewbox') or '').strip()
-    matched = re.match(r',?\s*'.join((
-        r'(?P<x>\d+(\.\d+)?)',
-        r'(?P<y>\d+(\.\d+)?)',
-        r'(?P<width>\d+(\.\d+)?)',
-        r'(?P<height>\d+(\.\d+)?)')),
-        viewBox)
-    if matched:
-        x = float(matched.groupdict()['x'])
-        y = float(matched.groupdict()['y'])
-        width = float(matched.groupdict()['width'])
-        height = float(matched.groupdict()['height'])
-
-        tempfont = fontforge.font()
-        tempfont.ascent = BASE_ASCENT
-        tempfont.descent = BASE_DESCENT
-        tempfont.em = BASE_ASCENT + BASE_DESCENT
-        glyph = tempfont.createChar(0xf000)
-        try:
-            tempiconfile = tempfile.NamedTemporaryFile(suffix='.svg')
-            tempiconfile.write(origincontents)
-            tempiconfile.flush()
-            glyph.importOutlines(tempiconfile.name)
-            bbox = glyph.boundingBox()
-            if abs(bbox[2] - bbox[0]) < 1.0 or abs(bbox[3] - bbox[1]) < 1.0:
-                return None
-            glyph.transform((1, 0, 0, 1, -bbox[0], -bbox[1]))
-            glyph.round()
-            bbox = map(int, glyph.boundingBox())
-            tempiconfile.close()
-        except:
+    tempfont = fontforge.font()
+    tempfont.ascent = BASE_ASCENT
+    tempfont.descent = BASE_DESCENT
+    tempfont.em = BASE_ASCENT + BASE_DESCENT
+    glyph = tempfont.createChar(0xf000)
+    try:
+        tempiconfile = tempfile.NamedTemporaryFile(suffix='.svg')
+        tempiconfile.write(origincontents)
+        tempiconfile.flush()
+        glyph.importOutlines(tempiconfile.name)
+        bbox = glyph.boundingBox()
+        if abs(bbox[2] - bbox[0]) < 1.0 or abs(bbox[3] - bbox[1]) < 1.0:
             return None
-        
-        tmpf = tempfile.NamedTemporaryFile(suffix='.svg')
-        tempfont.generate(tmpf.name)
-        tempfont.close()
+        glyph.transform((1, 0, 0, 1, -bbox[0], -bbox[1]))
+        glyph.round()
+        bbox = map(int, glyph.boundingBox())
+        tempiconfile.close()
+    except:
+        return None
+    
+    tmpf = tempfile.NamedTemporaryFile(suffix='.svg')
+    tempfont.generate(tmpf.name)
+    tempfont.close()
 
-        output = tmpf.read()
-        tmpf.close()
-        output = re.sub(r'xmlns\s*=\s*["\'][^"\']+["\']', '', output)
-        fontquery = pq(output)
-        glyph = fontquery('glyph').eq(0)
-        d = glyph.attr('d')
+    output = tmpf.read()
+    tmpf.close()
+    output = re.sub(r'xmlns\s*=\s*["\'][^"\']+["\']', '', output)
+    fontquery = pq(output)
+    glyph = fontquery('glyph').eq(0)
+    d = glyph.attr('d')
 
-        return {
-            'viewBox': (0, 0,BASE_ASCENT, BASE_ASCENT),
-            'boundingBox': bbox,
-            'svg_d': d
-            }
+    return {
+        'viewBox': (0, 0,BASE_ASCENT, BASE_ASCENT),
+        'boundingBox': bbox,
+        'svg_d': d
+        }
 
 
 def validate_font(filepath, filetype):

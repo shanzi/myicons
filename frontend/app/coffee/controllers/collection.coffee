@@ -89,6 +89,7 @@ class CollectionController
       if not svgfile.name.match /\.svg$/
         @svgInvalid = true
       else
+        @svgInvalid = false
         @$upload.upload url: '/convert/svg', file: svgfile
           .success (data) =>
             name = data.file.replace /[^a-zA-Z0-9\-]/g, '-'

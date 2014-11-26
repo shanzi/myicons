@@ -1,3 +1,44 @@
+#login {
+  width: 340px;
+  margin: 100px auto 0;
+}
+#login .logo {
+  text-align: center;
+  font-size: 150px;
+  color: #252a3a;
+}
+#login .content {
+  text-align: center;
+  color: #666;
+}
+#login .content legend {
+  font-size: 22px;
+  padding: 10px;
+  width: 100%;
+}
+#login .content input {
+  display: block;
+  width: 100%;
+  height: 56px;
+  font-size: 18px;
+  margin: 20px 0;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  text-align: center;
+}
+#login .content input[type=submit] {
+  background: #252a3a;
+  color: #fff;
+  text-transform: uppercase;
+  border: none;
+}
+#login a {
+  color: #252a3a;
+}
+#login .errors {
+  padding: 10px;
+  color: #fc2607;
+}
 .md-sidenav-left {
   z-index: 8;
 }
