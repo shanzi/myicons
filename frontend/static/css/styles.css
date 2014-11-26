@@ -463,6 +463,25 @@ pack-icons .icon:hover {
   border-radius: 3px;
   border: #ff5f00 1px solid;
 }
+.upload-svg {
+  text-align: center;
+  min-height: 100px;
+  color: #999;
+  border: #eee 1px solid;
+  margin: 20px 0;
+  padding: 20px;
+  background: #fff;
+  transition: background 0.2s ease-out;
+}
+.upload-svg.upload-drag-over {
+  background: #eee;
+}
+.upload-svg .upload-symbol {
+  font-size: 64px;
+}
+.upload-svg .svg-invalid {
+  color: #d8653b;
+}
 .label-pack-title {
   padding: 10px;
 }

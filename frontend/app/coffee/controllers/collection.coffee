@@ -42,6 +42,12 @@ class CollectionController
     icon.$delete =>
       @shouldRefreshRevisions = true
 
+  addIcon: (icon) ->
+    console.log icon
+    @$modelManager.addCollectionIcon icon, (newicon) =>
+      @icons.push newicon
+      @iconNames[newicon.id] = newicon.name
+
   unchanged: ->
     angular.equals @info, @_info
 
@@ -76,8 +82,28 @@ class CollectionController
   restoreRevision: (revision) ->
     @shouldRefreshIcons = true
     revision.$restore => @refreshRevisions()
+
+  svgFileSelected: (files) ->
+    if files.length > 0
+      svgfile = files[0]
+      if not svgfile.name.match /\.svg$/
+        @svgInvalid = true
+      else
+        @$upload.upload url: '/convert/svg', file: svgfile
+          .success (data) =>
+            name = data.file.replace /[^a-zA-Z0-9\-]/g, '-'
+            name = name.replace /(^-+)/g, ''
+            icon =
+              svg_d: data.content.svg_d
+              width: data.content.boundingBox[2]
+              name: name
+              collection: @info.id
+            @addIcon icon
+          .error =>
+            @svgInvalid = true
+
   
-  constructor: (@$routeParams, @$rootScope, @$location, @$modelManager) ->
+  constructor: (@$routeParams, @$rootScope, @$location, @$upload, @$modelManager) ->
     id = parseInt @$routeParams.id
     @$modelManager.getCollection id, (collection, icons) =>
       @_info = collection

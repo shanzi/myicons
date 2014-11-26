@@ -59,6 +59,18 @@
         <md-divider inset></md-divider>
       </md-item>
     </md-list>
+    <div class="upload-svg"
+        ng-file-drop="collection.svgFileSelected($files)"
+        ng-file-drag-over-class="upload-drag-over"
+        >
+        <div class="upload-symbol">
+          <i class="icon-svg-upload"></i>
+        </div>
+        <div>Drag SVG file here or pick icons from packs.</div>
+        <div class="svg-invalid" ng-if='collection.svgInvalid'>
+          Failed to convert SVG file to icon.
+        </div>
+      </div>
   </div>
 </div>
 <div class="tab" ng-if="collection.isTab('info')">

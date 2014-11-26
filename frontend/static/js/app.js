@@ -211,6 +211,16 @@ CollectionController = (function() {
     })(this));
   };
 
+  CollectionController.prototype.addIcon = function(icon) {
+    console.log(icon);
+    return this.$modelManager.addCollectionIcon(icon, (function(_this) {
+      return function(newicon) {
+        _this.icons.push(newicon);
+        return _this.iconNames[newicon.id] = newicon.name;
+      };
+    })(this));
+  };
+
   CollectionController.prototype.unchanged = function() {
     return angular.equals(this.info, this._info);
   };
@@ -273,11 +283,44 @@ CollectionController = (function() {
     })(this));
   };
 
-  function CollectionController($routeParams, $rootScope, $location, $modelManager) {
+  CollectionController.prototype.svgFileSelected = function(files) {
+    var svgfile;
+    if (files.length > 0) {
+      svgfile = files[0];
+      if (!svgfile.name.match(/\.svg$/)) {
+        return this.svgInvalid = true;
+      } else {
+        return this.$upload.upload({
+          url: '/convert/svg',
+          file: svgfile
+        }).success((function(_this) {
+          return function(data) {
+            var icon, name;
+            name = data.file.replace(/[^a-zA-Z0-9\-]/g, '-');
+            name = name.replace(/(^-+)/g, '');
+            icon = {
+              svg_d: data.content.svg_d,
+              width: data.content.boundingBox[2],
+              name: name,
+              collection: _this.info.id
+            };
+            return _this.addIcon(icon);
+          };
+        })(this)).error((function(_this) {
+          return function() {
+            return _this.svgInvalid = true;
+          };
+        })(this));
+      }
+    }
+  };
+
+  function CollectionController($routeParams, $rootScope, $location, $upload, $modelManager) {
     var id;
     this.$routeParams = $routeParams;
     this.$rootScope = $rootScope;
     this.$location = $location;
+    this.$upload = $upload;
     this.$modelManager = $modelManager;
     id = parseInt(this.$routeParams.id);
     this.$modelManager.getCollection(id, (function(_this) {
