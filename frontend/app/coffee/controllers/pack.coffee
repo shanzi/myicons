@@ -5,6 +5,7 @@ class PackController
   icons: []
   revisions: []
   currentTab: 'icons'
+  searchText: ''
 
   isTab: (name) -> name == @currentTab
 

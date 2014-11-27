@@ -389,6 +389,19 @@ pack-icons .icon:hover {
 .pack-icon-info .item-actions .collection i.icon-collections {
   width: 20px;
 }
+.pack-icon-search {
+  text-align: center;
+  padding: 10px;
+}
+.pack-icon-search input[type=search] {
+  background: #eee;
+  outline: none;
+  width: 200px;
+  height: 24px;
+  text-align: center;
+  border: none;
+  border-radius: 3px;
+}
 .collection-icons {
   width: 800px;
   margin: 0 auto;

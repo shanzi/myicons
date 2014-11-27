@@ -9,4 +9,4 @@ def search_text_for(name):
     for label, keywords in PRESET_LABEL_DICT.iteritems():
         if splited_set & keywords:
             splited.append(label)
-    return ' '.join(splited)
+    return ' '.join(splited).lower()

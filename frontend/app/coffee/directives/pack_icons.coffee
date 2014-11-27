@@ -1,4 +1,5 @@
 class PackIconDirective
+  searchText: ''
 
   _renderIcon: (icon) ->
     """
@@ -9,8 +10,14 @@ class PackIconDirective
     </div>
     """
 
+  filterIcons: (icons) ->
+    if @searchText
+      return icons.filter (icon) => icon and icon.search_text.search(@searchText) >= 0
+    else
+      return icons
+
   renderIcons: ->
-    icons = @scope.icons
+    icons = @filterIcons(@scope.icons)
     if icons
       @element.html (@_renderIcon(icon) for icon in icons).join('')
       @element.children().on 'click', (event) =>
@@ -32,12 +39,16 @@ class PackIconDirective
   constructor: (@scope, @element, @attrs) ->
     @renderIcons()
     @scope.$watchCollection 'icons', (value) => @renderIcons()
+    @scope.$watch 'filter', (value) =>
+      @searchText = value.trim()
+      @renderIcons()
   
 
 module.exports = ->
   restrict: 'E'
   scope:
     icons: '='
+    filter: '='
     iconClick: '&'
   link: (scope, element, attrs) ->
     scope.packIconCtrl = new PackIconDirective(scope, element, attrs)

@@ -22,7 +22,10 @@
 <md-content class="md-content-padding" flex>
 <div class="tab" ng-if="pack.isTab('icons')">
   <div class="pack-wrap">
-  <pack-icons icons="pack.icons" icon-click="pack.showIconInfo(icon)"></pack-icons>
+    <div class="pack-icon-search">
+      <input type="search" placeholder="Search" ng-model='pack.searchText' ng-model-options="{ debounce: 500 }" >
+    </div>
+    <pack-icons icons="pack.icons" filter="pack.searchText" icon-click="pack.showIconInfo(icon)"></pack-icons>
   </div>
 </div>
 <div class="tab" ng-if="pack.isTab('info')">

@@ -559,6 +559,8 @@ PackController = (function() {
 
   PackController.prototype.currentTab = 'icons';
 
+  PackController.prototype.searchText = '';
+
   PackController.prototype.isTab = function(name) {
     return name === this.currentTab;
   };
@@ -1114,13 +1116,27 @@ module.exports = hex_md5;
 var PackIconDirective;
 
 PackIconDirective = (function() {
+  PackIconDirective.prototype.searchText = '';
+
   PackIconDirective.prototype._renderIcon = function(icon) {
     return "<div class=\"icon\" data-icon-id=\"" + icon.id + "\">\n  <svg viewBox=\"0 0 1024 1024\">\n    <path d=\"" + icon.svg_d + "\" transform=\"scale(1, -1) translate(" + (512 - (icon.width || 1024) / 2) + ", -896)\"></path>\n  </svg>\n</div>";
   };
 
+  PackIconDirective.prototype.filterIcons = function(icons) {
+    if (this.searchText) {
+      return icons.filter((function(_this) {
+        return function(icon) {
+          return icon && icon.search_text.search(_this.searchText) >= 0;
+        };
+      })(this));
+    } else {
+      return icons;
+    }
+  };
+
   PackIconDirective.prototype.renderIcons = function() {
     var icon, icons;
-    icons = this.scope.icons;
+    icons = this.filterIcons(this.scope.icons);
     if (icons) {
       this.element.html(((function() {
         var _i, _len, _results;
@@ -1175,6 +1191,12 @@ PackIconDirective = (function() {
         return _this.renderIcons();
       };
     })(this));
+    this.scope.$watch('filter', (function(_this) {
+      return function(value) {
+        _this.searchText = value.trim();
+        return _this.renderIcons();
+      };
+    })(this));
   }
 
   return PackIconDirective;
@@ -1186,6 +1208,7 @@ module.exports = function() {
     restrict: 'E',
     scope: {
       icons: '=',
+      filter: '=',
       iconClick: '&'
     },
     link: function(scope, element, attrs) {
