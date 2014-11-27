@@ -67,7 +67,7 @@ class ModelManger
     return @$models.Revision.query ref_model:'collection', ref_id:collection.id
 
   refreshPacks: ->
-    @$models.Packs.query (packs) =>
+    @$models.Pack.query (packs) =>
       angular.forEach packs, (newpack) =>
         for oldpack in @packs
           if oldpack.id == newpack.id
