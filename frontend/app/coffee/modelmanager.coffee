@@ -30,6 +30,9 @@ class ModelManger
   getCollectionIcons: (collection) ->
     @$models.CollectionIcon.query collection: collection.id
 
+  getRevisions: (callback) ->
+    @$models.Revision.query (data) => callback(data)
+
   addPack: (pack, callback) ->
     newPack = new @$models.Pack pack
     newPack.$save =>
@@ -62,6 +65,24 @@ class ModelManger
 
   getCollectionRevisions: (collection) ->
     return @$models.Revision.query ref_model:'collection', ref_id:collection.id
+
+  refreshPacks: ->
+    @$models.Packs.query (packs) =>
+      angular.forEach packs, (newpack) =>
+        for oldpack in @packs
+          if oldpack.id == newpack.id
+            angular.extend oldpack, newpack
+            return
+        @packs.push newpack
+
+  refreshCollections: ->
+    @$models.Collection.query (collections) =>
+      angular.forEach collections, (newcol) =>
+        for oldcol in @collections
+          if oldcol.id == newcol.id
+            angular.extend oldcol, newcol
+            return
+        @collections.push newcol
 
   constructor: (@$resource, @$q) ->
     @$models = models(@$resource)

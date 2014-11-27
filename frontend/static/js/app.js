@@ -52,10 +52,12 @@ template = function(name) {
 angular.module('myiconsApp', ['ngMaterial', 'ngRoute', 'ngResource', 'angular-loading-bar', 'angularFileUpload']).controller('appCtrl', appCtrl).controller('menuCtrl', menuCtrl).controller('packCtrl', packCtrl).controller('packAddCtrl', packAddCtrl).controller('collectionCtrl', collectionCtrl).controller('collectionAddCtrl', collectionAddCtrl).controller('labelCtrl', labelCtrl).controller('DashboardCtrl', dashboardCtrl).controller('SettingsCtrl', settingsCtrl).directive('packIcons', packIconDirective).directive('revision', revisionDirective).factory('$modelManager', modelManager).config(function($routeProvider, $resourceProvider) {
   $routeProvider.when('/home/dashboard', {
     templateUrl: template('dashboard'),
-    controller: 'DashboardCtrl'
+    controller: 'DashboardCtrl',
+    controllerAs: 'dashboard'
   }).when('/home/settings', {
     templateUrl: template('settings'),
-    controller: 'SettingsCtrl'
+    controller: 'SettingsCtrl',
+    controllerAs: 'settings'
   }).when('/packs/add', {
     templateUrl: template('pack_add'),
     controller: 'packAddCtrl',
@@ -392,7 +394,51 @@ module.exports = CollectionAddController;
 
 
 },{}],5:[function(require,module,exports){
-module.exports = function($scope) {};
+var DashboardController;
+
+DashboardController = (function() {
+  DashboardController.prototype.revisions = [];
+
+  DashboardController.prototype.refreshRevisions = function() {
+    var delayed;
+    delayed = (function(_this) {
+      return function() {
+        return _this.$modelManager.getRevisions(function(revisions) {
+          return _this.revisions = revisions;
+        });
+      };
+    })(this);
+    return setTimeout(delayed, 1000);
+  };
+
+  DashboardController.prototype.restoreRevision = function(revision) {
+    return revision.$restore((function(_this) {
+      return function(rev) {
+        if (rev.model === 'pack') {
+          _this.$modelManager.refreshPacks();
+        } else if (rev.model === 'collection') {
+          _this.$modelManager.refreshCollections();
+        }
+        return _this.refreshRevisions();
+      };
+    })(this));
+  };
+
+  function DashboardController($mdSidenav, $modelManager) {
+    this.$mdSidenav = $mdSidenav;
+    this.$modelManager = $modelManager;
+    this.$modelManager.getRevisions((function(_this) {
+      return function(revisions) {
+        return _this.revisions = revisions;
+      };
+    })(this));
+  }
+
+  return DashboardController;
+
+})();
+
+module.exports = DashboardController;
 
 
 
@@ -848,7 +894,71 @@ module.exports = PackIconInfoController;
 
 
 },{}],11:[function(require,module,exports){
-module.exports = function($scope) {};
+var SettingsController;
+
+SettingsController = (function() {
+  SettingsController.prototype.chpass = {};
+
+  SettingsController.prototype.reset = function() {
+    this.currentUser = angular.copy(this._currentUser);
+    return this.randomFactor = (new Date()).valueOf().toString(16);
+  };
+
+  SettingsController.prototype.resetPass = function() {
+    return this.chpass = {};
+  };
+
+  SettingsController.prototype.update = function() {
+    return this.currentUser.$update((function(_this) {
+      return function() {
+        return angular.extend(_this._currentUser, _this.currentUser);
+      };
+    })(this));
+  };
+
+  SettingsController.prototype.updatePass = function() {
+    var user;
+    user = angular.copy(this.currentUser);
+    angular.extend(user, this.chpass);
+    return user.$change_password((function(_this) {
+      return function() {
+        return _this.resetPass();
+      };
+    })(this));
+  };
+
+  SettingsController.prototype.fieldName = function(prefix) {
+    return prefix + this.randomFactor;
+  };
+
+  SettingsController.prototype.unchanged = function() {
+    return angular.equals(this.currentUser, this._currentUser);
+  };
+
+  SettingsController.prototype.passUnchanged = function() {
+    return angular.equals(this.chpass, {});
+  };
+
+  SettingsController.prototype.passUnmatched = function() {
+    return this.chpass.newpassword !== this.chpass.repeat;
+  };
+
+  function SettingsController($mdSidenav, $modelManager) {
+    this.$mdSidenav = $mdSidenav;
+    this.$modelManager = $modelManager;
+    this.$modelManager.ready((function(_this) {
+      return function() {
+        _this._currentUser = _this.$modelManager.currentUser;
+        return _this.reset();
+      };
+    })(this));
+  }
+
+  return SettingsController;
+
+})();
+
+module.exports = SettingsController;
 
 
 
@@ -1385,6 +1495,14 @@ ModelManger = (function() {
     });
   };
 
+  ModelManger.prototype.getRevisions = function(callback) {
+    return this.$models.Revision.query((function(_this) {
+      return function(data) {
+        return callback(data);
+      };
+    })(this));
+  };
+
   ModelManger.prototype.addPack = function(pack, callback) {
     var newPack;
     newPack = new this.$models.Pack(pack);
@@ -1451,6 +1569,44 @@ ModelManger = (function() {
     });
   };
 
+  ModelManger.prototype.refreshPacks = function() {
+    return this.$models.Packs.query((function(_this) {
+      return function(packs) {
+        return angular.forEach(packs, function(newpack) {
+          var oldpack, _i, _len, _ref;
+          _ref = _this.packs;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            oldpack = _ref[_i];
+            if (oldpack.id === newpack.id) {
+              angular.extend(oldpack, newpack);
+              return;
+            }
+          }
+          return _this.packs.push(newpack);
+        });
+      };
+    })(this));
+  };
+
+  ModelManger.prototype.refreshCollections = function() {
+    return this.$models.Collection.query((function(_this) {
+      return function(collections) {
+        return angular.forEach(collections, function(newcol) {
+          var oldcol, _i, _len, _ref;
+          _ref = _this.collections;
+          for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+            oldcol = _ref[_i];
+            if (oldcol.id === newcol.id) {
+              angular.extend(oldcol, newcol);
+              return;
+            }
+          }
+          return _this.collections.push(newcol);
+        });
+      };
+    })(this));
+  };
+
   function ModelManger($resource, $q) {
     this.$resource = $resource;
     this.$q = $q;
@@ -1482,6 +1638,13 @@ module.exports = function($resource) {
       current: {
         method: 'GET',
         url: '/accounts/users/current/'
+      },
+      update: {
+        method: 'PATCH'
+      },
+      change_password: {
+        method: 'PATCH',
+        url: '/accounts/users/:username/change_password'
       }
     }),
     'Pack': $resource('/packs/:id/', {

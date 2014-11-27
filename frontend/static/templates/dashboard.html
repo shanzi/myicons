@@ -7,4 +7,60 @@
   <h1>Dashboard</h1>
 </div>
 </md-toolbar>
-<md-content class="md-content-padding"></md-content>
+<md-content class="md-content-padding" flex>
+<div id="dashboard" class="content-wrap" layout="vertical" layout-md="horizontal">
+  <div class="actions-panel" flex-md="33">
+    <section>
+      <h2>actions</h2>
+      <div class="actions-menu">
+        <a class="menu-item" href="#/packs/add">
+          <i class="icon-packs"></i>
+          Add new pack
+        </a>
+        <a class="menu-item" href="#/collections/add">
+          <i class="icon-collections"></i>
+          Add new collection
+        </a>
+      </div>
+    </section>
+    <section>
+      <h2>accounts</h2>
+      <div class="accounts-menu">
+        <a class="menu-item" href="#/home/settings">
+          <i class="icon-settings"></i>
+          Settings
+        </a>
+        <a class="menu-item" href="/logout">
+          <i class="icon-log-out"></i>
+          Log out
+        </a>
+      </div>
+    </section>
+    <section>
+      <h2>about</h2>
+      <div class="about-menu">
+        <a class="menu-item" href="http://io-meter.com/myicons">
+          <i class="icon-home"></i>
+          Project home
+        </a>
+        <a class="menu-item" href="http://github.com/shanzi/myicons/issues">
+          <i class="icon-bug"></i>
+          Bug report
+        </a>
+        <a class="menu-item" href="http://io-meter.com/myicons/#donate">
+          <i class="icon-donate"></i>
+          Donate
+        </a>
+      </div>
+    </section>
+  </div>
+  <div class="revisions" flex-md>
+    <revision ng-repeat="revision in dashboard.revisions" revision="revision"
+    restore-click="dashboard.restoreRevision(revision)"
+    ></revision>
+    <div class="revision-start">
+      <div class="revision-start-marker"></div>
+    </div>
+  </div>
+</div>
+</md-content>

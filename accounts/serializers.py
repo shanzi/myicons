@@ -12,18 +12,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         exclude = ('last_login', 'date_joined', 'groups', 'user_permissions', 'password')
 
-class UserAdminSerializer(serializers.ModelSerializer):
-
-    def validate_password(self, attrs, source):
-        password = attrs[source]
-        attrs[source] = make_password(password)
-        return attrs
-    
-    class Meta:
-        model = User
-        write_only_fields = ('password', )
-        exclude = ('last_login', 'date_joined', 'groups', 'user_permissions')
-
 
 class UserChangePasswordSerializer(serializers.ModelSerializer):
     oldpassword = serializers.CharField()

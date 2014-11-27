@@ -207,6 +207,55 @@
   background: #fff;
   margin-left: -16px;
 }
+#dashboard.content-wrap {
+  overflow: hidden;
+  max-width: 880px;
+  margin: 0 auto;
+}
+#dashboard .actions-panel {
+  padding: 20px;
+}
+#dashboard .revisions {
+  max-width: 530px;
+  margin-left: 30px;
+}
+#dashboard section {
+  margin-bottom: 10px;
+}
+#dashboard h2 {
+  font-size: 14px;
+  font-weight: normal;
+  color: #ccc;
+  text-transform: uppercase;
+}
+#dashboard .menu-item {
+  height: 30px;
+  line-height: 30px;
+  font-size: 16px;
+  color: #666;
+  text-decoration: none;
+  display: block;
+}
+#dashboard .menu-item i {
+  width: 22px;
+  height: 28px;
+  text-align: center;
+  font-size: 22px;
+  vertical-align: middle;
+}
+.user-info .row {
+  padding: 30px;
+}
+.user-info .row.actions {
+  padding-top: 0;
+}
+.user-info md-input-group {
+  margin: 5px;
+  font-size: 22px;
+}
+.user-info input {
+  width: 100%;
+}
 .label-pack,
 .pack-wrap {
   width: 800px;
@@ -335,7 +384,7 @@ pack-icons .icon:hover {
   border: #ff5f00 1px solid;
 }
 .pack-icon-info .item-info {
-  height: 200px;
+  max-height: 200px;
 }
 .pack-icon-info .item-info .icon {
   height: 160px;

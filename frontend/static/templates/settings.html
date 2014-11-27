@@ -7,4 +7,40 @@
   <h1>Settings</h1>
 </div>
 </md-toolbar>
-<md-content class="md-content-padding"></md-content>
+<md-content class="md-content-padding">
+<div class="user-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
+  <form name="form">
+    <div class="row" >
+      <div layout="vertical" layout-sm="horizontal">
+        <md-text-float label="First Name"
+        fid="{{ settings.fieldName('first_name') }}"
+        ng-model="settings.currentUser.first_name" flex> </md-text-float>
+        <md-text-float label="Last Name"
+        fid="{{ settings.fieldName('last_name') }}"
+        ng-model="settings.currentUser.last_name" flex> </md-text-float>
+      </div>
+      <md-text-float label="Email"
+      fid="{{ settings.fieldName('email') }}"
+      ng-model="settings.currentUser.email" required email> </md-text-float>
+    </div>
+    <div class="row actions">
+      <md-button aria-label class="md-warn" ng-click="settings.reset()" ng-disabled="settings.unchanged()">RESET</md-button>
+      <md-button aria-label class="md-safe" ng-click="settings.update()" ng-disabled="form.$invalid || settings.unchanged()">Update</md-button>
+    </div>
+  </form>
+  <form name="formpass">
+    <div class="row" >
+      <md-text-float label="Old password"
+      ng-model=" settings.chpass.oldpassword" required type='password'> </md-text-float>
+      <md-text-float label="New password"
+      ng-model="settings.chpass.newpassword" required type='password'> </md-text-float>
+      <md-text-float label="Repeat"
+      ng-model="settings.chpass.repeat" required type='password'> </md-text-float>
+    </div>
+    <div class="row actions">
+      <md-button aria-label class="md-warn" ng-click="settings.resetPass()" ng-disabled="settings.passUnchanged()">reset</md-button>
+      <md-button aria-label class="md-safe" ng-click="settings.updatePass()" ng-disabled="formpass.$invalid || settings.passUnmatched()">Update</md-button>
+    </div>
+  </form>
+</div>
+</md-content>

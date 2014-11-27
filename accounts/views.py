@@ -1,3 +1,5 @@
+import random
+
 from django.shortcuts import render
 
 from rest_framework import status
@@ -7,22 +9,17 @@ from rest_framework.decorators import detail_route, list_route
 
 from .models import User
 from .permissions import IsAdminUserSelfOrReadOnly, IsAuthenticated
-from .serializers import (UserSerializer,
-                          UserAdminSerializer,
-                          UserChangePasswordSerializer)
+from .serializers import (UserSerializer, UserChangePasswordSerializer)
 
+def random_pass():
+    return ''.join([random.choice('qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM?!-_+') for i in range(16)])
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     lookup_field = 'username'
-
+    serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, IsAdminUserSelfOrReadOnly)
 
-    def get_serializer_class(self):
-        user = self.request.user
-        if user.is_superuser:
-            return UserAdminSerializer
-        return UserSerializer
 
     @list_route(methods=['get'])
     def current(self, request):
@@ -42,3 +39,11 @@ class UserViewSet(viewsets.ModelViewSet):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
+
+    @detail_route(methods=['reset'])
+    def reset_password(self):
+        user = self.get_object()
+        newpass = random_pass()
+        user.set_password(newpass)
+        user.save()
+        return Response({'password': newpass})

@@ -65,9 +65,11 @@ angular.module('myiconsApp', [
       .when '/home/dashboard',
         templateUrl: template('dashboard')
         controller: 'DashboardCtrl'
+        controllerAs: 'dashboard'
       .when '/home/settings',
         templateUrl: template('settings')
         controller: 'SettingsCtrl'
+        controllerAs: 'settings'
       .when '/packs/add',
         templateUrl: template('pack_add')
         controller: 'packAddCtrl'

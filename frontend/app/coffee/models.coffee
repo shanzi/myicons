@@ -5,6 +5,11 @@ module.exports = ($resource) ->
       current:
         method: 'GET'
         url: '/accounts/users/current/',
+      update:
+        method: 'PATCH'
+      change_password:
+        method: 'PATCH'
+        url: '/accounts/users/:username/change_password',
 
   'Pack':
     $resource '/packs/:id/', {id: '@id'},
