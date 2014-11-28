@@ -9,7 +9,9 @@ from rest_framework.decorators import detail_route, list_route
 
 from .models import User
 from .permissions import IsAdminUserSelfOrReadOnly, IsAuthenticated
-from .serializers import (UserSerializer, UserChangePasswordSerializer)
+from .serializers import (UserSerializer,
+                          UserCreateSerializer,
+                          UserChangePasswordSerializer)
 
 def random_pass():
     return ''.join([random.choice('qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM?!-_+') for i in range(16)])
@@ -20,6 +22,14 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, IsAdminUserSelfOrReadOnly)
 
+    def create(self, request, *args, **kwargs):
+        data = request.DATA
+        data['password'] = random_pass()
+        serializer = UserCreateSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
     @list_route(methods=['get'])
     def current(self, request):

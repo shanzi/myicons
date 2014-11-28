@@ -10,7 +10,19 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        exclude = ('last_login', 'date_joined', 'groups', 'user_permissions', 'password')
+        exclude = ('last_login', 'date_joined', 'groups', 'user_permissions', 'password', 'is_active')
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
+
+    def save_object(self, obj, **kwargs):
+       obj.set_password(self.data['password']) 
+       obj.save()
+
+    class Meta:
+        model = User
+        readonly = ('is_superuser', 'is_staff')
+        exclude = ('last_login', 'date_joined', 'groups', 'user_permissions', 'is_active')
 
 
 class UserChangePasswordSerializer(serializers.ModelSerializer):
