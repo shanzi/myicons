@@ -17,7 +17,10 @@ class SettingsController
     @randomFactor = (new Date()).valueOf().toString(16)
 
   resetPass: ->
-    @chpass = {}
+    @chpass =
+      oldpassword: ''
+      newpassword: ''
+      repeat: ''
 
   update: ->
     @currentUser.$update =>
@@ -26,7 +29,13 @@ class SettingsController
   updatePass: ->
     user = angular.copy @currentUser
     angular.extend user, @chpass
-    user.$change_password => @resetPass()
+    success = =>
+      @resetPass()
+      alert 'Password updated success'
+    failed = =>
+      @chpass.oldpassword = ''
+      alert 'Password update failed!'
+    user.$change_password success, failed
 
   fieldName: (prefix) ->
     return prefix + @randomFactor
@@ -54,13 +63,16 @@ class SettingsController
     user.$reset_password()
 
   deleteUser: (user) ->
-    index = @users.indexOf user
-    @users.splice(index, 1)
-    user.$delete()
+    if confirm("Are you sure to delete user '#{user.username}'?\nThis action can not be undo.")
+      index = @users.indexOf user
+      @users.splice(index, 1)
+      user.$delete()
 
   addUser: ->
     success = (newuser) =>
-      @newuser = {}
+      @newuser =
+        username: ''
+        email: ''
       @users.push newuser
 
     failed = =>

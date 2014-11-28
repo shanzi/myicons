@@ -921,7 +921,11 @@ SettingsController = (function() {
   };
 
   SettingsController.prototype.resetPass = function() {
-    return this.chpass = {};
+    return this.chpass = {
+      oldpassword: '',
+      newpassword: '',
+      repeat: ''
+    };
   };
 
   SettingsController.prototype.update = function() {
@@ -933,14 +937,22 @@ SettingsController = (function() {
   };
 
   SettingsController.prototype.updatePass = function() {
-    var user;
+    var failed, success, user;
     user = angular.copy(this.currentUser);
     angular.extend(user, this.chpass);
-    return user.$change_password((function(_this) {
+    success = (function(_this) {
       return function() {
-        return _this.resetPass();
+        _this.resetPass();
+        return alert('Password updated success');
       };
-    })(this));
+    })(this);
+    failed = (function(_this) {
+      return function() {
+        _this.chpass.oldpassword = '';
+        return alert('Password update failed!');
+      };
+    })(this);
+    return user.$change_password(success, failed);
   };
 
   SettingsController.prototype.fieldName = function(prefix) {
@@ -978,16 +990,21 @@ SettingsController = (function() {
 
   SettingsController.prototype.deleteUser = function(user) {
     var index;
-    index = this.users.indexOf(user);
-    this.users.splice(index, 1);
-    return user.$delete();
+    if (confirm("Are you sure to delete user '" + user.username + "'?\nThis action can not be undo.")) {
+      index = this.users.indexOf(user);
+      this.users.splice(index, 1);
+      return user.$delete();
+    }
   };
 
   SettingsController.prototype.addUser = function() {
     var failed, success;
     success = (function(_this) {
       return function(newuser) {
-        _this.newuser = {};
+        _this.newuser = {
+          username: '',
+          email: ''
+        };
         return _this.users.push(newuser);
       };
     })(this);

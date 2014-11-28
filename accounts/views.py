@@ -21,6 +21,8 @@ class UserViewSet(viewsets.ModelViewSet):
     lookup_field = 'username'
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated, IsAdminUserSelfOrReadOnly)
+    ordering_fields = ('id', 'name')
+    ordering = ('id',)
 
     def create(self, request, *args, **kwargs):
         data = request.DATA
