@@ -30,8 +30,8 @@ class SettingsController
     user = angular.copy @currentUser
     angular.extend user, @chpass
     success = =>
-      @resetPass()
-      alert 'Password updated success'
+      alert 'Password updated success!\n\nPlease log in again.'
+      window.location = '/login'
     failed = =>
       @chpass.oldpassword = ''
       alert 'Password update failed!'

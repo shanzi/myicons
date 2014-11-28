@@ -942,8 +942,8 @@ SettingsController = (function() {
     angular.extend(user, this.chpass);
     success = (function(_this) {
       return function() {
-        _this.resetPass();
-        return alert('Password updated success');
+        alert('Password updated success!\n\nPlease log in again.');
+        return window.location = '/login';
       };
     })(this);
     failed = (function(_this) {
