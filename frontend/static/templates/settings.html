@@ -8,9 +8,10 @@
 </div>
 </md-toolbar>
 <md-content class="md-content-padding">
-<div class="user-info" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
+<div id="settings" layout="vertical" layout-align="center" flex flex-lg="70" offset-lg="15">
   <form name="form">
     <div class="row" >
+      <h3>account info</h3>
       <div layout="vertical" layout-sm="horizontal">
         <md-text-float label="First Name"
         fid="{{ settings.fieldName('first_name') }}"
@@ -21,7 +22,7 @@
       </div>
       <md-text-float label="Email"
       fid="{{ settings.fieldName('email') }}"
-      ng-model="settings.currentUser.email" required email> </md-text-float>
+      ng-model="settings.currentUser.email" required type="email"> </md-text-float>
     </div>
     <div class="row actions">
       <md-button aria-label class="md-warn" ng-click="settings.reset()" ng-disabled="settings.unchanged()">RESET</md-button>
@@ -31,16 +32,74 @@
   <form name="formpass">
     <div class="row" >
       <md-text-float label="Old password"
-      ng-model=" settings.chpass.oldpassword" required type='password'> </md-text-float>
+      ng-model=" settings.chpass.oldpassword" type='password'></md-text-float>
       <md-text-float label="New password"
-      ng-model="settings.chpass.newpassword" required type='password'> </md-text-float>
+      ng-model="settings.chpass.newpassword" type='password' minlength="8"></md-text-float>
       <md-text-float label="Repeat"
-      ng-model="settings.chpass.repeat" required type='password'> </md-text-float>
+      ng-model="settings.chpass.repeat" type='password'></md-text-float>
     </div>
     <div class="row actions">
       <md-button aria-label class="md-warn" ng-click="settings.resetPass()" ng-disabled="settings.passUnchanged()">reset</md-button>
-      <md-button aria-label class="md-safe" ng-click="settings.updatePass()" ng-disabled="formpass.$invalid || settings.passUnmatched()">Update</md-button>
+      <md-button aria-label class="md-safe" ng-click="settings.updatePass()" ng-disabled="formpass.$invalid ||
+      settings.passwordDisabled()">Update</md-button>
     </div>
   </form>
+  <div class="row users" ng-if="settings.isAdmin()">
+    <h3>Manage Users</h3>
+    <div class="users">
+      <div class="user" ng-repeat="user in settings.users" layout="horizontal">
+        <div class="avatar">
+          <img ng-src="{{ app.gravatar(user.email, 80) }}">
+        </div>
+        <div class="info">
+          <div class="username">
+            <span ng-bind="user.username"></span>
+            <span class="superuser" ng-if="user.is_superuser">superuser</span>
+            <span class="admin" ng-if="!user.is_superuser && user.is_staff">admin</span>
+          </div>
+          <div class="actions">
+            <md-button class="md-safe" ng-disabled="settings.actionDisabled(user)"
+            aria-label="grant admin"
+            ng-if="!user.is_staff"
+            ng-click="settings.grantAdmin(user)">grant admin</md-button>
+            <md-button class="md-warn" ng-disabled="settings.actionDisabled(user)"
+            aria-label="cancel admin"
+            ng-if="!user.is_superuser && user.is_staff"
+            ng-click="settings.cancelAdmin(user)">cancel admin</md-button>
+            <md-button class="md-warn" ng-disabled="settings.actionDisabled(user)"
+            aria-label="reset password"
+            ng-click="settings.resetPassword(user)"
+            >RESET PASSWORD</md-button>
+            <md-button class="md-danger" ng-disabled="settings.actionDisabled(user)"
+            aria-label="delete user"
+            ng-click="settings.deleteUser(user)"
+            >DELETE</md-button>
+          </div>
+          <div class="password" ng-show="user.password">
+            Password generated for this user is <span ng-bind="user.password"></span>
+          </div>
+        </div>
+      </div>
+      <div class="adduser">
+        <form name="adduserform">
+          <div layout="vertical" layout-md="horizontal">
+            <md-text-float label="Username"
+            fid="{{ settings.fieldName('addusername') }}"
+            ng-model="settings.newuser.username" pattern="[a-zA-Z][a-zA-Z0-9]{3,29}" flex> </md-text-float>
+            <md-text-float label="Email"
+            fid="{{ settings.fieldName('adduseremail') }}"
+            ng-model="settings.newuser.email" type="email" flex> </md-text-float>
+          </div>
+          <div>
+            <md-button class="md-safe adduser-btn" ng-disabled="adduserform.$invalid || settings.addUserDisabled(user)"
+            aria-label="delete user"
+            ng-click="settings.addUser()"
+            >ADD User</md-button>
+            <span class="adduser-tip">Password will be generated automatically.</span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 </md-content>

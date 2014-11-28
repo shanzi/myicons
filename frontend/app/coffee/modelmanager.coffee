@@ -33,6 +33,9 @@ class ModelManger
   getRevisions: (callback) ->
     @$models.Revision.query (data) => callback(data)
 
+  getUsers: ->
+    @$models.User.query()
+
   addPack: (pack, callback) ->
     newPack = new @$models.Pack pack
     newPack.$save =>
@@ -54,6 +57,10 @@ class ModelManger
     newIcon = new @$models.CollectionIcon icon
     newIcon.$save =>
       callback newIcon if callback
+
+  addUser: (user, callback, error) ->
+    newuser = new @$models.User(user)
+    newuser.$save callback, error
 
   deleteCollection: (col) ->
     idx = @collections.indexOf col

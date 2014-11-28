@@ -899,6 +899,22 @@ var SettingsController;
 SettingsController = (function() {
   SettingsController.prototype.chpass = {};
 
+  SettingsController.prototype.newuser = {};
+
+  SettingsController.prototype.isAdmin = function() {
+    return this.currentUser.is_superuser || this.currentUser.is_staff;
+  };
+
+  SettingsController.prototype.actionDisabled = function(user) {
+    if (user.is_superuser) {
+      return true;
+    }
+    if (user.is_staff) {
+      return !this.currentUser.is_superuser;
+    }
+    return false;
+  };
+
   SettingsController.prototype.reset = function() {
     this.currentUser = angular.copy(this._currentUser);
     return this.randomFactor = (new Date()).valueOf().toString(16);
@@ -939,8 +955,52 @@ SettingsController = (function() {
     return angular.equals(this.chpass, {});
   };
 
-  SettingsController.prototype.passUnmatched = function() {
-    return this.chpass.newpassword !== this.chpass.repeat;
+  SettingsController.prototype.passwordDisabled = function() {
+    if (this.chpass.oldpassword && this.chpass.newpassword && this.chpass.repeat) {
+      return this.chpass.newpassword !== this.chpass.repeat;
+    }
+    return true;
+  };
+
+  SettingsController.prototype.grantAdmin = function(user) {
+    user.is_staff = true;
+    return user.$update();
+  };
+
+  SettingsController.prototype.cancelAdmin = function(user) {
+    user.is_staff = false;
+    return user.$update();
+  };
+
+  SettingsController.prototype.resetPassword = function(user) {
+    return user.$reset_password();
+  };
+
+  SettingsController.prototype.deleteUser = function(user) {
+    var index;
+    index = this.users.indexOf(user);
+    this.users.splice(index, 1);
+    return user.$delete();
+  };
+
+  SettingsController.prototype.addUser = function() {
+    var failed, success;
+    success = (function(_this) {
+      return function(newuser) {
+        _this.newuser = {};
+        return _this.users.push(newuser);
+      };
+    })(this);
+    failed = (function(_this) {
+      return function() {
+        return alert('Add user failed!');
+      };
+    })(this);
+    return this.$modelManager.addUser(this.newuser, success, failed);
+  };
+
+  SettingsController.prototype.addUserDisabled = function() {
+    return !(this.newuser.username && this.newuser.email);
   };
 
   function SettingsController($mdSidenav, $modelManager) {
@@ -949,7 +1009,10 @@ SettingsController = (function() {
     this.$modelManager.ready((function(_this) {
       return function() {
         _this._currentUser = _this.$modelManager.currentUser;
-        return _this.reset();
+        _this.reset();
+        if (_this.isAdmin()) {
+          return _this.users = _this.$modelManager.getUsers();
+        }
       };
     })(this));
   }
@@ -1503,6 +1566,10 @@ ModelManger = (function() {
     })(this));
   };
 
+  ModelManger.prototype.getUsers = function() {
+    return this.$models.User.query();
+  };
+
   ModelManger.prototype.addPack = function(pack, callback) {
     var newPack;
     newPack = new this.$models.Pack(pack);
@@ -1548,6 +1615,12 @@ ModelManger = (function() {
     })(this));
   };
 
+  ModelManger.prototype.addUser = function(user, callback, error) {
+    var newuser;
+    newuser = new this.$models.User(user);
+    return newuser.$save(callback, error);
+  };
+
   ModelManger.prototype.deleteCollection = function(col) {
     var idx;
     idx = this.collections.indexOf(col);
@@ -1570,7 +1643,7 @@ ModelManger = (function() {
   };
 
   ModelManger.prototype.refreshPacks = function() {
-    return this.$models.Packs.query((function(_this) {
+    return this.$models.Pack.query((function(_this) {
       return function(packs) {
         return angular.forEach(packs, function(newpack) {
           var oldpack, _i, _len, _ref;
@@ -1639,12 +1712,20 @@ module.exports = function($resource) {
         method: 'GET',
         url: '/accounts/users/current/'
       },
+      save: {
+        method: 'POST',
+        url: '/accounts/users/'
+      },
       update: {
         method: 'PATCH'
       },
       change_password: {
         method: 'PATCH',
-        url: '/accounts/users/:username/change_password'
+        url: '/accounts/users/:username/change_password/'
+      },
+      reset_password: {
+        method: 'PATCH',
+        url: '/accounts/users/:username/reset_password/'
       }
     }),
     'Pack': $resource('/packs/:id/', {

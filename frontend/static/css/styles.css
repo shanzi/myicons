@@ -243,18 +243,92 @@
   font-size: 22px;
   vertical-align: middle;
 }
-.user-info .row {
+#settings h3 {
+  color: #ccc;
+  text-transform: uppercase;
+  font-weight: normal;
+}
+#settings .row {
   padding: 30px;
 }
-.user-info .row.actions {
+#settings .row.actions {
   padding-top: 0;
 }
-.user-info md-input-group {
+#settings md-input-group {
   margin: 5px;
   font-size: 22px;
 }
-.user-info input {
+#settings input {
   width: 100%;
+}
+#settings .user {
+  min-height: 80px;
+  margin: 10px 0;
+}
+#settings .user .avatar {
+  width: 80px;
+  height: 80px;
+  overflow: hidden;
+  background: #eee;
+}
+#settings .user .info {
+  padding: 0 10px;
+}
+#settings .user .username {
+  padding: 5px;
+  font-size: 28px;
+  font-weight: bold;
+}
+#settings .user .username .superuser,
+#settings .user .username .admin {
+  font-size: 14px;
+  display: inline-block;
+  text-transform: uppercase;
+  padding: 0 3px;
+  margin: 0 3px;
+  border-radius: 3px;
+  vertical-align: middle;
+}
+#settings .user .username .superuser {
+  border: solid 2px #69f;
+  color: #69f;
+}
+#settings .user .username .admin {
+  border: solid 2px #5cb92f;
+  color: #5cb92f;
+}
+#settings .user .password {
+  margin: 0 5px;
+  padding: 0 5px;
+  background: #ffeabf;
+  color: #cca95a;
+  height: 30px;
+  line-height: 30px;
+  opacity: 1;
+  transition: 0.2s ease-out;
+  transition-property: opacity, height;
+}
+#settings .user .password.ng-hide {
+  height: 0;
+  opacity: 0;
+}
+#settings .user .password span {
+  color: #eb6911;
+  font-weight: bold;
+  padding: 0 3px;
+}
+#settings .adduser {
+  margin-top: 40px;
+}
+#settings .adduser .adduser-btn {
+  float: right;
+}
+#settings .adduser .adduser-tip {
+  font-size: 16px;
+  color: #aaa;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  margin-left: 5px;
 }
 .label-pack,
 .pack-wrap {

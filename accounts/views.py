@@ -50,10 +50,13 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         return Response(serializer.errors, status.HTTP_400_BAD_REQUEST)
 
-    @detail_route(methods=['reset'])
-    def reset_password(self):
+    @detail_route(methods=['patch'])
+    def reset_password(self, request, *args, **kwargs):
         user = self.get_object()
         newpass = random_pass()
         user.set_password(newpass)
         user.save()
-        return Response({'password': newpass})
+        serializer = UserSerializer(user)
+        data = serializer.data
+        data['password'] = newpass
+        return Response(data)

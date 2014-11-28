@@ -1,5 +1,16 @@
 class SettingsController
   chpass:{}
+  newuser: {}
+
+  isAdmin: ->
+    return @currentUser.is_superuser or @currentUser.is_staff
+
+  actionDisabled: (user) ->
+    if user.is_superuser
+      return true
+    if user.is_staff
+      return not @currentUser.is_superuser
+    return false
 
   reset: ->
     @currentUser = angular.copy @_currentUser
@@ -26,16 +37,45 @@ class SettingsController
   passUnchanged: ->
     angular.equals @chpass, {}
 
-  passUnmatched: ->
-    @chpass.newpassword != @chpass.repeat
+  passwordDisabled: ->
+    if @chpass.oldpassword and @chpass.newpassword and @chpass.repeat
+      return @chpass.newpassword != @chpass.repeat
+    return true
+
+  grantAdmin: (user) ->
+    user.is_staff = true
+    user.$update()
+
+  cancelAdmin: (user) ->
+    user.is_staff = false
+    user.$update()
+
+  resetPassword: (user) ->
+    user.$reset_password()
+
+  deleteUser: (user) ->
+    index = @users.indexOf user
+    @users.splice(index, 1)
+    user.$delete()
+
+  addUser: ->
+    success = (newuser) =>
+      @newuser = {}
+      @users.push newuser
+
+    failed = =>
+      alert 'Add user failed!'
+
+    @$modelManager.addUser @newuser, success, failed
+
+  addUserDisabled: ->
+    not (@newuser.username and @newuser.email)
 
   constructor: (@$mdSidenav, @$modelManager) ->
     @$modelManager.ready =>
       @_currentUser = @$modelManager.currentUser
       @reset()
-
-
-
+      @users = @$modelManager.getUsers() if @isAdmin()
 
 
 module.exports = SettingsController

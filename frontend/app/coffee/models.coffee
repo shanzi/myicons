@@ -4,12 +4,18 @@ module.exports = ($resource) ->
       {username: '@username'},
       current:
         method: 'GET'
-        url: '/accounts/users/current/',
+        url: '/accounts/users/current/'
+      save:
+        method: 'POST'
+        url: '/accounts/users/'
       update:
         method: 'PATCH'
       change_password:
         method: 'PATCH'
-        url: '/accounts/users/:username/change_password',
+        url: '/accounts/users/:username/change_password/'
+      reset_password:
+        method: 'PATCH'
+        url: '/accounts/users/:username/reset_password/'
 
   'Pack':
     $resource '/packs/:id/', {id: '@id'},

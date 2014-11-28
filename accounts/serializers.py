@@ -10,6 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
+        readonly = ('is_superuser',)
         exclude = ('last_login', 'date_joined', 'groups', 'user_permissions', 'password', 'is_active')
 
 
@@ -21,7 +22,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        readonly = ('is_superuser', 'is_staff')
+        readonly = ('is_superuser',)
         exclude = ('last_login', 'date_joined', 'groups', 'user_permissions', 'is_active')
 
 

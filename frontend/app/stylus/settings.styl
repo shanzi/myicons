@@ -1,4 +1,9 @@
-.user-info
+#settings
+  h3
+    color #ccc
+    text-transform uppercase
+    font-weight normal
+
   .row
     padding 30px
 
@@ -11,3 +16,71 @@
 
   input
     width 100%
+
+  .user
+    min-height 80px
+    margin 10px 0
+
+    .avatar
+      width 80px
+      height 80px
+      overflow hidden
+      background #eee
+
+    .info
+      padding 0 10px
+
+    .username
+      padding 5px
+      font-size 28px
+      font-weight bold
+
+      .superuser, .admin
+        font-size 14px
+        display inline-block
+        text-transform uppercase
+        padding 0 3px
+        margin 0 3px
+        border-radius 3px
+        vertical-align middle
+
+      .superuser
+        border solid 2px #69f
+        color #69f
+
+      .admin
+        border solid 2px #5CB92F
+        color #5CB92F
+
+    .password
+      margin 0 5px
+      padding 0 5px
+      background #FFEABF
+      color #CCA95A
+      height 30px
+      line-height 30px
+      opacity 1
+      transition 0.2s ease-out
+      transition-property opacity, height
+
+      &.ng-hide
+        height 0
+        opacity 0
+
+      span
+        color #EB6911
+        font-weight bold
+        padding 0 3px
+
+  .adduser
+    margin-top 40px
+
+    .adduser-btn
+      float right
+
+    .adduser-tip
+      font-size 16px
+      color #aaa
+      white-space nowrap
+      text-overflow ellipsis
+      margin-left 5px
