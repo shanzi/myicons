@@ -52,3 +52,12 @@
     .menu-icon
       font-size 18px
       width 20px
+
+  .menu-item
+    &.ng-enter, &.ng-leave-active
+      height 0
+      opacity 0
+
+    &.ng-enter.ng-enter-active
+      height 40px
+      opacity 1

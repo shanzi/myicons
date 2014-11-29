@@ -18,8 +18,19 @@
     width 100%
 
   .user
-    min-height 80px
+    overflow hidden
+    height 100px
     margin 10px 0
+    transition 0.4s ease-out
+    transition-property height, opacity
+
+    &.ng-enter, &.ng-leave-active 
+      height 0
+      opacity 0
+
+    &.ng-enter.ng-enter-active
+      height 100px
+      opacity 1
 
     .avatar
       width 80px

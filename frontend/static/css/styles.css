@@ -96,6 +96,15 @@ body {
   font-size: 18px;
   width: 20px;
 }
+.md-sidenav-left .menu-item.ng-enter,
+.md-sidenav-left .menu-item.ng-leave-active {
+  height: 0;
+  opacity: 0;
+}
+.md-sidenav-left .menu-item.ng-enter.ng-enter-active {
+  height: 40px;
+  opacity: 1;
+}
 .view-toolbar {
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -275,8 +284,20 @@ body {
   width: 100%;
 }
 #settings .user {
-  min-height: 80px;
+  overflow: hidden;
+  height: 100px;
   margin: 10px 0;
+  transition: 0.4s ease-out;
+  transition-property: height, opacity;
+}
+#settings .user.ng-enter,
+#settings .user.ng-leave-active {
+  height: 0;
+  opacity: 0;
+}
+#settings .user.ng-enter.ng-enter-active {
+  height: 100px;
+  opacity: 1;
 }
 #settings .user .avatar {
   width: 80px;
@@ -556,6 +577,19 @@ pack-icons .icon:hover {
   width: 80px;
   height: 80px;
   padding: 10px;
+}
+.collection-icons .icon-item {
+  transition: 0.4s ease-out;
+}
+.collection-icons .icon-item md-item-content {
+  overflow: hidden;
+  height: 80px;
+  transition: 0.4s ease-out;
+  transition-property: height, opacity;
+}
+.collection-icons .icon-item.ng-leave.ng-leave-active md-item-content {
+  height: 0;
+  opacity: 0;
 }
 .collection-icons .icon-item .icon-name-label md-button {
   transition: opacity 0.2s ease-out;

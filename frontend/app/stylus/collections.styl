@@ -12,6 +12,17 @@
     padding 10px
 
   .icon-item
+    transition 0.4s ease-out
+
+    md-item-content
+      overflow hidden
+      height 80px
+      transition 0.4s ease-out
+      transition-property height, opacity
+
+    &.ng-leave.ng-leave-active md-item-content
+      height 0
+      opacity 0
 
     .icon-name-label
       md-button
