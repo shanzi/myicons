@@ -43,7 +43,6 @@ class CollectionController
       @shouldRefreshRevisions = true
 
   addIcon: (icon) ->
-    console.log icon
     @$modelManager.addCollectionIcon icon, (newicon) =>
       @icons.push newicon
       @iconNames[newicon.id] = newicon.name

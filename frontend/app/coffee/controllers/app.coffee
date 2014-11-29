@@ -13,7 +13,5 @@ class AppController
 
   constructor: (@$mdSidenav, @$modelManager) ->
     @currentUser = @$modelManager.currentUser
-    @$modelManager.ready =>
-      console.log 'models ready'
 
 module.exports = AppController
