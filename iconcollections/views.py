@@ -12,8 +12,9 @@ class CollectionsViewSet(rmixins.CollectionRevisionMixin, viewsets.ModelViewSet)
 
     """ViewSet for displaying packs. """
     queryset = Collection.objects.all()
-    ordering_fields = ('id', 'name')
     serializer_class = CollectionSerializer
+    ordering_fields = ('id', 'name')
+    ordering = ('id', )
 
     @detail_route(methods=['post'])
     def retoken(self, request, pk=None):
@@ -28,5 +29,6 @@ class CollectionIconsViewSet(rmixins.CollectionIconRevisionMixin, viewsets.Model
     """ViewSet for displaying packicons. """
     queryset = CollectionIcon.objects.all()
     filter_fields = ('packicon', 'collection')
-    ordering_fields = ('id', 'name')
     serializer_class = CollectionIconSerializer
+    ordering_fields = ('id', 'name')
+    ordering = ('id', )
