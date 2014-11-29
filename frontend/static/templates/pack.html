@@ -84,9 +84,12 @@
 <div class="tab" ng-if="pack.isTab('revisions')">
   <div class="revisions-wrap">
     <div class="revisions">
-      <revision ng-repeat="revision in pack.revisions" revision="revision"></revision>
+      <revision ng-repeat="revision in pack.revisionPage.results" revision="revision"></revision>
       <div class="revision-start">
-        <div class="revision-start-marker"></div>
+        <span class="revision-start-marker"></span>
+        <a class="revision-older" ng-if="pack.revisionPage.next" ng-click="pack.loadMoreRevisions()">
+          Show older revisions...
+        </a>
       </div>
     </div>
   </div>

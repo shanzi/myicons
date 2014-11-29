@@ -2,7 +2,7 @@ class CollectionController
   info: {}
   icons: []
   iconNames: {}
-  revisions: []
+  revisionPage: {}
   currentTab: 'icons'
 
   isTab: (name) -> name == @currentTab
@@ -68,10 +68,6 @@ class CollectionController
   fieldName: (prefix) ->
     return prefix + @randomFactor
 
-  refreshRevisions: ->
-    @shouldRefreshRevisions = false
-    @revisions = @$modelManager.getCollectionRevisions @_info
-
   refreshIcons: ->
     @shouldRefreshIcons = false
     @icons = @$modelManager.getCollectionIcons @_info
@@ -79,9 +75,22 @@ class CollectionController
     @icons.$promise.then =>
       @iconNames[icon.id] = icon.name for icon in @icons
 
+  refreshRevisions: ->
+    @shouldRefreshRevisions = false
+    if @revisionPage.$get
+      @revisionPage.$get()
+    else
+      @revisionPage = @$modelManager.getCollectionRevisionPage @_info
+
   restoreRevision: (revision) ->
     @shouldRefreshIcons = true
-    revision.$restore => @refreshRevisions()
+    refresh = => @refreshRevisions()
+    @$modelManager.restoreRevision revision, (rev) =>
+      rev.revertable = false
+      setTimeout refresh, 1000
+
+  loadMoreRevisions: ->
+    @$modelManager.getNextRevisionPage @revisionPage
 
   svgFileSelected: (files) ->
     if files.length > 0

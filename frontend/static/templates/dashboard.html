@@ -55,11 +55,14 @@
     </section>
   </div>
   <div class="revisions" flex-md>
-    <revision ng-repeat="revision in dashboard.revisions" revision="revision"
+    <revision ng-repeat="revision in dashboard.revisionPage.results" revision="revision"
     restore-click="dashboard.restoreRevision(revision)"
     ></revision>
     <div class="revision-start">
-      <div class="revision-start-marker"></div>
+      <span class="revision-start-marker"></span>
+      <a class="revision-older" ng-if="dashboard.revisionPage.next" ng-click="dashboard.loadMoreRevisions()">
+        Show older revisions...
+      </a>
     </div>
   </div>
 </div>

@@ -128,11 +128,14 @@
 <div class="tab" ng-if="collection.isTab('revisions')">
   <div class="revisions-wrap">
     <div class="revisions">
-      <revision ng-repeat="revision in collection.revisions" revision="revision"
+      <revision ng-repeat="revision in collection.revisionPage.results" revision="revision"
       restore-click="collection.restoreRevision(revision)"
       ></revision>
       <div class="revision-start">
-        <div class="revision-start-marker"></div>
+        <span class="revision-start-marker"></span>
+        <a class="revision-older" ng-if="collection.revisionPage.next" ng-click="collection.loadMoreRevisions()">
+          Show older revisions...
+        </a>
       </div>
     </div>
   </div>

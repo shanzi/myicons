@@ -14,6 +14,7 @@ class RevisionViewSet(viewsets.ReadOnlyModelViewSet):
     filter_fields = ('model', 'ref_model', 'target_id', 'ref_id')
     ordering_fields = ('created_at',)
     ordering = ('-created_at', )
+    paginate_by_param = 'page_size'
 
     @detail_route(methods=['post'])
     def restore(self, request, *args, **kwargs):

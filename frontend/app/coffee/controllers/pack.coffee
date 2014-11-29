@@ -3,7 +3,7 @@ PackIconInfoController = require './pack_icon_info'
 class PackController
   info: {}
   icons: []
-  revisions: []
+  revisionPage: {}
   currentTab: 'icons'
   searchText: ''
 
@@ -44,7 +44,13 @@ class PackController
 
   refreshRevisions: ->
     @shouldRefreshRevisions = false
-    @revisions = @$modelManager.getPackRevisions @_info
+    if @revisionPage.$get
+      @revisionPage.$get()
+    else
+      @revisionPage = @$modelManager.getPackRevisionPage @_info
+
+  loadMoreRevisions: ->
+    @$modelManager.getNextRevisionPage @revisionPage
   
   constructor: (@$routeParams, @$rootScope, @$location, @$modelManager, @$mdBottomSheet) ->
     id = parseInt @$routeParams.id

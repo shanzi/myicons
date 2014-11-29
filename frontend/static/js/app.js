@@ -144,7 +144,7 @@ CollectionController = (function() {
 
   CollectionController.prototype.iconNames = {};
 
-  CollectionController.prototype.revisions = [];
+  CollectionController.prototype.revisionPage = {};
 
   CollectionController.prototype.currentTab = 'icons';
 
@@ -253,11 +253,6 @@ CollectionController = (function() {
     return prefix + this.randomFactor;
   };
 
-  CollectionController.prototype.refreshRevisions = function() {
-    this.shouldRefreshRevisions = false;
-    return this.revisions = this.$modelManager.getCollectionRevisions(this._info);
-  };
-
   CollectionController.prototype.refreshIcons = function() {
     this.shouldRefreshIcons = false;
     this.icons = this.$modelManager.getCollectionIcons(this._info);
@@ -276,13 +271,33 @@ CollectionController = (function() {
     })(this));
   };
 
+  CollectionController.prototype.refreshRevisions = function() {
+    this.shouldRefreshRevisions = false;
+    if (this.revisionPage.$get) {
+      return this.revisionPage.$get();
+    } else {
+      return this.revisionPage = this.$modelManager.getCollectionRevisionPage(this._info);
+    }
+  };
+
   CollectionController.prototype.restoreRevision = function(revision) {
+    var refresh;
     this.shouldRefreshIcons = true;
-    return revision.$restore((function(_this) {
+    refresh = (function(_this) {
       return function() {
         return _this.refreshRevisions();
       };
+    })(this);
+    return this.$modelManager.restoreRevision(revision, (function(_this) {
+      return function(rev) {
+        rev.revertable = false;
+        return setTimeout(refresh, 1000);
+      };
     })(this));
+  };
+
+  CollectionController.prototype.loadMoreRevisions = function() {
+    return this.$modelManager.getNextRevisionPage(this.revisionPage);
   };
 
   CollectionController.prototype.svgFileSelected = function(files) {
@@ -397,22 +412,14 @@ module.exports = CollectionAddController;
 var DashboardController;
 
 DashboardController = (function() {
-  DashboardController.prototype.revisions = [];
+  DashboardController.prototype.revisionPage = {};
 
   DashboardController.prototype.refreshRevisions = function() {
-    var delayed;
-    delayed = (function(_this) {
-      return function() {
-        return _this.$modelManager.getRevisions(function(revisions) {
-          return _this.revisions = revisions;
-        });
-      };
-    })(this);
-    return setTimeout(delayed, 1000);
+    return this.revisionPage.$get();
   };
 
   DashboardController.prototype.restoreRevision = function(revision) {
-    return revision.$restore((function(_this) {
+    return this.$modelManager.restoreRevision(revision, (function(_this) {
       return function(rev) {
         if (rev.model === 'pack') {
           _this.$modelManager.refreshPacks();
@@ -424,14 +431,14 @@ DashboardController = (function() {
     })(this));
   };
 
+  DashboardController.prototype.loadMoreRevisions = function() {
+    return this.$modelManager.getNextRevisionPage(this.revisionPage);
+  };
+
   function DashboardController($mdSidenav, $modelManager) {
     this.$mdSidenav = $mdSidenav;
     this.$modelManager = $modelManager;
-    this.$modelManager.getRevisions((function(_this) {
-      return function(revisions) {
-        return _this.revisions = revisions;
-      };
-    })(this));
+    this.revisionPage = this.$modelManager.getRevisionPage();
   }
 
   return DashboardController;
@@ -601,7 +608,7 @@ PackController = (function() {
 
   PackController.prototype.icons = [];
 
-  PackController.prototype.revisions = [];
+  PackController.prototype.revisionPage = {};
 
   PackController.prototype.currentTab = 'icons';
 
@@ -663,7 +670,15 @@ PackController = (function() {
 
   PackController.prototype.refreshRevisions = function() {
     this.shouldRefreshRevisions = false;
-    return this.revisions = this.$modelManager.getPackRevisions(this._info);
+    if (this.revisionPage.$get) {
+      return this.revisionPage.$get();
+    } else {
+      return this.revisionPage = this.$modelManager.getPackRevisionPage(this._info);
+    }
+  };
+
+  PackController.prototype.loadMoreRevisions = function() {
+    return this.$modelManager.getNextRevisionPage(this.revisionPage);
   };
 
   function PackController($routeParams, $rootScope, $location, $modelManager, $mdBottomSheet) {
@@ -1575,10 +1590,22 @@ ModelManger = (function() {
     });
   };
 
-  ModelManger.prototype.getRevisions = function(callback) {
-    return this.$models.Revision.query((function(_this) {
+  ModelManger.prototype.getRevisionPage = function() {
+    return this.$models.RevisionPage.get();
+  };
+
+  ModelManger.prototype.getNextRevisionPage = function(revpage) {
+    return this.$http.get(revpage.next).success((function(_this) {
       return function(data) {
-        return callback(data);
+        var res, results, _i, _len, _results;
+        revpage.next = data.next;
+        results = data.results;
+        _results = [];
+        for (_i = 0, _len = results.length; _i < _len; _i++) {
+          res = results[_i];
+          _results.push(revpage.results.push(res));
+        }
+        return _results;
       };
     })(this));
   };
@@ -1645,15 +1672,19 @@ ModelManger = (function() {
     return col.$delete();
   };
 
-  ModelManger.prototype.getPackRevisions = function(pack) {
-    return this.$models.Revision.query({
+  ModelManger.prototype.restoreRevision = function(rev, callback) {
+    return this.$models.Revision.restore(rev, callback);
+  };
+
+  ModelManger.prototype.getPackRevisionPage = function(pack) {
+    return this.$models.RevisionPage.get({
       ref_model: 'pack',
       ref_id: pack.id
     });
   };
 
-  ModelManger.prototype.getCollectionRevisions = function(collection) {
-    return this.$models.Revision.query({
+  ModelManger.prototype.getCollectionRevisionPage = function(collection) {
+    return this.$models.RevisionPage.get({
       ref_model: 'collection',
       ref_id: collection.id
     });
@@ -1697,8 +1728,9 @@ ModelManger = (function() {
     })(this));
   };
 
-  function ModelManger($resource, $q) {
+  function ModelManger($resource, $http, $q) {
     this.$resource = $resource;
+    this.$http = $http;
     this.$q = $q;
     this.$models = models(this.$resource);
     this.currentUser = this.$models.User.current();
@@ -1712,8 +1744,8 @@ ModelManger = (function() {
 })();
 
 module.exports = (function(_this) {
-  return function($resource, $q) {
-    return new ModelManger($resource, $q);
+  return function($resource, $http, $q) {
+    return new ModelManger($resource, $http, $q);
   };
 })(this);
 
@@ -1790,6 +1822,9 @@ module.exports = function($resource) {
         },
         method: 'POST'
       }
+    }),
+    'RevisionPage': $resource('/revisions/', {
+      page_size: 30
     }),
     'Label': $resource('/labels/:id/', {
       id: '@id'

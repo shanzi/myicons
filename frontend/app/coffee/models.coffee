@@ -48,5 +48,8 @@ module.exports = ($resource) ->
         params: {id: '@id'}
         method: 'POST'
 
+  'RevisionPage':
+    $resource '/revisions/', {page_size: 30},
+
   'Label':
     $resource '/labels/:id/', {id: '@id'},

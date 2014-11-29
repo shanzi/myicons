@@ -30,8 +30,15 @@ class ModelManger
   getCollectionIcons: (collection) ->
     @$models.CollectionIcon.query collection: collection.id
 
-  getRevisions: (callback) ->
-    @$models.Revision.query (data) => callback(data)
+  getRevisionPage: ->
+    return @$models.RevisionPage.get()
+
+  getNextRevisionPage: (revpage) ->
+    @$http.get(revpage.next)
+      .success (data) =>
+        revpage.next = data.next
+        results = data.results
+        revpage.results.push res for res in results
 
   getUsers: ->
     @$models.User.query()
@@ -67,11 +74,14 @@ class ModelManger
     @collections.splice(idx, 1)
     col.$delete()
 
-  getPackRevisions: (pack) ->
-    return @$models.Revision.query ref_model:'pack', ref_id:pack.id
+  restoreRevision: (rev, callback) ->
+    @$models.Revision.restore rev, callback
 
-  getCollectionRevisions: (collection) ->
-    return @$models.Revision.query ref_model:'collection', ref_id:collection.id
+  getPackRevisionPage: (pack) ->
+    return @$models.RevisionPage.get ref_model:'pack', ref_id:pack.id
+
+  getCollectionRevisionPage: (collection) ->
+    return @$models.RevisionPage.get ref_model:'collection', ref_id:collection.id
 
   refreshPacks: ->
     @$models.Pack.query (packs) =>
@@ -91,7 +101,7 @@ class ModelManger
             return
         @collections.push newcol
 
-  constructor: (@$resource, @$q) ->
+  constructor: (@$resource, @$http, @$q) ->
     @$models = models(@$resource)
     @currentUser = @$models.User.current()
     @packs = @$models.Pack.query()
@@ -99,5 +109,5 @@ class ModelManger
     @labels = @$models.Label.query()
 
 
-module.exports = ($resource, $q) =>
-  new ModelManger($resource, $q)
+module.exports = ($resource, $http, $q) =>
+  new ModelManger($resource, $http, $q)

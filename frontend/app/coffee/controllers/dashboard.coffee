@@ -1,21 +1,22 @@
 class DashboardController
-  revisions: []
+  revisionPage: {}
   
   refreshRevisions: ->
-    delayed = =>
-      @$modelManager.getRevisions (revisions) => @revisions = revisions
-    setTimeout delayed, 1000
+    @revisionPage.$get()
 
   restoreRevision: (revision) ->
-    revision.$restore (rev) =>
+    @$modelManager.restoreRevision revision, (rev) =>
       if rev.model == 'pack'
         @$modelManager.refreshPacks()
       else if rev.model == 'collection'
         @$modelManager.refreshCollections()
       @refreshRevisions()
 
+  loadMoreRevisions: ->
+    @$modelManager.getNextRevisionPage @revisionPage
+
   constructor: (@$mdSidenav, @$modelManager) ->
-    @$modelManager.getRevisions (revisions) => @revisions = revisions
+    @revisionPage = @$modelManager.getRevisionPage()
 
 
 module.exports = DashboardController
