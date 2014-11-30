@@ -54,15 +54,21 @@
       </div>
     </section>
   </div>
-  <div class="revisions" flex-md>
-    <revision ng-repeat="revision in dashboard.revisionPage.results" revision="revision"
-    restore-click="dashboard.restoreRevision(revision)"
-    ></revision>
-    <div class="revision-start">
-      <span class="revision-start-marker"></span>
-      <a class="revision-older" ng-if="dashboard.revisionPage.next" ng-click="dashboard.loadMoreRevisions()">
-        Show older revisions...
-      </a>
+  <div class="revisions-wrap" flex-md>
+    <div class="no-revisions" ng-if="!dashboard.revisionPage.results">
+      Nothing had happend, get started by
+      <a href="#/packs/add">adding a new pack</a>.
+    </div>
+    <div class="revisions" ng-if="dashboard.revisionPage.results">
+      <revision ng-repeat="revision in dashboard.revisionPage.results" revision="revision"
+      restore-click="dashboard.restoreRevision(revision)"
+      ></revision>
+      <div class="revision-start">
+        <span class="revision-start-marker"></span>
+        <a class="revision-older" ng-if="dashboard.revisionPage.next" ng-click="dashboard.loadMoreRevisions()">
+          Show older revisions...
+        </a>
+      </div>
     </div>
   </div>
 </div>

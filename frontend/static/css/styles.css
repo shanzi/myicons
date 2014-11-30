@@ -265,6 +265,16 @@ body {
   font-size: 22px;
   vertical-align: middle;
 }
+#dashboard .no-revisions {
+  margin-top: 30px;
+  padding: 5px;
+  font-size: 14px;
+  color: #aaa;
+  text-align: center;
+}
+#dashboard .no-revisions a {
+  color: #666;
+}
 #settings h3 {
   color: #ccc;
   text-transform: uppercase;
@@ -491,61 +501,6 @@ pack-icons .icon:hover {
   border-radius: 3px;
   border: #ff5f00 1px solid;
 }
-.pack-icon-info .item-info {
-  max-height: 200px;
-}
-.pack-icon-info .item-info .icon {
-  height: 160px;
-  padding: 10px;
-  display: none;
-}
-@media (min-width: 600px) {
-  .pack-icon-info .item-info .icon[show-sm] {
-    display: block;
-  }
-}
-.pack-icon-info .item-info .icon svg {
-  height: 100%;
-  width: 100%;
-}
-.pack-icon-info .item-info .name {
-  text-align: center;
-  font-size: 18px;
-  padding: 10px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.pack-icon-info .item-actions {
-  overflow-y: scroll;
-}
-.pack-icon-info .item-actions .title {
-  text-transform: uppercase;
-  font-weight: normal;
-  font-size: 14px;
-  color: #aaa;
-  padding: 0 5px;
-}
-.pack-icon-info .item-actions .collections {
-  margin: 10px 0;
-  max-height: 400px;
-  overflow-y: scroll;
-}
-.pack-icon-info .item-actions .collection {
-  height: 40px;
-  line-height: 40px;
-  padding: 0 10px;
-  transition: background-color 0.1s ease-out;
-  color: #666;
-  cursor: pointer;
-  position: relative;
-}
-.pack-icon-info .item-actions .collection:hover {
-  background-color: rgba(0,0,0,0.1);
-  color: #69f;
-}
-.pack-icon-info .item-actions .collection i.icon-collections {
-  width: 20px;
-}
 .pack-icon-search {
   text-align: center;
   padding: 10px;
@@ -715,6 +670,69 @@ pack-icons .icon:hover {
 }
 .label-pack-title a:hover {
   color: #666;
+}
+.pack-icon-info .item-info {
+  max-height: 200px;
+}
+.pack-icon-info .item-info .icon {
+  height: 160px;
+  padding: 10px;
+  display: none;
+}
+@media (min-width: 600px) {
+  .pack-icon-info .item-info .icon[show-sm] {
+    display: block;
+  }
+}
+.pack-icon-info .item-info .icon svg {
+  height: 100%;
+  width: 100%;
+}
+.pack-icon-info .item-info .name {
+  text-align: center;
+  font-size: 18px;
+  padding: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.pack-icon-info .item-actions {
+  overflow-y: scroll;
+}
+.pack-icon-info .item-actions .title {
+  text-transform: uppercase;
+  font-weight: normal;
+  font-size: 14px;
+  color: #aaa;
+  padding: 0 5px;
+}
+.pack-icon-info .item-actions .no-collections {
+  font-size: 14px;
+  color: #999;
+  padding: 5px;
+}
+.pack-icon-info .item-actions .no-collections a {
+  color: #999;
+}
+.pack-icon-info .item-actions .collections {
+  margin: 10px 0;
+  max-height: 400px;
+  overflow-y: scroll;
+}
+.pack-icon-info .item-actions .collection {
+  height: 40px;
+  line-height: 40px;
+  padding: 0 10px;
+  transition: background-color 0.1s ease-out;
+  color: #666;
+  cursor: pointer;
+  position: relative;
+}
+.pack-icon-info .item-actions .collection:hover {
+  background-color: rgba(0,0,0,0.1);
+  color: #69f;
+}
+.pack-icon-info .item-actions .collection i.icon-collections {
+  width: 20px;
 }
 .md-sidenav-left.md-mydark-theme {
   color: #ccc;

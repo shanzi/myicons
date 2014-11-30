@@ -1,0 +1,64 @@
+.pack-icon-info
+  .item-info
+    max-height 200px
+
+    .icon
+      height 160px
+      padding 10px
+      display none
+
+      @media(min-width: 600px)
+        &[show-sm]
+          display block
+
+      svg
+        height 100%
+        width 100%
+
+    .name
+      text-align center
+      font-size 18px
+      padding 10px
+      text-overflow ellipsis
+      white-space nowrap
+
+  .item-actions
+    overflow-y scroll
+
+    .title
+      text-transform uppercase
+      font-weight normal
+      font-size 14px
+      color #aaa
+      padding 0 5px
+
+    .no-collections
+      font-size 14px
+      color #999
+      padding 5px
+
+      a
+        color #999
+
+    .collections
+      margin 10px 0
+      max-height 400px
+      overflow-y scroll
+
+    .collection
+      height 40px
+      line-height 40px
+      padding 0 10px
+      transition background-color 0.1s ease-out
+      color #666
+      cursor pointer
+      position relative
+
+      &:hover
+        background-color rgba(0, 0, 0, 0.1)
+        color #69f
+
+      i.icon-collections
+        width 20px
+
+

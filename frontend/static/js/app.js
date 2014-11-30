@@ -119,11 +119,6 @@ AppController = (function() {
     this.$mdSidenav = $mdSidenav;
     this.$modelManager = $modelManager;
     this.currentUser = this.$modelManager.currentUser;
-    this.$modelManager.ready((function(_this) {
-      return function() {
-        return console.log('models ready');
-      };
-    })(this));
   }
 
   return AppController;
@@ -214,7 +209,6 @@ CollectionController = (function() {
   };
 
   CollectionController.prototype.addIcon = function(icon) {
-    console.log(icon);
     return this.$modelManager.addCollectionIcon(icon, (function(_this) {
       return function(newicon) {
         _this.icons.push(newicon);

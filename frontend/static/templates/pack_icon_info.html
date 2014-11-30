@@ -12,7 +12,11 @@
   <div class="item-actions" flex>
     <section>
       <h3 class="title">Send to</h3>
-      <div class="collections">
+      <div class="no-collections" ng-if="!info.collections">
+        No collections here,
+        <a href="#/collections/add">add a new one</a>.
+      </div>
+      <div class="collections" ng-if="info.collections">
         <div
           class="collection"
           ng-repeat="collection in info.collections"
