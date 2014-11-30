@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="csrf-token" content="{{ csrf_token }}">
   <title>myicons</title>
+  {% include "favico.html" %}
   <link rel="stylesheet" href="{% static 'css/styles.css' %}" type="text/css">
   {% if bootstrap %}
   <link rel="stylesheet" href="/build/livetesting/{{ bootstrap }}.css" type="text/css">
