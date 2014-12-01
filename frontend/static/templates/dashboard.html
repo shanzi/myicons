@@ -59,8 +59,8 @@
       Nothing had happend, get started by
       <a href="#/packs/add">adding a new pack</a>.
     </div>
-    <div class="revisions" ng-if="dashboard.revisionPage.results">
-      <revision ng-repeat="revision in dashboard.revisionPage.results" revision="revision"
+    <div class="revisions" ng-if="dashboard.revisionPage.results.length">
+      <revision ng-repeat="revision in dashboard.revisionPage.results.length" revision="revision"
       restore-click="dashboard.restoreRevision(revision)"
       ></revision>
       <div class="revision-start">
