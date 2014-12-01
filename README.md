@@ -1,6 +1,8 @@
 MyIcons
 =======
 
+links: [homepage](http://io-meter.com/myicons), [screenshots](http://io-meter.com/myicons/#screenshots)
+
 Yes, this is yet another web icon font builder. But it's also designed to be your
 or your team's flat icons manager with enhanced team member management and
 revisions tracking. It is also very easy to deploy.
@@ -18,8 +20,7 @@ into your page when debuging
 icon fonts built and replace the live testing url.
 
 There are **nine** build-in smart labels which classify the icons automatically
-immediately after uploaded. More introduction and screenshots of the app can be
-found at the [project homepage](http://io-meter.com/myicons).
+immediately after uploaded. 
 
 This web app can be deployed to heroku in 3 minutes. Go to [Get Started](#get-started)
 
@@ -37,7 +38,7 @@ If you meet any compatibility problems under IE11+, Chrome, Firefox and Safari, 
 3. Modification of the shape of icons is not supported (feature in plan).
 
 Pull request is welcome. Also feel free to report a issue or request a feature, but don't
-forget to support by [donation](http://io-meter.com/myicons#donate).
+forget to support by [donation](http://io-meter.com/myicons/#donate).
 
 # Get started
 
