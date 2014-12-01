@@ -24,9 +24,13 @@ class PackAddController
         @fontStatus = 'processing'
         @$upload.upload url: '/convert/font/', file: fontfile
           .success (data) =>
-            @icons = data.content.glyphs
-            @fontStatus = 'success'
-            @info.name = data.content.fontname
+            if data.content.glyphs.length
+              @icons = data.content.glyphs
+              @fontStatus = 'success'
+              @info.name = data.content.fontname
+            else
+              @icons = []
+              @fontStatus = 'error'
           .error =>
             @fontStatus = 'error'
 
@@ -39,8 +43,12 @@ class PackAddController
         @cssStatus = 'processing'
         @$upload.upload url: '/convert/css', file: cssfile
           .success (data) =>
-            @iconNames = data.content
-            @cssStatus = 'success'
+            if data.content.length
+              @iconNames = data.content
+              @cssStatus = 'success'
+            else
+              @iconNames = []
+              @cssStatus = 'error'
           .error =>
             @cssStatus = 'error'
 

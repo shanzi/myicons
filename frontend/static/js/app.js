@@ -738,9 +738,14 @@ PackAddController = (function() {
           file: fontfile
         }).success((function(_this) {
           return function(data) {
-            _this.icons = data.content.glyphs;
-            _this.fontStatus = 'success';
-            return _this.info.name = data.content.fontname;
+            if (data.content.glyphs.length) {
+              _this.icons = data.content.glyphs;
+              _this.fontStatus = 'success';
+              return _this.info.name = data.content.fontname;
+            } else {
+              _this.icons = [];
+              return _this.fontStatus = 'error';
+            }
           };
         })(this)).error((function(_this) {
           return function() {
@@ -764,8 +769,13 @@ PackAddController = (function() {
           file: cssfile
         }).success((function(_this) {
           return function(data) {
-            _this.iconNames = data.content;
-            return _this.cssStatus = 'success';
+            if (data.content.length) {
+              _this.iconNames = data.content;
+              return _this.cssStatus = 'success';
+            } else {
+              _this.iconNames = [];
+              return _this.cssStatus = 'error';
+            }
           };
         })(this)).error((function(_this) {
           return function() {
