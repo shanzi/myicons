@@ -17,6 +17,11 @@ class LiveTestingViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'token'
     renderer_classes = (FontCheatSheetRenderer, FontCSSRenderer, SVGFontRenderer, WOFFRenderer)
 
+    def finalize_response(self, request, response, *args, **kwargs):
+        response = viewsets.ReadOnlyModelViewSet.finalize_response(self, request, response, *args, **kwargs)
+        response['Access-Control-Allow-Origin'] = '*'
+        return response
+
 class ZIPPackViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Collection.objects.all()
     serializer_class = CollectionSerializer
