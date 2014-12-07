@@ -103,7 +103,11 @@
     <h1>{{ name }} cheatsheet</h1>
     <p>
     <span class="css-link">
+      {% if production %}
+      (<a href="css/{{ build_name }}.css">VIEW CSS</a>)
+      {% else %}
       (<a href="{{ token }}.css">VIEW CSS</a>)
+      {% endif %}
     </span>
     <span class="count">
       {{ icons|length }} icons

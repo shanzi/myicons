@@ -5,8 +5,7 @@
 @font-face {
     font-family: "{{ build_name }}";
     {% if production %}
-    src: url('../fonts/{{ build_name }}.eot');
-    src: url('../fonts/{{ build_name }}.eot#iefix') format('embedded-opentype'), url('../fonts/{{ build_name }}.woff') format('woff'), url('../fonts/{{ build_name }}.ttf') format('truetype'), url('../fonts/{{ build_name }}.svg#{{ build_name}}') format('svg');
+    src: url('../fonts/{{ build_name }}.woff') format('woff'), url('../fonts/{{ build_name }}.ttf') format('truetype'), url('../fonts/{{ build_name }}.svg#{{ build_name}}') format('svg');
     {% else %}
     src: url('{{ token }}.svg#{{ build_name }}') format('svg'), url('{{ token }}.woff') format('woff'); 
     {% endif %}

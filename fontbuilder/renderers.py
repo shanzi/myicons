@@ -95,7 +95,6 @@ class ZIPPackRenderer(BinaryFontRenderer, FontCSSRenderer, FontCheatSheetRendere
 
         ttf = self.gen_binaryfont('ttf', font)
         woff = self.gen_binaryfont('woff', font)
-        eot = self.gen_binaryfont('eot', font)
 
         packfile = tempfile.TemporaryFile()
         pack = zipfile.ZipFile(packfile, 'w')
@@ -104,7 +103,6 @@ class ZIPPackRenderer(BinaryFontRenderer, FontCSSRenderer, FontCheatSheetRendere
 
         pack.writestr(('fonts/%s.ttf' % build_name), ttf)
         pack.writestr(('fonts/%s.woff' % build_name), woff)
-        pack.writestr(('fonts/%s.eot' % build_name), eot)
         pack.write(svgfile.name, ('fonts/%s.svg' % build_name))
 
         css = FontCSSRenderer.render(self, data, media_type, render_context)
