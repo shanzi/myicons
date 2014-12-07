@@ -55,12 +55,12 @@
     </section>
   </div>
   <div class="revisions-wrap" flex-md>
-    <div class="no-revisions" ng-if="!dashboard.revisionPage.results">
+    <div class="no-revisions" ng-if="!dashboard.revisionPage.results.length">
       Nothing had happend, get started by
       <a href="#/packs/add">adding a new pack</a>.
     </div>
     <div class="revisions" ng-if="dashboard.revisionPage.results.length">
-      <revision ng-repeat="revision in dashboard.revisionPage.results.length" revision="revision"
+      <revision ng-repeat="revision in dashboard.revisionPage.results" revision="revision"
       restore-click="dashboard.restoreRevision(revision)"
       ></revision>
       <div class="revision-start">
