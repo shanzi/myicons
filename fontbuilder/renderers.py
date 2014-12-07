@@ -93,7 +93,7 @@ class ZIPPackRenderer(BinaryFontRenderer, FontCSSRenderer, FontCheatSheetRendere
         svgfile = self.get_svgfile(data)
         font = fontforge.open(svgfile.name)
 
-        tff = self.gen_binaryfont('tff', font)
+        ttf = self.gen_binaryfont('ttf', font)
         woff = self.gen_binaryfont('woff', font)
         eot = self.gen_binaryfont('eot', font)
 
@@ -102,7 +102,7 @@ class ZIPPackRenderer(BinaryFontRenderer, FontCSSRenderer, FontCheatSheetRendere
 
         build_name = data['build_name']
 
-        pack.writestr(('fonts/%s.tff' % build_name), tff)
+        pack.writestr(('fonts/%s.ttf' % build_name), ttf)
         pack.writestr(('fonts/%s.woff' % build_name), woff)
         pack.writestr(('fonts/%s.eot' % build_name), eot)
         pack.write(svgfile.name, ('fonts/%s.svg' % build_name))
