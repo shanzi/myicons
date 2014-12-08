@@ -28,9 +28,9 @@ class Revision(models.Model):
     ref_model = models.CharField(choices=REVISION_REF_MODEL, max_length=10, db_index=True)
     ref_id = models.IntegerField(db_index=True)
     ref_name = models.CharField(max_length=128, blank=True, default="")
-    user = JSONField(default={})
-    snapshot = JSONField(default={})
-    diff = JSONField(default={})
+    user = JSONField(default=None, null=True, blank=True)
+    snapshot = JSONField(default=None, null=True, blank=True)
+    diff = JSONField(default=None, null=True, blank=True)
     is_restored = models.BooleanField(default=False)
     created_at = models.DateTimeField(db_index=True, auto_now_add=True)
 
@@ -46,12 +46,13 @@ class Revision(models.Model):
 
     def _diff(self, old, new):
         diff = {}
-        for key in new:
-            oldval = old.get(key)
-            newval = new.get(key)
-            if key == 'svg_d': continue
-            if  isinstance(newval, unicode) and oldval != newval:
-                diff[key] = {'old': oldval, 'new':newval}
+        if new:
+            for key in new:
+                oldval = old.get(key)
+                newval = new.get(key)
+                if key == 'svg_d': continue
+                if  isinstance(newval, unicode) and oldval != newval:
+                    diff[key] = {'old': oldval, 'new':newval}
         return diff
 
     def save(self, *args, **kwargs):
