@@ -26,7 +26,7 @@ This web app can be deployed to heroku in 3 minutes. Go to [Get Started](#get-st
 
 ## Compatibility
 
-Both this application and the fonts it builds have been tested under IE11+, Chrome, Firefox and Safari.
+Both this application and the fonts it builds have been tested under Chrome, Firefox and Safari.
 The fonts this application builds will work under IE8 and later. But IE 6 and 7 won't be supported.
 
 ## Known issues and possible improvements
@@ -128,7 +128,7 @@ And then initialize the database like that has described for heroku. You also ha
 All database compitible with django is OK for MyIcons. You may need refer to
 [dj-database-url](https://github.com/kennethreitz/dj-database-url).
 
-Fontforge's python extension (which is needed by MyIcons) doesn't works well with `virtualenv`,
+Fontforge's python extension (which is needed by MyIcons) doesn't work well with `virtualenv`,
 So it is recommended that you use [docker](https://www.docker.com) for enviroment separation.
 
 The official docker image for MyIcons is in future's plan.
