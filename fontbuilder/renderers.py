@@ -120,6 +120,7 @@ class ZIPPackRenderer(BinaryFontRenderer, FontCSSRenderer, FontCheatSheetRendere
         build_name = data['build_name']
 
         pack.writestr(('fonts/%s.ttf' % build_name), ttf)
+        pack.writestr(('fonts/%s.eot' % build_name), ttf2eot(ttf))
         pack.writestr(('fonts/%s.woff' % build_name), woff)
         pack.write(svgfile.name, ('fonts/%s.svg' % build_name))
 
