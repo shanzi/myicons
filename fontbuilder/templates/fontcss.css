@@ -7,7 +7,8 @@
     {% if production %}
     src: url('../fonts/{{ build_name }}.woff') format('woff'), url('../fonts/{{ build_name }}.ttf') format('truetype'), url('../fonts/{{ build_name }}.svg#{{ build_name}}') format('svg');
     {% else %}
-    src: url('{{ token }}.svg#{{ build_name }}') format('svg'), url('{{ token }}.woff') format('woff'); 
+    src: url('{{ token }}.eot');
+    src: url('{{ token }}.eot?#iefix') format("embedded-opentype"), url('{{ token }}.svg#{{ build_name }}') format('svg'), url('{{ token }}.woff') format('woff'); 
     {% endif %}
     font-weight: 500;
     font-style: normal;

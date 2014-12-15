@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from rest_framework import renderers
 
 from .utils import minify_css
+from .ttf2eot import ttf2eot
 
 class FontCSSRenderer(renderers.BaseRenderer):
     media_type = 'text/css'
@@ -79,6 +80,23 @@ class BinaryFontRenderer(SVGFontRenderer):
 
 class WOFFRenderer(BinaryFontRenderer):
     format = 'woff'
+
+
+class TTFRenderer(BinaryFontRenderer):
+    format = 'ttf'
+
+
+class EOTRenderer(BinaryFontRenderer):
+    format = 'eot'
+
+    def render(self, data, media_type=None, render_context=None):
+        if render_context and render_context.get('response').status_code != 200: return ''
+        svgfile = self.get_svgfile(data)
+        font = fontforge.open(svgfile.name)
+        fontdata = self.gen_binaryfont('ttf', font)
+        font.close()
+        svgfile.close()
+        return ttf2eot(fontdata)
 
 
 class ZIPPackRenderer(BinaryFontRenderer, FontCSSRenderer, FontCheatSheetRenderer):

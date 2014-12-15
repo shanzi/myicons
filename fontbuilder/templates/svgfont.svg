@@ -14,6 +14,7 @@ Created by myicons(http://io-meter.com/myicons) at {{ now|date:"r" }}.
     ascent="896"
     descent="-64"
     bbox="0 0 1024 896"
+    unicode-range="{{ unicode_range }}"
   />
   <missing-glyph />
   {% for icon in icons %}
