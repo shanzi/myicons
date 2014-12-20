@@ -98,7 +98,7 @@ STATIC_URL = '/static/'
 
 # File upload handlers
 FILE_UPLOAD_HANDLERS = (
-        "django.core.files.uploadhandler.TemporaryFileUploadHandler",
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler",
 )
 
 # Rest Framework

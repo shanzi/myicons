@@ -11,8 +11,10 @@ from .serializers import (UserSerializer,
                           UserCreateSerializer,
                           UserChangePasswordSerializer)
 
+
 def random_pass():
     return ''.join([random.choice('qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM?!-_+') for i in range(16)])
+
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -41,10 +43,9 @@ class UserViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['patch'])
     def change_password(self, request, *args, **kwargs):
         serializer = UserChangePasswordSerializer(
-                request.user,
-                data=request.DATA,
-                context={'request':self.request}
-                )
+            request.user,
+            data=request.DATA,
+            context={'request': self.request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)

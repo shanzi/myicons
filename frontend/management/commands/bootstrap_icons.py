@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 
+
 class Command(BaseCommand):
 
     """This command will persist icons from the collection named `myicons` into frontend files.
@@ -10,7 +11,7 @@ class Command(BaseCommand):
 
         try:
             bs_collection = Collection.objects.get(build_name='myicons')
-        except Collections.DoesNotExist:
+        except Collection.DoesNotExist:
             raise CommandError('Bootstraping icons collection not found')
 
         import os
@@ -19,7 +20,7 @@ class Command(BaseCommand):
 
         from fontbuilder.serializers import CollectionSerializer
         from fontbuilder.renderers import ZIPPackRenderer
-        
+
         path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../static'))
 
         serializer = CollectionSerializer(bs_collection)

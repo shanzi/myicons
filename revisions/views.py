@@ -6,6 +6,7 @@ from rest_framework.decorators import detail_route
 from .serializers import RevisionSerializer
 from .models import Revision
 
+
 class RevisionViewSet(viewsets.ReadOnlyModelViewSet):
 
     """ViewSet for displaying revisions. """

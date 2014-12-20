@@ -23,4 +23,3 @@ class PackIcon(models.Model):
 
     def __unicode__(self):
         return unicode(self.name)
-

@@ -5,18 +5,17 @@ import fontforge
 from pyquery import PyQuery as pq
 
 FONT_CONTENT_TYPE = (
-        'image/svg+xml',
-        'application/octet-stream',
-        )
+    'image/svg+xml',
+    'application/octet-stream',
+)
 
 CSS_CONTENT_TYPE = (
-        'text/css',
-        )
+    'text/css',
+)
 
 
 BASE_ASCENT = 896
 BASE_DESCENT = 128
-
 
 
 def font(filepath):
@@ -40,7 +39,7 @@ def font(filepath):
     descent = font.descent or BASE_DESCENT
 
     scale = float(BASE_ASCENT) / ascent
-    translateY = ascent / float(BASE_ASCENT/BASE_DESCENT) - descent
+    translateY = ascent / float(BASE_ASCENT / BASE_DESCENT) - descent
 
     trans = (scale, 0.0, 0.0, scale, 0.0, translateY * scale)
     font.ascent = BASE_ASCENT
@@ -74,15 +73,15 @@ def font(filepath):
             'width': width,
             'svg_unicode': unicode_as_int,
             'svg_d': d
-            })
+        })
 
     content = {
-            'fontname': font.fontname,
-            'ascent': font.ascent,
-            'descent': font.descent,
-            'width': font.ascent,
-            'glyphs': glyphs,
-            }
+        'fontname': font.fontname,
+        'ascent': font.ascent,
+        'descent': font.descent,
+        'width': font.ascent,
+        'glyphs': glyphs,
+    }
 
     font.close()
     return content
@@ -107,7 +106,7 @@ def css(filepath):
                 converted.append({
                     'name': name,
                     'unicode': unicode_as_int
-                    })
+                })
     return converted
 
 
@@ -139,7 +138,7 @@ def icon(filepath):
         tempiconfile.close()
     except:
         return None
-    
+
     tmpf = tempfile.NamedTemporaryFile(suffix='.svg')
     tempfont.generate(tmpf.name)
     tempfont.close()
@@ -152,10 +151,10 @@ def icon(filepath):
     d = glyph.attr('d')
 
     return {
-        'viewBox': (0, 0,BASE_ASCENT, BASE_ASCENT),
+        'viewBox': (0, 0, BASE_ASCENT, BASE_ASCENT),
         'boundingBox': bbox,
         'svg_d': d
-        }
+    }
 
 
 def validate_font(filepath, filetype):
@@ -166,7 +165,7 @@ def validate_font(filepath, filetype):
             f = fontforge.open(filepath)
             if f.glyphs().next():
                 return True
-        except EnvironmentError, e:
+        except EnvironmentError:
             pass
     return False
 
@@ -179,4 +178,3 @@ def validate_css(filepath, filetype):
         if sheet.cssText.strip():
             return True
     return False
-

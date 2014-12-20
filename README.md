@@ -26,10 +26,8 @@ This web app can be deployed to heroku in 3 minutes. Go to [Get Started](#get-st
 
 ## Compatibility
 
-Both this application been tested under IE11+, Chrome, Firefox and Safari.
-The web fonts and css built will work under IE9+, but IE6-IE8 are **NOT** supported by now.
-
-If you meet any compatibility problems under IE11+, Chrome, Firefox and Safari, please report a issue.
+Both this application and the fonts it builds have been tested under IE11+, Chrome, Firefox and Safari.
+The fonts this application builds will work under IE8 and later. But IE 6 and 7 won't be supported.
 
 ## Known issues and possible improvements
 

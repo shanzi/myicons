@@ -4,6 +4,7 @@
 import io
 import struct
 
+
 class ByteBuffer(io.BytesIO):
 
     def makefmt(self, width, littleEndian=False):
@@ -24,7 +25,7 @@ class ByteBuffer(io.BytesIO):
         oldpos = self.tell()
         self.seek(pos)
         fmt = self.makefmt(width, False)
-        value = struct.unpack(fmt, self.read(width/8))
+        value = struct.unpack(fmt, self.read(width / 8))
         self.seek(oldpos)
         return value[0]
 

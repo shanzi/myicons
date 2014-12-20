@@ -35,6 +35,6 @@ class CollectionIcon(models.Model):
             if not self.name.strip():
                 self.name = self.packicon.name
             if not self.svg_d.strip():
-                self.svg_d= self.packicon.svg_d
+                self.svg_d = self.packicon.svg_d
                 self.width = self.packicon.width
         return models.Model.save(self, *args, **kwargs)

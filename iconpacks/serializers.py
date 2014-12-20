@@ -61,4 +61,3 @@ class PackCreateSerializer(serializers.ModelSerializer):
             icon.search_text = search_text_for(icon.name)
         PackIcon.objects.bulk_create(icons)
         del(obj._related_data)
-

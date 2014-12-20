@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from . import convert 
+from . import convert
+
 
 class FontFileSerializer(serializers.Serializer):
 
@@ -25,7 +26,8 @@ class FontFileSerializer(serializers.Serializer):
         content = convert.font(filepath)
         self.data['content'] = content
         self.data['content_type'] = filetype
-        
+
+
 class CSSFileSerializer(serializers.Serializer):
     file = serializers.FileField()
     content = serializers.Field()
@@ -47,7 +49,8 @@ class CSSFileSerializer(serializers.Serializer):
         content = convert.css(filepath)
         self.data['content'] = content
         self.data['content_type'] = filetype
-     
+
+
 class IconFileSerializer(serializers.Serializer):
 
     """A serializer for simple file upload"""

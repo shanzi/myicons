@@ -25,6 +25,7 @@ class PacksViewSet(rmixins.PackRevisionMixin, viewsets.ModelViewSet):
         else:
             return PackSerializer
 
+
 class PackIconsViewSet(viewsets.ReadOnlyModelViewSet, mixins.UpdateModelMixin):
 
     """ViewSet for displaying packicons. """

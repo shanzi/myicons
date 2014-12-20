@@ -6,6 +6,7 @@ from rest_framework import serializers
 
 from .models import User, make_password
 
+
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -17,8 +18,8 @@ class UserSerializer(serializers.ModelSerializer):
 class UserCreateSerializer(serializers.ModelSerializer):
 
     def save_object(self, obj, **kwargs):
-       obj.set_password(self.data['password']) 
-       obj.save()
+        obj.set_password(self.data['password'])
+        obj.save()
 
     class Meta:
         model = User
@@ -42,9 +43,8 @@ class UserChangePasswordSerializer(serializers.ModelSerializer):
         newpassword = attrs['newpassword']
         if not re.match(r'[\x21-\x7F]{8,}', newpassword):
             raise serializers.ValidationError(
-                    'Invalid new password, ' 
-                    'should be at least 8 non-space ASCII characters.'
-                    )
+                'Invalid new password, '
+                'should be at least 8 non-space ASCII characters.')
         attrs['password'] = make_password(newpassword)
         attrs['newpassword'] = '[PASSWORD_MASKED]'
         return attrs

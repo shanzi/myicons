@@ -4,10 +4,11 @@ from rest_framework.response import Response
 from rest_framework.parsers import MultiPartParser
 
 from .serializers import (
-        FontFileSerializer,
-        CSSFileSerializer,
-        IconFileSerializer,
-        )
+    FontFileSerializer,
+    CSSFileSerializer,
+    IconFileSerializer,
+)
+
 
 class FontUploadView(generics.CreateAPIView):
 
@@ -31,4 +32,3 @@ class SVGUploadView(generics.CreateAPIView):
 
     parser_classes = (MultiPartParser, )
     serializer_class = IconFileSerializer
-

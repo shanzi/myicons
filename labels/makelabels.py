@@ -8,6 +8,7 @@ BASE_DIR = os.path.dirname(__file__)
 PRESET_DIR = os.path.join(BASE_DIR, './presets')
 OUTPUT_FILE = os.path.join(BASE_DIR, 'presets.pickle')
 
+
 def main():
     label_dict = {}
     for path, _, names in os.walk(PRESET_DIR):

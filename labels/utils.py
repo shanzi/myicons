@@ -1,5 +1,6 @@
 from preset_labels import PRESET_LABEL_DICT
 
+
 def search_text_for(name):
     splited = name.split('-')
     if len(splited) >= 3:

@@ -36,5 +36,3 @@ class LabelViewSet(viewsets.ViewSet):
             'id': label,
             'packs': packs
         }
-
-

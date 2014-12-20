@@ -2,7 +2,7 @@
 # encoding: utf-8
 
 """
-Translate ttf files to IE8 compatible EOT files. 
+Translate ttf files to IE8 compatible EOT files.
 Based on the implementation of ttf2eot in nodejs by fontello.
 (https://github.com/fontello/ttf2eot/)
 """
@@ -13,15 +13,16 @@ from .bytebuffer import ByteBuffer
 
 __all__ = ('ttf2eot', )
 
+
 def strbuf(raw):
     b = ByteBuffer(bytearray(len(raw) + 4))
     b.setuint(16, 0, len(raw), True)
 
     for i in xrange(0, len(raw), 2):
         b1 = ord(raw[i])
-        b2 = ord(raw[i+1])
+        b2 = ord(raw[i + 1])
         val = (b1 << 8) + b2
-        b.setuint(16, i+2, val, True)
+        b.setuint(16, i + 2, val, True)
 
     b.setuint(16, len(raw) + 2, 0, True)
     return b.getvalue()
@@ -44,7 +45,7 @@ def ttf2eot(array):
     haveOS2 = False
     haveName = False
     haveHead = False
-    
+
     numTables = buf.getuint(16, consts.SFNT_OFFSET.NUMTABLES)
 
     for i in xrange(numTables):
@@ -69,12 +70,12 @@ def ttf2eot(array):
             out.setuint(32, consts.EOT_OFFSET.WEIGHT, os2_weight, True)
 
             for j in range(4):
-                os2_unicode_range = table.getuint(32, consts.SFNT_OFFSET.OS2_UNICODE_RANGE + j*4)
-                out.setuint(32, consts.EOT_OFFSET.UNICODE_RANGE + j*4, os2_unicode_range, True)
+                os2_unicode_range = table.getuint(32, consts.SFNT_OFFSET.OS2_UNICODE_RANGE + j * 4)
+                out.setuint(32, consts.EOT_OFFSET.UNICODE_RANGE + j * 4, os2_unicode_range, True)
 
             for j in (0, 1):
-                os2_codepage_range = table.getuint(32, consts.SFNT_OFFSET.OS2_CODEPAGE_RANGE + j*4)
-                out.setuint(32, consts.EOT_OFFSET.CODEPAGE_RANGE + j*4, os2_codepage_range, True)
+                os2_codepage_range = table.getuint(32, consts.SFNT_OFFSET.OS2_CODEPAGE_RANGE + j * 4)
+                out.setuint(32, consts.EOT_OFFSET.CODEPAGE_RANGE + j * 4, os2_codepage_range, True)
 
         elif tableEntryTag == 'head':
             haveHead = True
@@ -83,12 +84,11 @@ def ttf2eot(array):
 
         elif tableEntryTag == 'name':
             haveName = True
-            nameTableFormat = table.getuint(16, consts.SFNT_OFFSET.NAMETABLE_FORMAT)
             nameTableCount = table.getuint(16, consts.SFNT_OFFSET.NAMETABLE_COUNT)
             nameTableStringOffset = table.getuint(16, consts.SFNT_OFFSET.NAMETABLE_STRING_OFFSET)
 
             for j in xrange(nameTableCount):
-                tableOffset = tableEntryOffset + consts.SIZEOF.SFNT_NAMETABLE + j*consts.SIZEOF.SFNT_NAMETABLE_ENTRY
+                tableOffset = tableEntryOffset + consts.SIZEOF.SFNT_NAMETABLE + j * consts.SIZEOF.SFNT_NAMETABLE_ENTRY
                 nameRecord = ByteBuffer(array[tableOffset:])
                 namePID = nameRecord.getuint(16, consts.SFNT_OFFSET.NAME_PLATFORM_ID)
                 nameEID = nameRecord.getuint(16, consts.SFNT_OFFSET.NAME_ENCODING_ID)
@@ -119,12 +119,12 @@ def ttf2eot(array):
     outvalue = out.getvalue()
     bufvalue = buf.getvalue()
     finallen = sum((len(outvalue),
-                len(familyName),
-                len(subfamilyName),
-                len(versionString),
-                len(fullName),
-                len(bufvalue),
-                2))
+                    len(familyName),
+                    len(subfamilyName),
+                    len(versionString),
+                    len(fullName),
+                    len(bufvalue),
+                    2))
     eot = ByteBuffer(bytearray(finallen))
     eot.write(outvalue)
     eot.write(familyName)
@@ -136,4 +136,3 @@ def ttf2eot(array):
     eot.setuint(32, consts.EOT_OFFSET.LENGTH, finallen, True)
 
     return eot.getvalue()
-

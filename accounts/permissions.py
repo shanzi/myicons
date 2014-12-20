@@ -1,7 +1,8 @@
 from rest_framework.permissions import (
-        BasePermission,
-        IsAuthenticated,
-        SAFE_METHODS)
+    BasePermission,
+    IsAuthenticated,
+    SAFE_METHODS)
+
 
 class IsAdminUserSelfOrReadOnly(BasePermission):
 
@@ -21,5 +22,3 @@ class IsAdminUserSelfOrReadOnly(BasePermission):
             return True
         if request.user.is_staff:
             return not obj.is_superuser
-
-

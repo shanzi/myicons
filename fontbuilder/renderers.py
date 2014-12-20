@@ -10,6 +10,7 @@ from rest_framework import renderers
 from .utils import minify_css
 from .ttf2eot import ttf2eot
 
+
 class FontCSSRenderer(renderers.BaseRenderer):
     media_type = 'text/css'
     format = 'css'
@@ -22,6 +23,7 @@ class FontCSSRenderer(renderers.BaseRenderer):
         icons = data['icons']
         data['classnames'] = ', '.join('.' + icon['classname'] for icon in icons)
         return render_to_string('fontcss.css', data)
+
 
 class FontCheatSheetRenderer(renderers.BaseRenderer):
     media_type = 'text/html'
@@ -47,7 +49,7 @@ class PListRenderer(renderers.BaseRenderer):
 class SVGFontRenderer(renderers.BaseRenderer):
     media_type = 'text/svg+xml'
     format = 'svg'
-    
+
     def render(self, data, media_type=None, render_context=None):
         if render_context and render_context.get('response').status_code != 200: return ''
         return render_to_string('svgfont.svg', data)
@@ -58,7 +60,7 @@ class BinaryFontRenderer(SVGFontRenderer):
     charset = None
     render_style = 'binary'
     svgfile = None
-    
+
     def get_svgfile(self, data):
         if self.svgfile: return self.svgfile
         svgtext = SVGFontRenderer.render(self, data)
@@ -144,6 +146,6 @@ class ZIPPackRenderer(BinaryFontRenderer, FontCSSRenderer, FontCheatSheetRendere
         pack.close()
         packfile.seek(0)
         ret = packfile.read()
-        
+
         packfile.close()
         return ret

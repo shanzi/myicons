@@ -4,6 +4,7 @@ from django.contrib.auth.views import login as django_login
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 
+
 @login_required
 def index(request):
     bootstrap_token = None
@@ -13,6 +14,7 @@ def index(request):
         if collections:
             bootstrap_token = collections[0]
     return render(request, 'index.html', {'bootstrap': bootstrap_token})
+
 
 def login(request):
     bootstrap_token = None
@@ -25,4 +27,3 @@ def login(request):
     return django_login(request,
                         template_name='login.html',
                         extra_context={'bootstrap': bootstrap_token})
-

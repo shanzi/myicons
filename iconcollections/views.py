@@ -24,6 +24,7 @@ class CollectionsViewSet(rmixins.CollectionRevisionMixin, viewsets.ModelViewSet)
         serializer = self.serializer_class(obj)
         return Response(serializer.data)
 
+
 class CollectionIconsViewSet(rmixins.CollectionIconRevisionMixin, viewsets.ModelViewSet):
 
     """ViewSet for displaying packicons. """

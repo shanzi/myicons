@@ -13,6 +13,7 @@ from .renderers import (
     ZIPPackRenderer,
 )
 
+
 class LiveTestingViewSet(viewsets.ReadOnlyModelViewSet):
     permission_classes = []
     queryset = Collection.objects.all()
@@ -31,6 +32,7 @@ class LiveTestingViewSet(viewsets.ReadOnlyModelViewSet):
         response['Access-Control-Allow-Origin'] = '*'
         return response
 
+
 class ZIPPackViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Collection.objects.all()
     serializer_class = CollectionSerializer
@@ -43,4 +45,3 @@ class ZIPPackViewSet(viewsets.ReadOnlyModelViewSet):
         if obj:
             response['content-disposition'] = 'attachment; filename="%s.zip"' % obj.name
         return response
-

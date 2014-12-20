@@ -20,6 +20,7 @@ REVISION_REF_MODEL = (
     ('collection', 'Collection models'),
 )
 
+
 class Revision(models.Model):
     action = models.CharField(choices=REVISION_ACTIONS, max_length=7, db_index=True)
     model = models.CharField(choices=REVISION_MODEL, max_length=14, db_index=True)
@@ -51,8 +52,8 @@ class Revision(models.Model):
                 oldval = old.get(key)
                 newval = new.get(key)
                 if key == 'svg_d': continue
-                if  isinstance(newval, unicode) and oldval != newval:
-                    diff[key] = {'old': oldval, 'new':newval}
+                if isinstance(newval, unicode) and oldval != newval:
+                    diff[key] = {'old': oldval, 'new': newval}
         return diff
 
     def save(self, *args, **kwargs):
@@ -98,8 +99,8 @@ class Revision(models.Model):
         else:
             snapshot = self.snapshot
             RevertModel = self.retrieve_model()
-            icons = snapshot['icons']
-            if snapshot.has_key('icons'): del snapshot['icons']
+            icons = snapshot.get('icons')
+            if 'icons' in snapshot: del snapshot['icons']
             IconModel = self.retrieve_related_model()
             to_revert = RevertModel(**snapshot)
             revert_icons = [IconModel(**icon) for icon in icons]

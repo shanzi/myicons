@@ -3,9 +3,11 @@ from iconcollections.models import Collection, CollectionIcon
 
 from .models import Revision
 
+
 def get_field_names(model):
     fields = model._meta.fields
     return [field.name for field in fields]
+
 
 class RevisionMixin:
     fields = []
@@ -73,7 +75,7 @@ class RevisionMixin:
         self._pre_delete_name = obj.name
         self._pre_delete_snapshot = self.serialize_delete(obj)
         self._pre_delete_ref_name = self.get_ref_name(obj)
-        
+
     def post_delete(self, obj):
         Revision.objects.create(
             action='delete',
@@ -84,7 +86,7 @@ class RevisionMixin:
             ref_id=self._pre_delete_ref_id,
             ref_name=self._pre_delete_ref_name,
             user=self.get_user(),
-            snapshot = self._pre_delete_snapshot)
+            snapshot=self._pre_delete_snapshot)
 
 
 class PackRevisionMixin(RevisionMixin):
@@ -103,7 +105,7 @@ class CollectionRevisionMixin(PackRevisionMixin):
     exclude = ('token', )
     revision_model = 'collection'
     revision_ref_model = 'collection'
-    
+
 
 class CollectionIconRevisionMixin(RevisionMixin):
     fields = get_field_names(CollectionIcon)
