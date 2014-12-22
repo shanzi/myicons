@@ -1,5 +1,6 @@
-import tempfile
 import zipfile
+import plistlib
+import tempfile
 import fontforge
 
 from django.template.loader import render_to_string
@@ -32,6 +33,15 @@ class FontCheatSheetRenderer(renderers.BaseRenderer):
         if render_context and render_context.get('response').status_code != 200: return ''
         data['production'] = self.production
         return render_to_string('fontcheatsheet.html', data)
+
+
+class PListRenderer(renderers.BaseRenderer):
+    media_type = 'application/x-plist'
+    format = 'plist'
+
+    def render(self, data, media_type=None, render_context=None):
+        if render_context and render_context.get('response').status_code != 200: return ''
+        return plistlib.writePlistToString(data['icons'])
 
 
 class SVGFontRenderer(renderers.BaseRenderer):

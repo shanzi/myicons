@@ -5,6 +5,7 @@ from .serializers import CollectionSerializer
 from .renderers import (
     FontCheatSheetRenderer,
     FontCSSRenderer,
+    PListRenderer,
     SVGFontRenderer,
     WOFFRenderer,
     TTFRenderer,
@@ -17,7 +18,13 @@ class LiveTestingViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Collection.objects.all()
     serializer_class = CollectionSerializer
     lookup_field = 'token'
-    renderer_classes = (FontCheatSheetRenderer, FontCSSRenderer, SVGFontRenderer, WOFFRenderer, EOTRenderer, TTFRenderer)
+    renderer_classes = (FontCheatSheetRenderer,
+                        FontCSSRenderer,
+                        PListRenderer,
+                        SVGFontRenderer,
+                        WOFFRenderer,
+                        EOTRenderer,
+                        TTFRenderer)
 
     def finalize_response(self, request, response, *args, **kwargs):
         response = viewsets.ReadOnlyModelViewSet.finalize_response(self, request, response, *args, **kwargs)
