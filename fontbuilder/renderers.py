@@ -43,7 +43,9 @@ class PListRenderer(renderers.BaseRenderer):
 
     def render(self, data, media_type=None, render_context=None):
         if render_context and render_context.get('response').status_code != 200: return ''
-        return plistlib.writePlistToString(data['icons'])
+        icons = data['icons']
+        icondict = {icon['name']: icon['svg_d'] for icon in icons}
+        return plistlib.writePlistToString(icondict)
 
 
 class SVGFontRenderer(renderers.BaseRenderer):
