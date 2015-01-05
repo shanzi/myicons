@@ -62,14 +62,18 @@
     <div class="upload-svg"
         ng-file-drop="collection.svgFileSelected($files)"
         ng-file-drag-over-class="upload-drag-over"
+        ng-multiple="true"
         >
         <div class="upload-symbol">
           <i class="icon-svg-upload"></i>
         </div>
-        <div>Drag SVG file here or pick icons from packs.</div>
+        <div>Drag SVG file here or select from your disk.</div>
         <div class="svg-invalid" ng-if='collection.svgInvalid'>
           Failed to convert SVG file to icon.
         </div>
+        <input type="file" class="upload-svg-select" multiple="true"
+          ng-file-select="collection.svgFileSelected($files)"
+          onclick="this.value=null">
       </div>
   </div>
 </div>
